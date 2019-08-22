@@ -29,12 +29,18 @@ public class ChildService {
     @Autowired
     PreschoolGroupService preschoolGroupService;
 
+
     public Child save(Child child) {
         return childRepository.save(child);
     }
 
     public Child findById(Long childId) {
         return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Child findByIdWithAllDetails(Long childId) {
+        return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
@@ -49,7 +55,7 @@ public class ChildService {
 
     @Transactional
     public Child assignToPreschoolGroup(Long childId, Long preschoolGroupId) {
-        Child child = childRepository.findByIdWithPreschoolGroup(childId).orElseThrow(EntityNotFoundException::new);
+        Child child = childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
         PreschoolGroup oldGroup = child.getPreschoolGroup();
         if (oldGroup != null) {
             oldGroup.getChildren().remove(child);

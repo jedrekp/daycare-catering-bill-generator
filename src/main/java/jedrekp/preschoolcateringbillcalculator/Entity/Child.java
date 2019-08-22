@@ -34,12 +34,12 @@ public class Child {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
     @JoinColumn(name = "preschool_group_id")
     @JsonIgnoreProperties({"children"})
-    @JsonView(JsonViewFilter.WithGroup.class)
+    @JsonView({JsonViewFilter.WithGroup.class})
     private PreschoolGroup preschoolGroup;
 
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JsonIgnoreProperties({"id", "child", "diet.children"})
-    @JsonView(JsonViewFilter.WithDiets.class)
+    @JsonView({JsonViewFilter.WithDiets.class})
     private Set<ChildDiet> chosenDiets = new HashSet<>();
 
 }

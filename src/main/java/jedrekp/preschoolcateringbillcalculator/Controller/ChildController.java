@@ -25,7 +25,7 @@ public class ChildController {
         return new ResponseEntity<>(childService.save(child), HttpStatus.OK);
     }
 
-    @PostMapping("/children/{childId}/diets/{dietId}")
+    @PutMapping("/children/{childId}/diets/{dietId}")
     @JsonView(JsonViewFilter.WithDiets.class)
     public ResponseEntity<Child> assignDiet(@PathVariable Long childId, @PathVariable Long dietId, @RequestBody DateInput dateInput) {
         return new ResponseEntity<>(childService.assignDiet(childId, dietId, dateInput.getDate()), HttpStatus.OK);
@@ -37,6 +37,11 @@ public class ChildController {
         return new ResponseEntity<>(childService.assignToPreschoolGroup(childId, preschoolGroupId), HttpStatus.OK);
     }
 
+    @GetMapping("/children/{childId}")
+    public ResponseEntity<Child> getChild(@PathVariable Long childId) {
+        return new ResponseEntity<>(childService.findByIdWithAllDetails(childId), HttpStatus.OK);
+    }
+
     @GetMapping("/children/{childId}/diets")
     @JsonView(JsonViewFilter.WithDiets.class)
     public ResponseEntity<Child> getChildWithChosenDiets(@PathVariable long childId) {
@@ -45,13 +50,13 @@ public class ChildController {
 
     @GetMapping("/children")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Collection<Child>> getChildrenWithNoGroup() {
+    public ResponseEntity<Collection<Child>> getAllChildrenWithNoGroup() {
         return new ResponseEntity<>(childService.findChildrenFromGroup(null), HttpStatus.OK);
     }
 
     @GetMapping("/children/preschoolGroups/{preschoolGroupId}")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Collection<Child>> getChildrenFromGroup(@PathVariable Long preschoolGroupId) {
+    public ResponseEntity<Collection<Child>> getAllChildrenFromGroup(@PathVariable Long preschoolGroupId) {
         return new ResponseEntity<>(childService.findChildrenFromGroup(preschoolGroupId), HttpStatus.OK);
     }
 }
