@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -40,6 +40,7 @@ public class Child {
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JsonIgnoreProperties({"id", "child", "diet.children"})
     @JsonView({JsonViewFilter.WithDiets.class})
-    private Set<ChildDiet> chosenDiets = new HashSet<>();
+    @OrderBy("effective_date DESC")
+    private Set<ChildDiet> chosenDiets = new LinkedHashSet<>();
 
 }
