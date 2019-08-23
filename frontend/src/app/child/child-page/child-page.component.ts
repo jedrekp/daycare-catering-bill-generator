@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChildDataService } from '../child-data.service';
-import { Child } from '../child';
+import { Child, ChosenDiet } from '../child';
 import { PreschoolGroup } from 'src/app/preschool-group/preschool-group';
 import { PreschoolGroupDataService } from 'src/app/preschool-group/preschool-group-data.service';
 
@@ -41,5 +41,4 @@ export class ChildPageComponent implements OnInit {
         this.child = child
       })
   }
-
 }
