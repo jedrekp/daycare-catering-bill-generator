@@ -18,12 +18,12 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
             "WHERE c.id = :childId")
     Optional<Child> findByIdWithPreschoolGroup(@Param("childId") Long childId);
 
-    @Query("SELECT c FROM Child c LEFT JOIN FETCH c.chosenDiets cd  LEFT JOIN FETCH cd.diet " +
+    @Query("SELECT c FROM Child c LEFT JOIN FETCH c.assignedDiets ad  LEFT JOIN FETCH ad.diet " +
             "WHERE c.id = :childId")
     Optional<Child> findByIdWithChosenDiets(@Param("childId") Long childId);
 
     @Query("SELECT c FROM Child c LEFT JOIN FETCH c.preschoolGroup " +
-            "LEFT JOIN FETCH c.chosenDiets cd  LEFT JOIN FETCH cd.diet " +
+            "LEFT JOIN FETCH c.assignedDiets ad  LEFT JOIN FETCH ad.diet " +
             "WHERE c.id = :childId")
     Optional<Child> findByIdWithAllDetails(@Param("childId") Long childId);
 }

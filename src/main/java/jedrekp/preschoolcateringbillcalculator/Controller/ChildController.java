@@ -25,14 +25,18 @@ public class ChildController {
         return new ResponseEntity<>(childService.save(child), HttpStatus.OK);
     }
 
+    @PutMapping("/children/{childId}")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    public ResponseEntity<Child> EditChild(@PathVariable Long childId, @RequestBody Child child) {
+        return new ResponseEntity<>(childService.editChild(childId, child), HttpStatus.OK);
+    }
+
     @PutMapping("/children/{childId}/diets/{dietId}")
-    @JsonView(JsonViewFilter.WithDiets.class)
     public ResponseEntity<Child> assignDiet(@PathVariable Long childId, @PathVariable Long dietId, @RequestBody DateInput dateInput) {
         return new ResponseEntity<>(childService.assignDiet(childId, dietId, dateInput.getDate()), HttpStatus.OK);
     }
 
     @PutMapping("/children/{childId}/preschoolGroups/{preschoolGroupId}")
-    @JsonView(JsonViewFilter.WithGroup.class)
     public ResponseEntity<Child> assignToGroup(@PathVariable Long childId, @PathVariable long preschoolGroupId) {
         return new ResponseEntity<>(childService.assignToPreschoolGroup(childId, preschoolGroupId), HttpStatus.OK);
     }

@@ -15,7 +15,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ChildDiet {
+
+public class ChildDiet implements Comparable<ChildDiet> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +42,10 @@ public class ChildDiet {
         this.effectiveDate = effectiveDate;
         this.child = child;
         this.diet = diet;
+    }
+
+    @Override
+    public int compareTo(ChildDiet o) {
+        return this.effectiveDate.compareTo(o.effectiveDate);
     }
 }

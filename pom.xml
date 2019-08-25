@@ -12,7 +12,8 @@
     <version>1.0</version>
     <name>preschool-catering-bill-calculator</name>
     <description>App to calculate monthly catering bills for children in preschool based on the chosen catering option,
-        and then send these bills to parents via email</description>
+        and then send these bills to parents via email
+    </description>
 
     <properties>
         <java.version>12</java.version>
