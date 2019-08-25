@@ -8,11 +8,11 @@ export class Child {
         public firstName: string,
         public lastName: string,
         public preschoolGroup: PreschoolGroup = null,
-        public chosenDiets: ChosenDiet[] = []
+        public assignedDiets: AssignedDiet[] = []
     ) { }
 }
 
-export class ChosenDiet {
+export class AssignedDiet {
 
     constructor(
         public effectiveDate: Date,

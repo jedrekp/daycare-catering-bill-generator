@@ -1,8 +1,15 @@
-<div class="container">
-    <h1>{{header}}</h1>
-    <div class="col-3">
-        First Name <input type="text" class="form-control" [(ngModel)]="child.firstName" />
-        Last Name <input type="tex" class="form-control" [(ngModel)]="child.lastName" />
-        <button mat-raised-button (click)=saveChild() class='btn btn-lg btn-warning'>Save</button>
-    </div>
+<div class="modal-top-20">
+  <div class="modal-header">
+    <h4 class="modal-title">{{header}}</h4>
+  </div>
+
+  <div class="modal-body">
+    First Name <input type="text" class="form-control" [(ngModel)]="child.firstName" />
+    Last Name <input type="tex" class="form-control" [(ngModel)]="child.lastName" />
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-warning" (click)="onSave()">Save</button>
+    <button class="btn btn-warning" (click)="onCancel()">Cancel</button>
+  </div>
 </div>

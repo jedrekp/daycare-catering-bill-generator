@@ -17,7 +17,19 @@ export class ChildDataService {
     return this.httpClient.post<Child>('http://localhost:8081/children/', child)
   }
 
+  editChild(childId: number, child: Child) {
+    return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}`, child)
+  }
+
   assignToPreschoolGroup(childId: number, groupId: number) {
     return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}/preschoolGroups/${groupId}`, null)
   }
+
+  assignNewDietToChild(childId: number, dietId: number, effectiveDate: string) {
+    return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}/diets/${dietId}`, new DateOutput(effectiveDate))
+  }
+}
+
+class DateOutput {
+  constructor(private date: string) { }
 }

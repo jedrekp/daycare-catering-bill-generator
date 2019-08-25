@@ -1,6 +1,7 @@
-<div *ngIf="child" class="col-md-5 text-right mx-auto">
+<div *ngIf="child" class="col-md-5 mx-auto">
 
     <h2 class="text-center my-3">Child #{{child.id}}</h2>
+
 
     <table class="table text-center">
         <tbody>
@@ -22,8 +23,13 @@
         </tbody>
     </table>
 
-    <button class="btn btn-sm btn-info mx-auto" data-target="#assignNewGroupModal" data-toggle="modal">Assign to
-        Group</button>
+
+    <button class="btn btn-sm btn-success mx-auto" (click)="openEditChildModal()">Edit basic info</button>
+
+    <button class="btn btn-sm btn-info mx-auto float-right" (click)="assignNewGroupModal.show()">
+        Assign to Group
+    </button>
+
 
     <h4 class="text-center my-3">Assigned Diets</h4>
 
@@ -35,66 +41,73 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let chosenDiet of child.chosenDiets">
-                <td>{{chosenDiet.effectiveDate}}</td>
-                <td>{{chosenDiet.diet.dietName}}</td>
+            <tr *ngFor="let assignedDiet of child.assignedDiets">
+                <td>{{assignedDiet.effectiveDate}}</td>
+                <td>{{assignedDiet.diet.dietName}}</td>
             </tr>
         </tbody>
     </table>
 
-    <button class="btn btn-sm btn-info mx-auto" data-target="#assignNewDietModal" data-toggle="modal">Assign to
-        Group</button>
+    <button class="btn btn-sm btn-info mx-auto float-right" (click)="assignNewDietModal.show()">
+        Assign new diet
+    </button>
+
+</div>
 
 
-    <div class="modal" id="assignNewGroupModal" tabindex="-1" data-backdrop="static">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content">
 
-                <div class="modal-header">
-                    <h4 class="modal-title">Assign to Group</h4>
-                </div>
+<div bsModal #assignNewGroupModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    [config]="{backdrop: 'static'}">
 
-                <div class="modal-body">
-                    <div class="input-group">
-                        <select class="custom-select" [(ngModel)]="newGroupId">
-                            <option *ngFor="let group of preschoolGroups" [value]="group.id">
-                                {{group.groupName}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
+    <div class="modal-dialog modal-top-20 modal-sm">
+        <div class="modal-content">
 
-                <div class="modal-footer">
-                    <button class="btn btn-warning" (click)="assignToNewGroup()" data-dismiss="modal">Save</button>
-                    <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
-                </div>
-
+            <div class="modal-header">
+                <h4 class="modal-title">Assign to Group</h4>
             </div>
+
+            <div class="modal-body">
+                Preschool group <select class="custom-select" [(ngModel)]="newGroup">
+                    <option *ngFor="let group of preschoolGroups" [ngValue]="group">
+                        {{group.groupName}}
+                    </option>
+                </select>
+            </div>
+
+            <div class=" modal-footer">
+                <button class="btn btn-warning" (click)="assignNewGroupModal.hide(); assignToNewGroup()">Save</button>
+                <button class="btn btn-warning" (click)="assignNewGroupModal.hide()">Cancel</button>
+            </div>
+
         </div>
     </div>
+</div>
 
-    <div class="modal" id="assignNewDietModal" tabindex="-1" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
 
-                <div class="modal-header">
-                    <h4 class="modal-title">Assign New Diet</h4>
-                </div>
+<div bsModal #assignNewDietModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    [config]="{backdrop: 'static'}">
 
-                <div class="modal-body">
-                    <div class="input-group">
-                        <input class="form-control" type="date"/>
-                        <select class="custom-select" [(ngModel)]="newGroupId">
-                            <option *ngFor="let group of preschoolGroups" [value]="group.id">
-                                {{group.groupName}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
+    <div class="modal-dialog modal-top-20 modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Assign New Diet</h4>
+            </div>
+
+            <div class="modal-body">
+                Effective date <input #datepickerMDY="bsDatepicker" bsDatepicker class="form-control"
+                    [bsConfig]="{dateInputFormat: 'YYYY/MM/DD', containerClass:'theme-default'}" [daysDisabled]="[6,0]"
+                    [(ngModel)]="effectiveDate" readonly>
+                Diet <select class="custom-select" [(ngModel)]="newDiet">
+                    <option *ngFor="let diet of dietOptions" [ngValue]="diet">
+                        {{diet.dietName}}
+                    </option>
+                </select>
+            </div>
 
             <div class="modal-footer">
-                <button class="btn btn-warning" (click)="assignToNewGroup()" data-dismiss="modal">Save</button>
-                <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-warning" (click)="assignNewDietModal.hide(); assignNewDiet()">Save</button>
+                <button class="btn btn-warning" (click)="assignNewDietModal.hide()">Cancel</button>
             </div>
 
         </div>

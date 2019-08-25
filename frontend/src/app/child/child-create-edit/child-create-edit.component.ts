@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs';
+
 import { Child } from '../child';
 import { ChildDataService } from '../child-data.service';
 
@@ -10,41 +12,43 @@ import { ChildDataService } from '../child-data.service';
 })
 export class ChildCreateEditComponent implements OnInit {
 
-  private childId: number
+  @Input() private child: Child
+  private onClose: Subject<number>
   private header: string
-  private child: Child
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private dataService: ChildDataService
+    private bsModalRef: BsModalRef,
+    private childDataService: ChildDataService
   ) { }
 
   ngOnInit() {
-    this.childId = this.route.snapshot.params['childId'];
-    this.child = new Child(this.childId, '', '')
-    if (this.childId != -1) {
-      this.retriveChild(this.childId)
-    }
-    else {
-      this.header = 'Add new child'
+    this.onClose = new Subject<number>()
+    if (this.child.id == -1) {
+      this.header = 'New child'
+    } else {
+      this.header = `Edit child #${this.child.id}`
     }
   }
 
-  retriveChild(childId: number) {
-    this.dataService.retrieveChild(childId).subscribe(
-      child => {
-        this.child = child
-        this.header = `Edit child - ${this.child.firstName} ${this.child.lastName}`
-      })
-  }
-
-  saveChild() {
-    if (this.childId == -1) {
-      this.dataService.createChild(this.child).subscribe(
+  public onSave() {
+    if (this.child.id == -1) {
+      this.childDataService.createChild(this.child).subscribe(
         child => {
-          this.router.navigate([''])
+          this.bsModalRef.hide()
+          this.onClose.next(child.id)
         })
-      }
+    } else {
+      this.childDataService.editChild(this.child.id, this.child).subscribe(
+        child => {
+          this.bsModalRef.hide()
+          this.onClose.next(this.child.id)
+        })
     }
   }
+
+  public onCancel() {
+    this.bsModalRef.hide()
+    this.onClose.next(null)
+  }
+
+}
