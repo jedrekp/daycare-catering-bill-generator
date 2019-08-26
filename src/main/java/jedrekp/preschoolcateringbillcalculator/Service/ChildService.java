@@ -34,10 +34,6 @@ public class ChildService {
         return childRepository.save(child);
     }
 
-    public Child findById(Long childId) {
-        return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
-    }
-
     @Transactional
     public Child editChild(Long childId, Child child) {
         Child childToEdit = findById(childId);
@@ -46,11 +42,14 @@ public class ChildService {
         return childToEdit;
     }
 
+    public Child findById(Long childId) {
+        return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
+    }
+
     @Transactional(readOnly = true)
     public Child findByIdWithAllDetails(Long childId) {
         return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
     }
-
 
     @Transactional(readOnly = true)
     public Collection<Child> findChildrenFromGroup(Long preschoolGroupId) {
@@ -59,7 +58,7 @@ public class ChildService {
 
     @Transactional
     public Child assignToPreschoolGroup(Long childId, Long preschoolGroupId) {
-        Child child = childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
+        Child child = findByIdWithAllDetails(childId);
         PreschoolGroup oldGroup = child.getPreschoolGroup();
         if (oldGroup != null) {
             oldGroup.getChildren().remove(child);

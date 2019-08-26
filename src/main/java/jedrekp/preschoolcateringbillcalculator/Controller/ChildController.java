@@ -31,25 +31,9 @@ public class ChildController {
         return new ResponseEntity<>(childService.editChild(childId, child), HttpStatus.OK);
     }
 
-    @PutMapping("/children/{childId}/diets/{dietId}")
-    public ResponseEntity<Child> assignDiet(@PathVariable Long childId, @PathVariable Long dietId, @RequestBody DateInput dateInput) {
-        return new ResponseEntity<>(childService.assignDiet(childId, dietId, dateInput.getDate()), HttpStatus.OK);
-    }
-
-    @PutMapping("/children/{childId}/preschoolGroups/{preschoolGroupId}")
-    public ResponseEntity<Child> assignToGroup(@PathVariable Long childId, @PathVariable long preschoolGroupId) {
-        return new ResponseEntity<>(childService.assignToPreschoolGroup(childId, preschoolGroupId), HttpStatus.OK);
-    }
-
     @GetMapping("/children/{childId}")
     public ResponseEntity<Child> getChild(@PathVariable Long childId) {
         return new ResponseEntity<>(childService.findByIdWithAllDetails(childId), HttpStatus.OK);
-    }
-
-    @GetMapping("/children/{childId}/diets")
-    @JsonView(JsonViewFilter.WithDiets.class)
-    public ResponseEntity<Child> getChildWithChosenDiets(@PathVariable long childId) {
-        return new ResponseEntity<>(childService.findByIdWithChosenDiets(childId), HttpStatus.OK);
     }
 
     @GetMapping("/children")
@@ -60,7 +44,17 @@ public class ChildController {
 
     @GetMapping("/children/preschoolGroups/{preschoolGroupId}")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Collection<Child>> getAllChildrenFromGroup(@PathVariable Long preschoolGroupId) {
+    public ResponseEntity<Collection<Child>> getAllChildrenFromPreschoolGroup(@PathVariable Long preschoolGroupId) {
         return new ResponseEntity<>(childService.findChildrenFromGroup(preschoolGroupId), HttpStatus.OK);
+    }
+
+    @PostMapping("/children/{childId}/diets/{dietId}")
+    public ResponseEntity<Child> assignNewDiet(@PathVariable Long childId, @PathVariable Long dietId, @RequestBody DateInput dateInput) {
+        return new ResponseEntity<>(childService.assignDiet(childId, dietId, dateInput.getDate()), HttpStatus.OK);
+    }
+
+    @PutMapping("/children/{childId}/preschoolGroups/{preschoolGroupId}")
+    public ResponseEntity<Child> assignToGroup(@PathVariable Long childId, @PathVariable long preschoolGroupId) {
+        return new ResponseEntity<>(childService.assignToPreschoolGroup(childId, preschoolGroupId), HttpStatus.OK);
     }
 }
