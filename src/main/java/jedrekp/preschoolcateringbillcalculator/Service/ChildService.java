@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class ChildService {
@@ -78,52 +80,38 @@ public class ChildService {
     @Transactional
     public Child assignDiet(Long childId, Long dietId, LocalDate effectiveDate) {
         Child child = findByIdWithAllDetails(childId);
-
-        throwExceptionIfDietWithSameEffectiveDateAlreadyAssigned(child, effectiveDate);
-        throwExceptionIfNewDietAlreadyInEffectForGivenDate(child, dietId, effectiveDate);
-        deleteNextAssignedDietIfTheSameAsNew(child, dietId, effectiveDate);
-
         Diet diet = dietService.findById(dietId);
-        ChildDiet childDiet = new ChildDiet(effectiveDate, child, diet);
-        child.getAssignedDiets().add(childDiet);
-        childDietRepository.save(childDiet);
+        childDietRepository.findByEffectiveDateAndChild_Id(effectiveDate, childId)
+                .ifPresentOrElse(childDiet -> childDiet.setDiet(diet),
+                        () -> {
+                            ChildDiet childDiet = new ChildDiet(effectiveDate, child, diet);
+                            child.getAssignedDiets().add(childDiet);
+                            childDietRepository.save(childDiet);
+                        });
+
+        if (child.getAssignedDiets().size() > 1) {
+            deleteFromAssignedDietsIfSameDietAssignedTwiceInARow(child);
+        }
         return child;
     }
 
-    private void throwExceptionIfDietWithSameEffectiveDateAlreadyAssigned(Child child, LocalDate effectiveDate) {
-        Optional<ChildDiet> assignedDietWithSameEffectiveDate = child.getAssignedDiets()
-                .stream().filter(childDiet -> childDiet.getEffectiveDate().equals(effectiveDate))
-                .findAny();
-        assignedDietWithSameEffectiveDate.ifPresent(childDiet -> {
-            throw new IllegalArgumentException("This child already has a diet with chosen effective date. Please remove it first.");
-        });
+
+    /* if child has the same diet assigned twice with no other diet in between them (based on effectiveDate),
+     delete the second instance for clarity */
+    private void deleteFromAssignedDietsIfSameDietAssignedTwiceInARow(Child child) {
+        List<ChildDiet> assignedDiets = new ArrayList<>(child.getAssignedDiets());
+        assignedDiets.sort(Comparator.comparing(ChildDiet::getEffectiveDate));
+        int i = 0;
+        while (i < assignedDiets.size() - 1) {
+            if (assignedDiets.get(i).getDiet().equals(assignedDiets.get(i + 1).getDiet())) {
+                ChildDiet assignedDietToDelete = assignedDiets.get(i + 1);
+                child.getAssignedDiets().remove(assignedDietToDelete);
+                childDietRepository.deleteById(assignedDietToDelete.getId());
+                assignedDiets.remove(assignedDietToDelete);
+                i = 0;
+            } else {
+                i++;
+            }
+        }
     }
-
-    private void throwExceptionIfNewDietAlreadyInEffectForGivenDate(Child child, Long newDietId, LocalDate effectiveDate) {
-        Optional<Diet> dietInEffectIfSameAsNew = child.getAssignedDiets()
-                .stream()
-                .filter(childDiet -> childDiet.getEffectiveDate().compareTo(effectiveDate) < 0)
-                .max(ChildDiet::compareTo)
-                .map(ChildDiet::getDiet)
-                .filter(diet -> diet.getId().equals(newDietId));
-
-        dietInEffectIfSameAsNew.ifPresent(diet -> {
-            throw new IllegalArgumentException("Diet: '" + diet.getDietName() + "' is already in effect for given date");
-        });
-    }
-
-
-    private void deleteNextAssignedDietIfTheSameAsNew(Child child, Long newDietId, LocalDate effectiveDate) {
-        Optional<ChildDiet> nextAssignedDietIfSameAsNew = child.getAssignedDiets()
-                .stream()
-                .filter(childDiet -> childDiet.getEffectiveDate().compareTo(effectiveDate) > 0)
-                .min(ChildDiet::compareTo)
-                .filter(childDiet -> childDiet.getDiet().getId().equals(newDietId));
-
-        nextAssignedDietIfSameAsNew.ifPresent(childDiet -> {
-            child.getAssignedDiets().remove(childDiet);
-            childDietRepository.deleteById(childDiet.getId());
-        });
-    }
-
 }

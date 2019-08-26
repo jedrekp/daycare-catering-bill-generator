@@ -25,13 +25,11 @@ public class DietController {
     DietRepository dietRepository;
 
     @PostMapping("/diets")
-    @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Diet> addNewDiet(@RequestBody Diet diet) {
         return new ResponseEntity<>(dietService.save(diet), HttpStatus.OK);
     }
 
     @GetMapping("/diets")
-    @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Collection<Diet>> getDiets() {
         return new ResponseEntity<>(dietService.findAll(), HttpStatus.OK);
     }

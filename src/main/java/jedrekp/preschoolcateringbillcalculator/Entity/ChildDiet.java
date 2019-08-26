@@ -48,4 +48,5 @@ public class ChildDiet implements Comparable<ChildDiet> {
     public int compareTo(ChildDiet o) {
         return this.effectiveDate.compareTo(o.effectiveDate);
     }
+
 }
