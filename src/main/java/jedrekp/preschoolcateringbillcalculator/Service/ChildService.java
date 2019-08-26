@@ -12,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 public class ChildService {
@@ -54,10 +51,6 @@ public class ChildService {
         return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
     }
 
-    @Transactional(readOnly = true)
-    public Child findByIdWithChosenDiets(Long childId) {
-        return childRepository.findByIdWithChosenDiets(childId).orElseThrow(EntityNotFoundException::new);
-    }
 
     @Transactional(readOnly = true)
     public Collection<Child> findChildrenFromGroup(Long preschoolGroupId) {
@@ -88,30 +81,8 @@ public class ChildService {
                             child.getAssignedDiets().add(childDiet);
                             childDietRepository.save(childDiet);
                         });
-
-        if (child.getAssignedDiets().size() > 1) {
-            deleteFromAssignedDietsIfSameDietAssignedTwiceInARow(child);
-        }
         return child;
     }
 
 
-    /* if child has the same diet assigned twice with no other diet in between them (based on effectiveDate),
-     delete the second instance for clarity */
-    private void deleteFromAssignedDietsIfSameDietAssignedTwiceInARow(Child child) {
-        List<ChildDiet> assignedDiets = new ArrayList<>(child.getAssignedDiets());
-        assignedDiets.sort(Comparator.comparing(ChildDiet::getEffectiveDate));
-        int i = 0;
-        while (i < assignedDiets.size() - 1) {
-            if (assignedDiets.get(i).getDiet().equals(assignedDiets.get(i + 1).getDiet())) {
-                ChildDiet assignedDietToDelete = assignedDiets.get(i + 1);
-                child.getAssignedDiets().remove(assignedDietToDelete);
-                childDietRepository.deleteById(assignedDietToDelete.getId());
-                assignedDiets.remove(assignedDietToDelete);
-                i = 0;
-            } else {
-                i++;
-            }
-        }
-    }
 }
