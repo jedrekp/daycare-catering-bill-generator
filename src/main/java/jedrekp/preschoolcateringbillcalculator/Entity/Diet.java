@@ -24,4 +24,7 @@ public class Diet {
     @Column(name = "daily_cost")
     private BigDecimal dailyCost;
 
+    @Column(name = "disabled")
+    private boolean disabled = false;
+
 }

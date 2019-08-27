@@ -75,6 +75,10 @@ public class ChildService {
     public Child assignDiet(Long childId, AssignedDietDTO assignedDietDTO) {
         Child child = findByIdWithAllDetails(childId);
         Diet diet = dietService.findById(assignedDietDTO.getDietId());
+        if (diet.isDisabled()) {
+            throw new IllegalArgumentException("Chosen diet :  " + diet.getDietName() + " is disabled." +
+                    " It can no longer be assigned");
+        }
         getAssignedDietByEffectiveDateIfExistsAlready(child, assignedDietDTO.getEffectiveDate())
                 .ifPresentOrElse(assignedDiet -> assignedDiet.setDiet(diet),
                         () -> {
