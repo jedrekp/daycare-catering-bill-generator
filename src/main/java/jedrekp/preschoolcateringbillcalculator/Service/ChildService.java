@@ -1,10 +1,11 @@
 package jedrekp.preschoolcateringbillcalculator.Service;
 
+import jedrekp.preschoolcateringbillcalculator.DTO.AssignedDietDTO;
+import jedrekp.preschoolcateringbillcalculator.Entity.AssignedDiet;
 import jedrekp.preschoolcateringbillcalculator.Entity.Child;
-import jedrekp.preschoolcateringbillcalculator.Entity.ChildDiet;
 import jedrekp.preschoolcateringbillcalculator.Entity.Diet;
 import jedrekp.preschoolcateringbillcalculator.Entity.PreschoolGroup;
-import jedrekp.preschoolcateringbillcalculator.Repository.ChildDietRepository;
+import jedrekp.preschoolcateringbillcalculator.Repository.AssignedDietRepository;
 import jedrekp.preschoolcateringbillcalculator.Repository.ChildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class ChildService {
@@ -21,7 +23,7 @@ public class ChildService {
     ChildRepository childRepository;
 
     @Autowired
-    ChildDietRepository childDietRepository;
+    AssignedDietRepository assignedDietRepository;
 
     @Autowired
     DietService dietService;
@@ -70,18 +72,24 @@ public class ChildService {
     }
 
     @Transactional
-    public Child assignDiet(Long childId, Long dietId, LocalDate effectiveDate) {
+    public Child assignDiet(Long childId, AssignedDietDTO assignedDietDTO) {
         Child child = findByIdWithAllDetails(childId);
-        Diet diet = dietService.findById(dietId);
-        childDietRepository.findByEffectiveDateAndChild_Id(effectiveDate, childId)
-                .ifPresentOrElse(childDiet -> childDiet.setDiet(diet),
+        Diet diet = dietService.findById(assignedDietDTO.getDietId());
+        getAssignedDietByEffectiveDateIfExistsAlready(child, assignedDietDTO.getEffectiveDate())
+                .ifPresentOrElse(assignedDiet -> assignedDiet.setDiet(diet),
                         () -> {
-                            ChildDiet childDiet = new ChildDiet(effectiveDate, child, diet);
-                            child.getAssignedDiets().add(childDiet);
-                            childDietRepository.save(childDiet);
+                            AssignedDiet assignedDiet = new AssignedDiet(
+                                    assignedDietDTO.getEffectiveDate(), child, diet);
+                            child.getAssignedDiets().add(assignedDiet);
+                            assignedDietRepository.save(assignedDiet);
                         });
         return child;
     }
 
-
+    private Optional<AssignedDiet> getAssignedDietByEffectiveDateIfExistsAlready(Child child, LocalDate effectiveDate) {
+        return child.getAssignedDiets()
+                .stream()
+                .filter(assignedDiet -> assignedDiet.getEffectiveDate().equals(effectiveDate))
+                .findAny();
+    }
 }

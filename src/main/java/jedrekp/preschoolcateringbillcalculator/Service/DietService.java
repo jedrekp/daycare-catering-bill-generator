@@ -30,6 +30,7 @@ public class DietService {
 
     @Transactional(readOnly = true)
     public Diet findDietCurrentlyAssignedToChild(Long childId, LocalDate date) {
-        return dietRepository.findCurrentlyAssignedDietByChildIdAndDate(childId, date).orElseThrow(EntityNotFoundException::new);
+        return dietRepository.findCurrentlyAssignedDietByChildIdAndDate(childId, date)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

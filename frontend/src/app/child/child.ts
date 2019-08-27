@@ -15,7 +15,8 @@ export class Child {
 export class AssignedDiet {
 
     constructor(
+        public id: number,
         public effectiveDate: Date,
         public diet: Diet
-        ) { }
+    ) { }
 }

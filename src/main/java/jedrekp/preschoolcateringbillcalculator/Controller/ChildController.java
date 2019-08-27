@@ -1,7 +1,7 @@
 package jedrekp.preschoolcateringbillcalculator.Controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.preschoolcateringbillcalculator.DTO.DateInput;
+import jedrekp.preschoolcateringbillcalculator.DTO.AssignedDietDTO;
 import jedrekp.preschoolcateringbillcalculator.Entity.Child;
 import jedrekp.preschoolcateringbillcalculator.Service.ChildService;
 import jedrekp.preschoolcateringbillcalculator.Utility.JsonViewFilter;
@@ -48,13 +48,15 @@ public class ChildController {
         return new ResponseEntity<>(childService.findChildrenFromGroup(preschoolGroupId), HttpStatus.OK);
     }
 
-    @PostMapping("/children/{childId}/diets/{dietId}")
-    public ResponseEntity<Child> assignNewDiet(@PathVariable Long childId, @PathVariable Long dietId, @RequestBody DateInput dateInput) {
-        return new ResponseEntity<>(childService.assignDiet(childId, dietId, dateInput.getDate()), HttpStatus.OK);
-    }
-
     @PutMapping("/children/{childId}/preschoolGroups/{preschoolGroupId}")
     public ResponseEntity<Child> assignToGroup(@PathVariable Long childId, @PathVariable long preschoolGroupId) {
         return new ResponseEntity<>(childService.assignToPreschoolGroup(childId, preschoolGroupId), HttpStatus.OK);
     }
+
+    @PostMapping("/children/{childId}/assignedDiets")
+    public ResponseEntity<Child> assignNewDiet(@PathVariable Long childId,
+                                               @RequestBody AssignedDietDTO assignedDietDTO) {
+        return new ResponseEntity<>(childService.assignDiet(childId, assignedDietDTO), HttpStatus.OK);
+    }
+
 }

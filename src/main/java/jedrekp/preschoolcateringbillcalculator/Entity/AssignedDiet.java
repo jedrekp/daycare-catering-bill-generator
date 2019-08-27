@@ -8,13 +8,13 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "child_diet",
+@Table(name = "assigned_diet",
         uniqueConstraints = @UniqueConstraint(columnNames = {"effective_date", "child_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
 
-public class ChildDiet {
+public class AssignedDiet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class ChildDiet {
     @JoinColumn(name = "diet_id")
     private Diet diet;
 
-    public ChildDiet(LocalDate effectiveDate, Child child, Diet diet) {
+    public AssignedDiet(LocalDate effectiveDate, Child child, Diet diet) {
         this.effectiveDate = effectiveDate;
         this.child = child;
         this.diet = diet;

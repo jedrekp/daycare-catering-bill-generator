@@ -29,7 +29,8 @@ public class DailyAttendanceService {
         }
 
         // find dailyAttendance object by date if already exists or else create new
-        DailyAttendance dailyAttendance = dailyAttendanceRepository.findByDateWithPresentChildren(dailyAttendanceDTO.getDate())
+        DailyAttendance dailyAttendance = dailyAttendanceRepository
+                .findByDateWithPresentChildren(dailyAttendanceDTO.getDate())
                 .orElse(new DailyAttendance(dailyAttendanceDTO.getDate()));
 
 

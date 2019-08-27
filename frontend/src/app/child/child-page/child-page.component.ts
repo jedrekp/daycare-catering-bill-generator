@@ -69,7 +69,7 @@ export class ChildPageComponent implements OnInit {
   retrieveDietOptions() {
     this.dietDataService.retrieveAllDiets().subscribe(
       diets => {
-      this.dietOptions = diets
+        this.dietOptions = diets
         this.newDiet = diets[0]
       })
   }
@@ -86,7 +86,8 @@ export class ChildPageComponent implements OnInit {
 
   openEditChildModal() {
     let initialState = { child: new Child(this.child.id, this.child.firstName, this.child.lastName) };
-    this.modalRef = this.modalService.show(ChildCreateEditComponent, { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+    this.modalRef = this.modalService.show(ChildCreateEditComponent,
+      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
       childId => {
         if (childId) {
@@ -104,11 +105,12 @@ export class ChildPageComponent implements OnInit {
   }
 
   assignNewDiet() {
-    this.childDataService.assignNewDietToChild(this.child.id, this.newDiet.id, this.datePipe.transform(this.effectiveDate, 'yyyy/MM/dd')).subscribe(
-      child => {
-        this.child = child
-        this.sortAssignedDietsbyEffectiveDate(this.child.assignedDiets)
-      }
-    )
+    this.childDataService.assignNewDietToChild(this.child.id, this.newDiet.id,
+      this.datePipe.transform(this.effectiveDate, 'yyyy/MM/dd')).subscribe(
+        child => {
+          this.child = child
+          this.sortAssignedDietsbyEffectiveDate(this.child.assignedDiets)
+        }
+      )
   }
 }

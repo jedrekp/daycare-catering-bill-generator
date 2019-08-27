@@ -19,6 +19,7 @@ public interface DailyAttendanceRepository extends JpaRepository<DailyAttendance
     @Query("SELECT da FROM DailyAttendance da LEFT JOIN da.presentChildren pc " +
             "WHERE  pc.id = :childId AND MONTH(da.date) = :month AND YEAR(da.date) = :year " +
             "ORDER BY da.date")
-    List<DailyAttendance> findByChildIdForSpecificMonth(@Param("childId") Long childId, @Param("month") Integer month, @Param("year") Integer year);
+    List<DailyAttendance> findByChildIdForSpecificMonth(@Param("childId") Long childId,
+                                                        @Param("month") Integer month, @Param("year") Integer year);
 
 }

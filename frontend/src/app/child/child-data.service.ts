@@ -26,10 +26,14 @@ export class ChildDataService {
   }
 
   assignNewDietToChild(childId: number, dietId: number, effectiveDate: string) {
-    return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}/diets/${dietId}`, new DateOutput(effectiveDate))
+    return this.httpClient.post<Child>(`http://localhost:8081/children/${childId}/assignedDiets`,
+      new AssignedDietDTO(effectiveDate, dietId))
   }
+
 }
 
-class DateOutput {
-  constructor(private date: string) { }
+class AssignedDietDTO {
+  constructor(
+    private effectiveDate: string,
+    private dietId: number) { }
 }
