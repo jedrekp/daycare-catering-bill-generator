@@ -1,7 +1,7 @@
 package jedrekp.preschoolcateringbillcalculator.Controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.preschoolcateringbillcalculator.DTO.AssignedDietDTO;
+import jedrekp.preschoolcateringbillcalculator.DTO.AssignedOptionDTO;
 import jedrekp.preschoolcateringbillcalculator.Entity.Child;
 import jedrekp.preschoolcateringbillcalculator.Service.ChildService;
 import jedrekp.preschoolcateringbillcalculator.Utility.JsonViewFilter;
@@ -53,16 +53,16 @@ public class ChildController {
         return new ResponseEntity<>(childService.assignToPreschoolGroup(childId, preschoolGroupId), HttpStatus.OK);
     }
 
-    @PostMapping("/children/{childId}/assignedDiets")
-    public ResponseEntity<Child> assignNewDiet(@PathVariable Long childId,
-                                               @RequestBody AssignedDietDTO assignedDietDTO) {
-        return new ResponseEntity<>(childService.assignDiet(childId, assignedDietDTO), HttpStatus.OK);
+    @PostMapping("/children/{childId}/assignedOptions")
+    public ResponseEntity<Child> assignNewCateringOption(@PathVariable Long childId,
+                                                         @RequestBody AssignedOptionDTO assignedOptionDTO) {
+        return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
     }
 
-    @DeleteMapping("/children/{childId}/assignedDiets/{assignedDietId}")
-    public ResponseEntity<Child> removeAssignedDietFromChild(@PathVariable Long childId, @PathVariable
-            Long assignedDietId) {
-        childService.removeAssignedDiet(childId, assignedDietId);
+    @DeleteMapping("/children/{childId}/assignedOptions/{assignedOptionId}")
+    public ResponseEntity<Child> removeAssignedOptionFromChild(@PathVariable Long childId, @PathVariable
+            Long assignedOptionId) {
+        childService.removeAssignedOption(childId, assignedOptionId);
         return ResponseEntity.noContent().build();
     }
 }

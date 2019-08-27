@@ -11,12 +11,12 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AssignedDietDTO {
+public class AssignedOptionDTO {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     private LocalDate effectiveDate;
 
     @NotNull
-    private Long dietId;
+    private Long cateringOptionId;
 
 }

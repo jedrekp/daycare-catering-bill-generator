@@ -31,30 +31,30 @@
     </button>
 
 
-    <h4 class="text-center my-3">Assigned Diets</h4>
+    <h4 class="text-center my-3">Assigned Catering Options</h4>
 
     <table class="table table-striped text-center">
         <thead>
             <tr>
                 <th>Effective from</th>
-                <th>Diet Name</th>
+                <th>Option Name</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let assignedDiet of child.assignedDiets">
-                <td>{{assignedDiet.effectiveDate}}</td>
-                <td>{{assignedDiet.diet.dietName}}</td>
+            <tr *ngFor="let assignedOption of child.assignedOptions">
+                <td>{{assignedOption.effectiveDate}}</td>
+                <td>{{assignedOption.cateringOption.optionName}}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-danger"
-                        (click)="removeAssignedDiet(assignedDiet.id)">Delete</button>
+                    <button class="btn btn-sm btn-danger"
+                        (click)="removeAssignedOption(assignedOption.id)">Delete</button>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <button class="btn btn-sm btn-info mx-auto float-right" (click)="assignNewDietModal.show()">
-        Assign new diet
+    <button class="btn btn-sm btn-info mx-auto float-right" (click)="assignNewOptionModal.show()">
+        Assign new option
     </button>
 
 </div>
@@ -89,30 +89,30 @@
 </div>
 
 
-<div bsModal #assignNewDietModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+<div bsModal #assignNewOptionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
     [config]="{backdrop: 'static'}">
 
     <div class="modal-dialog modal-top-20 modal-sm">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h4 class="modal-title">Assign New Diet</h4>
+                <h4 class="modal-title">Assign new catering option</h4>
             </div>
 
             <div class="modal-body">
                 Effective date <input #datepickerMDY="bsDatepicker" bsDatepicker class="form-control"
                     [bsConfig]="{dateInputFormat: 'YYYY/MM/DD', containerClass:'theme-default'}" [daysDisabled]="[6,0]"
                     [(ngModel)]="effectiveDate" readonly>
-                Diet <select class="custom-select" [(ngModel)]="newDiet">
-                    <option *ngFor="let diet of dietOptions" [ngValue]="diet">
-                        {{diet.dietName}}
+                Catering option <select class="custom-select" [(ngModel)]="newOption">
+                    <option *ngFor="let cateringOption of cateringOptions" [ngValue]="cateringOption">
+                        {{cateringOption.optionName}}
                     </option>
                 </select>
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-warning" (click)="assignNewDietModal.hide(); assignNewDiet()">Save</button>
-                <button class="btn btn-warning" (click)="assignNewDietModal.hide()">Cancel</button>
+                <button class="btn btn-warning" (click)="assignNewOptionModal.hide(); assignNewOption()">Save</button>
+                <button class="btn btn-warning" (click)="assignNewOptionModal.hide()">Cancel</button>
             </div>
 
         </div>

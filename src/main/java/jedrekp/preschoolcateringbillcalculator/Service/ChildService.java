@@ -1,11 +1,11 @@
 package jedrekp.preschoolcateringbillcalculator.Service;
 
-import jedrekp.preschoolcateringbillcalculator.DTO.AssignedDietDTO;
-import jedrekp.preschoolcateringbillcalculator.Entity.AssignedDiet;
+import jedrekp.preschoolcateringbillcalculator.DTO.AssignedOptionDTO;
+import jedrekp.preschoolcateringbillcalculator.Entity.AssignedOption;
+import jedrekp.preschoolcateringbillcalculator.Entity.CateringOption;
 import jedrekp.preschoolcateringbillcalculator.Entity.Child;
-import jedrekp.preschoolcateringbillcalculator.Entity.Diet;
 import jedrekp.preschoolcateringbillcalculator.Entity.PreschoolGroup;
-import jedrekp.preschoolcateringbillcalculator.Repository.AssignedDietRepository;
+import jedrekp.preschoolcateringbillcalculator.Repository.AssignedOptionRepository;
 import jedrekp.preschoolcateringbillcalculator.Repository.ChildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +23,10 @@ public class ChildService {
     ChildRepository childRepository;
 
     @Autowired
-    AssignedDietRepository assignedDietRepository;
+    AssignedOptionRepository assignedOptionRepository;
 
     @Autowired
-    DietService dietService;
+    CateringOptionService cateringOptionService;
 
     @Autowired
     PreschoolGroupService preschoolGroupService;
@@ -72,37 +72,37 @@ public class ChildService {
     }
 
     @Transactional
-    public Child assignDiet(Long childId, AssignedDietDTO assignedDietDTO) {
+    public Child assignCateringOption(Long childId, AssignedOptionDTO assignedOptionDTO) {
         Child child = findByIdWithAllDetails(childId);
-        Diet diet = dietService.findById(assignedDietDTO.getDietId());
-        if (diet.isDisabled()) {
-            throw new IllegalArgumentException("Chosen diet :  " + diet.getDietName() + " is disabled." +
+        CateringOption cateringOption = cateringOptionService.findById(assignedOptionDTO.getCateringOptionId());
+        if (cateringOption.isDisabled()) {
+            throw new IllegalArgumentException("Catering Option:  " + cateringOption.getOptionName() + " is disabled." +
                     " It can no longer be assigned");
         }
-        getAssignedDietByEffectiveDateIfExistsAlready(child, assignedDietDTO.getEffectiveDate())
-                .ifPresentOrElse(assignedDiet -> assignedDiet.setDiet(diet),
+        getAssignedOptionByEffectiveDateIfExistsAlready(child, assignedOptionDTO.getEffectiveDate())
+                .ifPresentOrElse(assignedOption -> assignedOption.setCateringOption(cateringOption),
                         () -> {
-                            AssignedDiet assignedDiet = new AssignedDiet(
-                                    assignedDietDTO.getEffectiveDate(), child, diet);
-                            child.getAssignedDiets().add(assignedDiet);
-                            assignedDietRepository.save(assignedDiet);
+                            AssignedOption assignedOption = new AssignedOption(
+                                    assignedOptionDTO.getEffectiveDate(), child, cateringOption);
+                            child.getAssignedOptions().add(assignedOption);
+                            assignedOptionRepository.save(assignedOption);
                         });
         return child;
     }
 
     @Transactional
-    public void removeAssignedDiet(Long childId, Long assignedDietId) {
+    public void removeAssignedOption(Long childId, Long assignedOptionId) {
         Child child = findById(childId);
-        AssignedDiet assignedDiet = assignedDietRepository.findById(assignedDietId)
+        AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
                 .orElseThrow(EntityNotFoundException::new);
-        child.getAssignedDiets().remove(assignedDiet);
-        assignedDietRepository.delete(assignedDiet);
+        child.getAssignedOptions().remove(assignedOption);
+        assignedOptionRepository.delete(assignedOption);
     }
 
-    private Optional<AssignedDiet> getAssignedDietByEffectiveDateIfExistsAlready(Child child, LocalDate effectiveDate) {
-        return child.getAssignedDiets()
+    private Optional<AssignedOption> getAssignedOptionByEffectiveDateIfExistsAlready(Child child, LocalDate effectiveDate) {
+        return child.getAssignedOptions()
                 .stream()
-                .filter(assignedDiet -> assignedDiet.getEffectiveDate().equals(effectiveDate))
+                .filter(assignedOption -> assignedOption.getEffectiveDate().equals(effectiveDate))
                 .findAny();
     }
 

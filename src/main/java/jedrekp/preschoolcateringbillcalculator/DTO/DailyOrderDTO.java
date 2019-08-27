@@ -15,6 +15,6 @@ import java.time.LocalDate;
 public class DailyOrderDTO {
 
     private LocalDate date;
-    private String dietName;
-    private BigDecimal dietPrice;
+    private String cateringOptionName;
+    private BigDecimal cateringOptionPrice;
 }

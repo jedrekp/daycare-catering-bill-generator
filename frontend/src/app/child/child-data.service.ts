@@ -25,20 +25,20 @@ export class ChildDataService {
     return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}/preschoolGroups/${groupId}`, null)
   }
 
-  assignNewDietToChild(childId: number, dietId: number, effectiveDate: string) {
-    return this.httpClient.post<Child>(`http://localhost:8081/children/${childId}/assignedDiets`,
-      new AssignedDietDTO(effectiveDate, dietId))
+  assignNewOptionToChild(childId: number, assignedOptionId: number, effectiveDate: string) {
+    return this.httpClient.post<Child>(`http://localhost:8081/children/${childId}/assignedOptions`,
+      new AssignedOptionDTO(effectiveDate, assignedOptionId))
   }
 
-  removeAssignedDietFromChild(childId: number, assignedDietId: number) {
+  removeAssignedOptionFromChild(childId: number, assignedOptionId: number) {
     return this.httpClient.delete(
-      `http://localhost:8081/children/${childId}/assignedDiets/${assignedDietId}`)
+      `http://localhost:8081/children/${childId}/assignedOptions/${assignedOptionId}`)
   }
 
 }
 
-class AssignedDietDTO {
+class AssignedOptionDTO {
   constructor(
     private effectiveDate: string,
-    private dietId: number) { }
+    private cateringOptionId: number) { }
 }

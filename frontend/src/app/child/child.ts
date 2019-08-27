@@ -1,5 +1,5 @@
 import { PreschoolGroup } from '../preschool-group/preschool-group';
-import { Diet } from '../diet/Diet';
+import { CateringOption } from '../catering-option/CateringOption';
 
 export class Child {
 
@@ -8,15 +8,15 @@ export class Child {
         public firstName: string,
         public lastName: string,
         public preschoolGroup: PreschoolGroup = null,
-        public assignedDiets: AssignedDiet[] = []
+        public assignedOptions: AssignedOption[] = []
     ) { }
 }
 
-export class AssignedDiet {
+export class AssignedOption {
 
     constructor(
         public id: number,
         public effectiveDate: Date,
-        public diet: Diet
+        public cateringOption: CateringOption
     ) { }
 }

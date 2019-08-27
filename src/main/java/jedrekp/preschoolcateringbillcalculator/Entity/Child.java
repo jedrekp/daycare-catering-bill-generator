@@ -37,7 +37,7 @@ public class Child {
     private PreschoolGroup preschoolGroup;
 
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JsonIgnoreProperties({"child", "diet.children"})
-    private Set<AssignedDiet> assignedDiets = new HashSet<>();
+    @JsonIgnoreProperties({"child", "cateringOption.children"})
+    private Set<AssignedOption> assignedOptions = new HashSet<>();
 
 }

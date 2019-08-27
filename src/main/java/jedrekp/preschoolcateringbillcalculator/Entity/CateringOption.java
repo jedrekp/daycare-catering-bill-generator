@@ -8,18 +8,18 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "diet")
+@Table(name = "catering_option")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Diet {
+public class CateringOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "diet_name", unique = true)
-    private String dietName;
+    @Column(name = "option_name", unique = true)
+    private String optionName;
 
     @Column(name = "daily_cost")
     private BigDecimal dailyCost;

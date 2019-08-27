@@ -15,7 +15,7 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     Collection<Child> findByPreschoolGroup_Id(Long preschoolGroupId);
 
     @Query("SELECT c FROM Child c LEFT JOIN FETCH c.preschoolGroup " +
-            "LEFT JOIN FETCH c.assignedDiets ad  LEFT JOIN FETCH ad.diet " +
+            "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
             "WHERE c.id = :childId")
     Optional<Child> findByIdWithAllDetails(@Param("childId") Long childId);
 }

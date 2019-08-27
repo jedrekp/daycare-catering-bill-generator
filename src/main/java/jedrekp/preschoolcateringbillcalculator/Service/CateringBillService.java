@@ -2,9 +2,9 @@ package jedrekp.preschoolcateringbillcalculator.Service;
 
 import jedrekp.preschoolcateringbillcalculator.DTO.DailyOrderDTO;
 import jedrekp.preschoolcateringbillcalculator.DTO.MonthlyCateringBillDTO;
+import jedrekp.preschoolcateringbillcalculator.Entity.CateringOption;
 import jedrekp.preschoolcateringbillcalculator.Entity.Child;
 import jedrekp.preschoolcateringbillcalculator.Entity.DailyAttendance;
-import jedrekp.preschoolcateringbillcalculator.Entity.Diet;
 import jedrekp.preschoolcateringbillcalculator.Repository.DailyAttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class CateringBillService {
     ChildService childService;
 
     @Autowired
-    DietService dietService;
+    CateringOptionService cateringOptionService;
 
     @Transactional(readOnly = true)
     public MonthlyCateringBillDTO generateCateringBill(Long childId, Month month, Integer year) {
@@ -36,14 +36,16 @@ public class CateringBillService {
         List<DailyAttendance> dailyAttendances = dailyAttendanceRepository.findByChildIdForSpecificMonth(childId, month.getValue(), year);
 
         for (DailyAttendance dailyAttendance : dailyAttendances) {
-            Diet currentlyAssignedDiet = dietService.findDietCurrentlyAssignedToChild(childId, dailyAttendance.getDate());
+            CateringOption currentlyAssignedCateringOption = cateringOptionService
+                    .findOptionInEffectForChild(childId, dailyAttendance.getDate());
             cateringBill.getDailyOrders()
-                    .add(new DailyOrderDTO(dailyAttendance.getDate(), currentlyAssignedDiet.getDietName(), currentlyAssignedDiet.getDailyCost()));
+                    .add(new DailyOrderDTO(dailyAttendance.getDate(),
+                            currentlyAssignedCateringOption.getOptionName(), currentlyAssignedCateringOption.getDailyCost()));
         }
 
         BigDecimal totalMonthlyCost = cateringBill.getDailyOrders()
                 .stream()
-                .map(DailyOrderDTO::getDietPrice)
+                .map(DailyOrderDTO::getCateringOptionPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         cateringBill.setTotalCost(totalMonthlyCost);

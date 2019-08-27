@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
 import { ChildDataService } from '../child-data.service';
-import { Child, AssignedDiet } from '../child';
+import { Child, AssignedOption } from '../child';
 import { PreschoolGroup } from 'src/app/preschool-group/preschool-group';
 import { PreschoolGroupDataService } from 'src/app/preschool-group/preschool-group-data.service';
 import { ChildCreateEditComponent } from '../child-create-edit/child-create-edit.component';
-import { Diet } from 'src/app/diet/Diet';
+import { CateringOption } from 'src/app/catering-option/CateringOption';
 import { DatePipe } from '@angular/common';
-import { DietDataService } from 'src/app/diet/diet-data.service';
+import { CateringOptionDataService } from 'src/app/catering-option/catering-option-data.service';
 
 @Component({
   selector: 'app-child-page',
@@ -21,9 +21,9 @@ export class ChildPageComponent implements OnInit {
 
   private child: Child
   private preschoolGroups: PreschoolGroup[]
-  private dietOptions: Diet[]
+  private cateringOptions: CateringOption[]
   private newGroup: PreschoolGroup
-  private newDiet: Diet
+  private newOption: CateringOption
   private effectiveDate: Date
 
 
@@ -33,13 +33,13 @@ export class ChildPageComponent implements OnInit {
     private datePipe: DatePipe,
     private childDataService: ChildDataService,
     private preschoolGroupDataService: PreschoolGroupDataService,
-    private dietDataService: DietDataService
+    private cateringOptionDataService: CateringOptionDataService
   ) { }
 
   ngOnInit() {
     this.retrieveChild(this.route.snapshot.params['childId'])
     this.retrievePreschoolGroups()
-    this.retrieveDietOptions()
+    this.retrieveCateringOptions()
     this.effectiveDate = this.setCurrentDateOrMondayIfWeekend()
   }
 
@@ -47,12 +47,12 @@ export class ChildPageComponent implements OnInit {
     this.childDataService.retrieveChild(childId).subscribe(
       child => {
         this.child = child
-        this.sortAssignedDietsbyEffectiveDate(this.child.assignedDiets)
+        this.sortAssignedOptionsbyEffectiveDate(this.child.assignedOptions)
       })
   }
 
-  sortAssignedDietsbyEffectiveDate(assignedDiets: AssignedDiet[]) {
-    assignedDiets.sort((val1, val2) => {
+  sortAssignedOptionsbyEffectiveDate(assignedOptions: AssignedOption[]) {
+    assignedOptions.sort((val1, val2) => {
       return <any>new Date(val2.effectiveDate) - <any>new
         Date(val1.effectiveDate)
     })
@@ -66,11 +66,11 @@ export class ChildPageComponent implements OnInit {
       })
   }
 
-  retrieveDietOptions() {
-    this.dietDataService.retrieveAllDiets().subscribe(
-      diets => {
-        this.dietOptions = diets
-        this.newDiet = diets[0]
+  retrieveCateringOptions() {
+    this.cateringOptionDataService.retrieveAllCateringOptions().subscribe(
+      cateringOptions => {
+        this.cateringOptions = cateringOptions
+        this.newOption = cateringOptions[0]
       })
   }
 
@@ -100,21 +100,21 @@ export class ChildPageComponent implements OnInit {
     this.childDataService.assignToPreschoolGroup(this.child.id, this.newGroup.id).subscribe(
       child => {
         this.child = child
-        this.sortAssignedDietsbyEffectiveDate(this.child.assignedDiets)
+        this.sortAssignedOptionsbyEffectiveDate(this.child.assignedOptions)
       })
   }
 
-  assignNewDiet() {
-    this.childDataService.assignNewDietToChild(this.child.id, this.newDiet.id,
+  assignNewOption() {
+    this.childDataService.assignNewOptionToChild(this.child.id, this.newOption.id,
       this.datePipe.transform(this.effectiveDate, 'yyyy/MM/dd')).subscribe(
         child => {
           this.child = child
-          this.sortAssignedDietsbyEffectiveDate(this.child.assignedDiets)
+          this.sortAssignedOptionsbyEffectiveDate(this.child.assignedOptions)
         })
   }
 
-  removeAssignedDiet(assignedDietId: number) {
-    this.childDataService.removeAssignedDietFromChild(this.child.id, assignedDietId).subscribe(
+  removeAssignedOption(assignedOptionId: number) {
+    this.childDataService.removeAssignedOptionFromChild(this.child.id, assignedOptionId).subscribe(
       response => {
         this.retrieveChild(this.child.id);
       })

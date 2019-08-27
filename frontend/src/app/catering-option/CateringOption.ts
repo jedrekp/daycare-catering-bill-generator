@@ -1,7 +1,7 @@
-export class Diet {
+export class CateringOption {
     constructor(
         public id: number,
-        public dietName: string,
+        public optionName: string,
         public dailyCost: number,
         public disabled: boolean
     ) { }

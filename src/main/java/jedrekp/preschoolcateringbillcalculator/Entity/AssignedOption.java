@@ -8,13 +8,13 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "assigned_diet",
+@Table(name = "assigned_option",
         uniqueConstraints = @UniqueConstraint(columnNames = {"effective_date", "child_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
 
-public class AssignedDiet {
+public class AssignedOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +30,13 @@ public class AssignedDiet {
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
-    @JoinColumn(name = "diet_id")
-    private Diet diet;
+    @JoinColumn(name = "catering_option_id")
+    private CateringOption cateringOption;
 
-    public AssignedDiet(LocalDate effectiveDate, Child child, Diet diet) {
+    public AssignedOption(LocalDate effectiveDate, Child child, CateringOption cateringOption) {
         this.effectiveDate = effectiveDate;
         this.child = child;
-        this.diet = diet;
+        this.cateringOption = cateringOption;
     }
 
 }
