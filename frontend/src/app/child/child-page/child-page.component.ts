@@ -110,7 +110,14 @@ export class ChildPageComponent implements OnInit {
         child => {
           this.child = child
           this.sortAssignedDietsbyEffectiveDate(this.child.assignedDiets)
-        }
-      )
+        })
   }
+
+  removeAssignedDiet(assignedDietId: number) {
+    this.childDataService.removeAssignedDietFromChild(this.child.id, assignedDietId).subscribe(
+      response => {
+        this.retrieveChild(this.child.id);
+      })
+  }
+
 }

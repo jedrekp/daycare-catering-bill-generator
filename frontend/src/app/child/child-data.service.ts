@@ -30,6 +30,11 @@ export class ChildDataService {
       new AssignedDietDTO(effectiveDate, dietId))
   }
 
+  removeAssignedDietFromChild(childId: number, assignedDietId: number) {
+    return this.httpClient.delete(
+      `http://localhost:8081/children/${childId}/assignedDiets/${assignedDietId}`)
+  }
+
 }
 
 class AssignedDietDTO {

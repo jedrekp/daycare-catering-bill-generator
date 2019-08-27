@@ -59,4 +59,10 @@ public class ChildController {
         return new ResponseEntity<>(childService.assignDiet(childId, assignedDietDTO), HttpStatus.OK);
     }
 
+    @DeleteMapping("/children/{childId}/assignedDiets/{assignedDietId}")
+    public ResponseEntity<Child> removeAssignedDietFromChild(@PathVariable Long childId, @PathVariable
+            Long assignedDietId) {
+        childService.removeAssignedDiet(childId, assignedDietId);
+        return ResponseEntity.noContent().build();
+    }
 }

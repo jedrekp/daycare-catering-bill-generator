@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface AssignedDietRepository extends JpaRepository<AssignedDiet, Long> {
 
     Optional<AssignedDiet> findByEffectiveDateAndChild_Id(LocalDate effectiveDate, Long childId);
+
 }

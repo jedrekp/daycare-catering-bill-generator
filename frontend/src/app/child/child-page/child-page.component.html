@@ -36,14 +36,19 @@
     <table class="table table-striped text-center">
         <thead>
             <tr>
-                <th>Effective from:</th>
-                <th>Diet Name:</th>
+                <th>Effective from</th>
+                <th>Diet Name</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let assignedDiet of child.assignedDiets">
                 <td>{{assignedDiet.effectiveDate}}</td>
                 <td>{{assignedDiet.diet.dietName}}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-danger"
+                        (click)="removeAssignedDiet(assignedDiet.id)">Delete</button>
+                </td>
             </tr>
         </tbody>
     </table>

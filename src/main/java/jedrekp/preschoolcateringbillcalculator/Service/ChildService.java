@@ -86,10 +86,20 @@ public class ChildService {
         return child;
     }
 
+    @Transactional
+    public void removeAssignedDiet(Long childId, Long assignedDietId) {
+        Child child = findById(childId);
+        AssignedDiet assignedDiet = assignedDietRepository.findById(assignedDietId)
+                .orElseThrow(EntityNotFoundException::new);
+        child.getAssignedDiets().remove(assignedDiet);
+        assignedDietRepository.delete(assignedDiet);
+    }
+
     private Optional<AssignedDiet> getAssignedDietByEffectiveDateIfExistsAlready(Child child, LocalDate effectiveDate) {
         return child.getAssignedDiets()
                 .stream()
                 .filter(assignedDiet -> assignedDiet.getEffectiveDate().equals(effectiveDate))
                 .findAny();
     }
+
 }
