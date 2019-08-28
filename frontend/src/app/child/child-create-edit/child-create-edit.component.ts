@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 
 import { Child } from '../child';
 import { ChildDataService } from '../child-data.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-child-create-edit',
@@ -15,6 +16,7 @@ export class ChildCreateEditComponent implements OnInit {
   @Input() private child: Child
   private onClose: Subject<number>
   private header: string
+  private childBasicInfoForm: FormGroup
 
   constructor(
     private bsModalRef: BsModalRef,
@@ -28,21 +30,31 @@ export class ChildCreateEditComponent implements OnInit {
     } else {
       this.header = `Edit child #${this.child.id}`
     }
+    this.childBasicInfoForm = new FormGroup({
+      firstName: new FormControl(this.child.firstName, [Validators.required, Validators.maxLength(25)]),
+      lastName: new FormControl(this.child.lastName, [Validators.required, Validators.maxLength(25)])
+    })
   }
 
-  public onSave() {
-    if (this.child.id == -1) {
-      this.childDataService.createChild(this.child).subscribe(
-        child => {
-          this.bsModalRef.hide()
-          this.onClose.next(child.id)
-        })
-    } else {
-      this.childDataService.editChild(this.child.id, this.child).subscribe(
-        child => {
-          this.bsModalRef.hide()
-          this.onClose.next(this.child.id)
-        })
+  public onSubmit() {
+    if (this.childBasicInfoForm.valid) {
+      let childToSubmit = new Child(
+        this.child.id, this.childBasicInfoForm.get('firstName').value,
+        this.childBasicInfoForm.get('lastName').value
+      )
+      if (this.child.id == -1) {
+        this.childDataService.createChild(childToSubmit).subscribe(
+          child => {
+            this.bsModalRef.hide()
+            this.onClose.next(child.id)
+          })
+      } else {
+        this.childDataService.editChild(this.child.id, childToSubmit).subscribe(
+          child => {
+            this.bsModalRef.hide()
+            this.onClose.next(this.child.id)
+          })
+      }
     }
   }
 

@@ -1,15 +1,41 @@
-<div class="modal-top-20">
-  <div class="modal-header">
-    <h4 class="modal-title">{{header}}</h4>
-  </div>
+<div class="modal-header">
+  <h4 class="modal-title">{{header}}</h4>
+</div>
+
+<form novalidate [formGroup]="childBasicInfoForm" (ngSubmit)="onSubmit()">
 
   <div class="modal-body">
-    First Name <input type="text" class="form-control" [(ngModel)]="child.firstName" />
-    Last Name <input type="tex" class="form-control" [(ngModel)]="child.lastName" />
+
+    <div class="form-group">
+      <label>First name</label>
+      <input type="text" class="form-control" formControlName="firstName" />
+    </div>
+    <alert
+      *ngIf="childBasicInfoForm.get('firstName').hasError('required') && childBasicInfoForm.get('firstName').touched"
+      type="danger" class="mt-1">
+      First name <strong>cannot</strong> be empty.
+    </alert>
+    <alert *ngIf="childBasicInfoForm.get('firstName').hasError('maxlength')" type="danger" class="mt-1">
+      First name <strong>cannot</strong> exceed <strong>25</strong> characters.
+    </alert>
+
+    <div class="form-group">
+      <label>Last name</label>
+      <input type="text" class="form-control" formControlName="lastName" />
+    </div>
+    <alert *ngIf="childBasicInfoForm.get('lastName').hasError('required') && childBasicInfoForm.get('lastName').touched"
+      type="danger" class="mt-1">
+      Last name <strong>cannot</strong> be empty.
+    </alert>
+    <alert *ngIf="childBasicInfoForm.get('lastName').hasError('maxlength')" type="danger" class="mt-1">
+      Last name <strong>cannot</strong> exceed <strong>25</strong> characters.
+    </alert>
+
   </div>
 
   <div class="modal-footer">
-    <button class="btn btn-warning" (click)="onSave()">Save</button>
-    <button class="btn btn-warning" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn btn-info">Save</button>
+    <button type="button" class="btn btn-warning" (click)="onCancel()">Cancel</button>
   </div>
-</div>
+
+</form>
