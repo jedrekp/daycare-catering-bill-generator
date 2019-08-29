@@ -37,7 +37,7 @@ export class ChildAssignOptionComponent implements OnInit {
   }
 
   retrieveCateringOptions() {
-    this.cateringOptionDataService.retrieveAllCateringOptions().subscribe(
+    this.cateringOptionDataService.retrieveAllActiveCateringOptions().subscribe(
       cateringOptions => {
         this.cateringOptions = cateringOptions
         this.assignCateringOptionForm.patchValue({ cateringOption: cateringOptions[0] })

@@ -7,10 +7,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository
 public interface CateringOptionRepository extends JpaRepository<CateringOption, Long> {
+
+    Collection<CateringOption> findAllByDisabled(boolean disabled);
 
     @Query(value = "SELECT co.* FROM assigned_option ao " +
             "INNER JOIN catering_option co ON co.id = ao.catering_option_id " +

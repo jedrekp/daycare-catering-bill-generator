@@ -31,4 +31,8 @@ public class CateringOptionController {
         return new ResponseEntity<>(cateringOptionService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/cateringOptions", params = "disabled")
+    public ResponseEntity<Collection<CateringOption>> getAllDietsByDisabled(@RequestParam boolean disabled) {
+        return new ResponseEntity<>(cateringOptionService.findAllByDisabled(disabled), HttpStatus.OK);
+    }
 }

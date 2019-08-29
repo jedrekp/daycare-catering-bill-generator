@@ -29,6 +29,11 @@ public class CateringOptionService {
     }
 
     @Transactional(readOnly = true)
+    public Collection<CateringOption> findAllByDisabled(boolean disabled) {
+        return cateringOptionRepository.findAllByDisabled(disabled);
+    }
+
+    @Transactional(readOnly = true)
     public CateringOption findOptionInEffectForChild(Long childId, LocalDate date) {
         return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
                 .orElseThrow(EntityNotFoundException::new);

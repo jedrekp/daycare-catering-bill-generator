@@ -54,8 +54,8 @@ public class ChildController {
     }
 
     @PostMapping("/children/{childId}/assignedOptions")
-    public ResponseEntity<Child> assignNewCateringOption(@PathVariable Long childId,
-                                                         @RequestBody AssignedOptionDTO assignedOptionDTO) {
+    public ResponseEntity<Child> assignNewCateringOptionToChild(@PathVariable Long childId,
+                                                                @RequestBody AssignedOptionDTO assignedOptionDTO) {
         return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
     }
 
