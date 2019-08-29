@@ -3,10 +3,10 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
 import { ChildDataService } from '../child-data.service';
 import { Child, AssignedOption } from '../child';
-import { PreschoolGroup } from 'src/app/preschool-group/preschool-group';
-import { PreschoolGroupDataService } from 'src/app/preschool-group/preschool-group-data.service';
 import { ChildCreateEditComponent } from '../child-create-edit/child-create-edit.component';
 import { ChildAssignOptionComponent } from '../child-assign-option/child-assign-option.component';
+import { DaycareGroup } from 'src/app/daycare-group/daycare-group';
+import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-data.service';
 
 @Component({
   selector: 'app-child-page',
@@ -18,19 +18,19 @@ export class ChildPageComponent implements OnInit {
   private modalRef: BsModalRef
 
   private child: Child
-  private preschoolGroups: PreschoolGroup[]
-  private newGroup: PreschoolGroup
+  private daycareGroups: DaycareGroup[]
+  private newGroup: DaycareGroup
 
   constructor(
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private childDataService: ChildDataService,
-    private preschoolGroupDataService: PreschoolGroupDataService,
+    private daycaregroupDataService: DaycareGroupDataService,
   ) { }
 
   ngOnInit() {
     this.retrieveChild(this.route.snapshot.params['childId'])
-    this.retrievePreschoolGroups()
+    this.retrieveDaycareGroups()
   }
 
   retrieveChild(childId: number) {
@@ -43,16 +43,15 @@ export class ChildPageComponent implements OnInit {
 
   sortAssignedOptionsbyEffectiveDate(assignedOptions: AssignedOption[]) {
     assignedOptions.sort((val1, val2) => {
-      return <any>new Date(val2.effectiveDate) - <any>new
-        Date(val1.effectiveDate)
+      return <any>new Date(val2.effectiveDate) - <any>new Date(val1.effectiveDate)
     })
   }
 
-  retrievePreschoolGroups() {
-    this.preschoolGroupDataService.retrieveGroups().subscribe(
-      preschoolGroups => {
-        this.preschoolGroups = preschoolGroups
-        this.newGroup = preschoolGroups[0]
+  retrieveDaycareGroups() {
+    this.daycaregroupDataService.retrieveGroups().subscribe(
+      daycareGroups => {
+        this.daycareGroups = daycareGroups
+        this.newGroup = daycareGroups[0]
       })
   }
 
@@ -69,7 +68,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   assignToNewGroup() {
-    this.childDataService.assignToPreschoolGroup(this.child.id, this.newGroup.id).subscribe(
+    this.childDataService.assignToGroup(this.child.id, this.newGroup.id).subscribe(
       child => {
         this.child = child
         this.sortAssignedOptionsbyEffectiveDate(this.child.assignedOptions)

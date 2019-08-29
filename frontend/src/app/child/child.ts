@@ -1,5 +1,5 @@
-import { PreschoolGroup } from '../preschool-group/preschool-group';
 import { CateringOption } from '../catering-option/CateringOption';
+import { DaycareGroup } from '../daycare-group/daycare-group';
 
 export class Child {
 
@@ -7,7 +7,7 @@ export class Child {
         public id: number,
         public firstName: string,
         public lastName: string,
-        public preschoolGroup: PreschoolGroup = null,
+        public daycareGroup: DaycareGroup = null,
         public assignedOptions: AssignedOption[] = []
     ) { }
 }

@@ -21,8 +21,8 @@ export class ChildDataService {
     return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}`, child)
   }
 
-  assignToPreschoolGroup(childId: number, groupId: number) {
-    return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}/preschoolGroups/${groupId}`, null)
+  assignToGroup(childId: number, groupId: number) {
+    return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}/daycareGroups/${groupId}`, null)
   }
 
   assignNewOptionToChild(childId: number, assignedOptionId: number, effectiveDate: string) {

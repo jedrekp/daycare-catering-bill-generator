@@ -14,10 +14,10 @@
                 <td>{{child.lastName}}</td>
             </tr>
             <tr>
-                <th>Preschool Group:</th>
+                <th>Daycare Group:</th>
                 <td>
-                    <span *ngIf="child.preschoolGroup">{{child.preschoolGroup.groupName}} </span>
-                    <span *ngIf="!child.preschoolGroup">unassigned</span>
+                    <span *ngIf="child.daycareGroup">{{child.daycareGroup.groupName}} </span>
+                    <span *ngIf="!child.daycareGroup">unassigned</span>
                 </td>
             </tr>
         </tbody>
@@ -72,8 +72,8 @@
             </div>
 
             <div class="modal-body">
-                Preschool group <select class="custom-select" [(ngModel)]="newGroup">
-                    <option *ngFor="let group of preschoolGroups" [ngValue]="group">
+                Daycare group <select class="custom-select" [(ngModel)]="newGroup">
+                    <option *ngFor="let group of daycareGroups" [ngValue]="group">
                         {{group.groupName}}
                     </option>
                 </select>

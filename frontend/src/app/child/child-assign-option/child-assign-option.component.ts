@@ -12,6 +12,7 @@ import { FormGroup, FormControl } from '@angular/forms';
   templateUrl: './child-assign-option.component.html',
   styleUrls: ['./child-assign-option.component.css']
 })
+
 export class ChildAssignOptionComponent implements OnInit {
 
   @Input() private childId: number
@@ -28,17 +29,18 @@ export class ChildAssignOptionComponent implements OnInit {
 
   ngOnInit() {
     this.onClose = new Subject<number>()
-    this.retrieveCateringOptions()
     this.assignCateringOptionForm = new FormGroup({
       effectiveDate: new FormControl(this.setCurrentDateOrMondayIfWeekend()),
       cateringOption: new FormControl()
     })
+    this.retrieveCateringOptions()
   }
 
   retrieveCateringOptions() {
     this.cateringOptionDataService.retrieveAllCateringOptions().subscribe(
       cateringOptions => {
         this.cateringOptions = cateringOptions
+        this.assignCateringOptionForm.patchValue({ cateringOption: cateringOptions[0] })
       })
   }
 
@@ -53,10 +55,11 @@ export class ChildAssignOptionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.assignCateringOptionForm.get('cateringOption').value)
     this.childDataService.assignNewOptionToChild(
-      this.childId, this.assignCateringOptionForm.get('cateringOption').value.id,
-      this.datePipe.transform(this.assignCateringOptionForm.get('effectiveDate').value, 'yyyy/MM/dd')).subscribe(
+      this.childId,
+      this.assignCateringOptionForm.get('cateringOption').value.id,
+      this.datePipe.transform(this.assignCateringOptionForm.get('effectiveDate').value, 'yyyy/MM/dd'))
+      .subscribe(
         child => {
           this.bsModalRef.hide()
           this.onClose.next(child.id)

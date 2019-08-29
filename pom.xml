@@ -10,8 +10,8 @@
     <groupId>jedrekp</groupId>
     <artifactId>preschool-catering-bill-calculator</artifactId>
     <version>1.0</version>
-    <name>preschool-catering-bill-calculator</name>
-    <description>App to calculate monthly catering bills for children in preschool based on the chosen catering option,
+    <name>daycare-catering-bill-generator</name>
+    <description>App to calculate monthly catering bills for children in daycare based on the chosen catering option,
         and then send these bills to parents via email
     </description>
 
