@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h4 class="modal-title">Assign new catering option</h4>
+</div>
+
+<form novalidate [formGroup]="assignCateringOptionForm" (ngSubmit)="onSubmit()">
+
+    <div class="modal-body">
+
+        <div class="form-group">
+            <label>Effective date</label>
+            <input #datepickerMDY="bsDatepicker" bsDatepicker class="form-control" formControlName="effectiveDate"
+                [bsConfig]="{dateInputFormat: 'YYYY/MM/DD', containerClass:'theme-default'}" [daysDisabled]="[6,0]"
+                readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Catering option</label>
+            <select class="custom-select" formControlName="cateringOption">
+                <option *ngFor="let cateringOption of cateringOptions" [ngValue]="cateringOption">
+                    {{cateringOption.optionName}}
+                </option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-warning">Save</button>
+        <button type="button" class="btn btn-warning" (click)="onCancel()">Cancel</button>
+    </div>
+
+</form>

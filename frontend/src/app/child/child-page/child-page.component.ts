@@ -6,9 +6,7 @@ import { Child, AssignedOption } from '../child';
 import { PreschoolGroup } from 'src/app/preschool-group/preschool-group';
 import { PreschoolGroupDataService } from 'src/app/preschool-group/preschool-group-data.service';
 import { ChildCreateEditComponent } from '../child-create-edit/child-create-edit.component';
-import { CateringOption } from 'src/app/catering-option/CateringOption';
-import { DatePipe } from '@angular/common';
-import { CateringOptionDataService } from 'src/app/catering-option/catering-option-data.service';
+import { ChildAssignOptionComponent } from '../child-assign-option/child-assign-option.component';
 
 @Component({
   selector: 'app-child-page',
@@ -21,26 +19,18 @@ export class ChildPageComponent implements OnInit {
 
   private child: Child
   private preschoolGroups: PreschoolGroup[]
-  private cateringOptions: CateringOption[]
   private newGroup: PreschoolGroup
-  private newOption: CateringOption
-  private effectiveDate: Date
-
 
   constructor(
     private route: ActivatedRoute,
     private modalService: BsModalService,
-    private datePipe: DatePipe,
     private childDataService: ChildDataService,
     private preschoolGroupDataService: PreschoolGroupDataService,
-    private cateringOptionDataService: CateringOptionDataService
   ) { }
 
   ngOnInit() {
     this.retrieveChild(this.route.snapshot.params['childId'])
     this.retrievePreschoolGroups()
-    this.retrieveCateringOptions()
-    this.effectiveDate = this.setCurrentDateOrMondayIfWeekend()
   }
 
   retrieveChild(childId: number) {
@@ -66,24 +56,6 @@ export class ChildPageComponent implements OnInit {
       })
   }
 
-  retrieveCateringOptions() {
-    this.cateringOptionDataService.retrieveAllCateringOptions().subscribe(
-      cateringOptions => {
-        this.cateringOptions = cateringOptions
-        this.newOption = cateringOptions[0]
-      })
-  }
-
-  setCurrentDateOrMondayIfWeekend(): Date {
-    let date = new Date();
-    if (date.getDay() == 0) {
-      date.setDate(date.getDate() + 1)
-    } else if (date.getDay() == 6) {
-      date.setDate(date.getDate() + 2)
-    }
-    return date
-  }
-
   openEditChildModal() {
     let initialState = { child: new Child(this.child.id, this.child.firstName, this.child.lastName) };
     this.modalRef = this.modalService.show(ChildCreateEditComponent,
@@ -104,13 +76,16 @@ export class ChildPageComponent implements OnInit {
       })
   }
 
-  assignNewOption() {
-    this.childDataService.assignNewOptionToChild(this.child.id, this.newOption.id,
-      this.datePipe.transform(this.effectiveDate, 'yyyy/MM/dd')).subscribe(
-        child => {
-          this.child = child
-          this.sortAssignedOptionsbyEffectiveDate(this.child.assignedOptions)
-        })
+  openAssignNewOptionModal() {
+    let initialState = { childId: this.child.id }
+    this.modalRef = this.modalService.show(ChildAssignOptionComponent,
+      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+    this.modalRef.content.onClose.subscribe(
+      childId => {
+        if (childId) {
+          this.retrieveChild(childId)
+        }
+      })
   }
 
   removeAssignedOption(assignedOptionId: number) {

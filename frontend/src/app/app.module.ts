@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { ChildCreateEditComponent } from './child/child-create-edit/child-create-edit.component';
 import { MenuBarComponent } from './menu-bar/menu-bar.component';
 import { ChildPageComponent } from './child/child-page/child-page.component';
+import { ChildAssignOptionComponent } from './child/child-assign-option/child-assign-option.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { ChildPageComponent } from './child/child-page/child-page.component';
     ChildCreateEditComponent,
     MenuBarComponent,
     ChildPageComponent,
+    ChildAssignOptionComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +36,8 @@ import { ChildPageComponent } from './child/child-page/child-page.component';
     AlertModule.forRoot()
   ],
   entryComponents: [
-    ChildCreateEditComponent
+    ChildCreateEditComponent,
+    ChildAssignOptionComponent
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

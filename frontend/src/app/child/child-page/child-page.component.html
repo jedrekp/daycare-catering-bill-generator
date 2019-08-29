@@ -53,7 +53,7 @@
         </tbody>
     </table>
 
-    <button class="btn btn-sm btn-info mx-auto float-right" (click)="assignNewOptionModal.show()">
+    <button class="btn btn-sm btn-info mx-auto float-right" (click)="openAssignNewOptionModal()">
         Assign new option
     </button>
 
@@ -82,37 +82,6 @@
             <div class=" modal-footer">
                 <button class="btn btn-warning" (click)="assignNewGroupModal.hide(); assignToNewGroup()">Save</button>
                 <button class="btn btn-warning" (click)="assignNewGroupModal.hide()">Cancel</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-<div bsModal #assignNewOptionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
-    [config]="{backdrop: 'static'}">
-
-    <div class="modal-dialog modal-top-20 modal-sm">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h4 class="modal-title">Assign new catering option</h4>
-            </div>
-
-            <div class="modal-body">
-                Effective date <input #datepickerMDY="bsDatepicker" bsDatepicker class="form-control"
-                    [bsConfig]="{dateInputFormat: 'YYYY/MM/DD', containerClass:'theme-default'}" [daysDisabled]="[6,0]"
-                    [(ngModel)]="effectiveDate" readonly>
-                Catering option <select class="custom-select" [(ngModel)]="newOption">
-                    <option *ngFor="let cateringOption of cateringOptions" [ngValue]="cateringOption">
-                        {{cateringOption.optionName}}
-                    </option>
-                </select>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-warning" (click)="assignNewOptionModal.hide(); assignNewOption()">Save</button>
-                <button class="btn btn-warning" (click)="assignNewOptionModal.hide()">Cancel</button>
             </div>
 
         </div>

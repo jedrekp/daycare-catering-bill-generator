@@ -1,0 +1,70 @@
+import { Component, OnInit, Input } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs';
+import { ChildDataService } from '../child-data.service';
+import { CateringOption } from 'src/app/catering-option/CateringOption';
+import { CateringOptionDataService } from 'src/app/catering-option/catering-option-data.service';
+import { DatePipe } from '@angular/common';
+import { FormGroup, FormControl } from '@angular/forms';
+
+@Component({
+  selector: 'app-child-assign-option',
+  templateUrl: './child-assign-option.component.html',
+  styleUrls: ['./child-assign-option.component.css']
+})
+export class ChildAssignOptionComponent implements OnInit {
+
+  @Input() private childId: number
+  private onClose: Subject<number>
+  private assignCateringOptionForm: FormGroup
+  private cateringOptions: CateringOption[]
+
+  constructor(
+    private bsModalRef: BsModalRef,
+    private datePipe: DatePipe,
+    private childDataService: ChildDataService,
+    private cateringOptionDataService: CateringOptionDataService
+  ) { }
+
+  ngOnInit() {
+    this.onClose = new Subject<number>()
+    this.retrieveCateringOptions()
+    this.assignCateringOptionForm = new FormGroup({
+      effectiveDate: new FormControl(this.setCurrentDateOrMondayIfWeekend()),
+      cateringOption: new FormControl()
+    })
+  }
+
+  retrieveCateringOptions() {
+    this.cateringOptionDataService.retrieveAllCateringOptions().subscribe(
+      cateringOptions => {
+        this.cateringOptions = cateringOptions
+      })
+  }
+
+  setCurrentDateOrMondayIfWeekend(): Date {
+    let date = new Date();
+    if (date.getDay() == 0) {
+      date.setDate(date.getDate() + 1)
+    } else if (date.getDay() == 6) {
+      date.setDate(date.getDate() + 2)
+    }
+    return date
+  }
+
+  onSubmit() {
+    console.log(this.assignCateringOptionForm.get('cateringOption').value)
+    this.childDataService.assignNewOptionToChild(
+      this.childId, this.assignCateringOptionForm.get('cateringOption').value.id,
+      this.datePipe.transform(this.assignCateringOptionForm.get('effectiveDate').value, 'yyyy/MM/dd')).subscribe(
+        child => {
+          this.bsModalRef.hide()
+          this.onClose.next(child.id)
+        })
+  }
+
+  onCancel() {
+    this.bsModalRef.hide()
+    this.onClose.next(null)
+  }
+}
