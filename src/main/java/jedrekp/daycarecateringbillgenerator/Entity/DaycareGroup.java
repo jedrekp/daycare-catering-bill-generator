@@ -31,5 +31,6 @@ public class DaycareGroup {
     @OneToMany(mappedBy = "daycareGroup", fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
     @JsonIgnoreProperties({"daycareGroup"})
+    @JsonView(JsonViewFilter.WithChildren.class)
     private Set<Child> children = new HashSet<>();
 }

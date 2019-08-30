@@ -4,7 +4,6 @@ import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
 import jedrekp.daycarecateringbillgenerator.Entity.AssignedOption;
 import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
 import jedrekp.daycarecateringbillgenerator.Entity.Child;
-import jedrekp.daycarecateringbillgenerator.Entity.DaycareGroup;
 import jedrekp.daycarecateringbillgenerator.Repository.AssignedOptionRepository;
 import jedrekp.daycarecateringbillgenerator.Repository.ChildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +26,6 @@ public class ChildService {
 
     @Autowired
     CateringOptionService cateringOptionService;
-
-    @Autowired
-    DaycareGroupService daycareGroupService;
-
 
     public Child save(Child child) {
         return childRepository.save(child);
@@ -55,20 +50,10 @@ public class ChildService {
 
     @Transactional(readOnly = true)
     public Collection<Child> findChildrenFromGroup(Long daycareGroupId) {
-        return childRepository.findByDaycareGroup_Id(daycareGroupId);
-    }
-
-    @Transactional
-    public Child assignToDaycareGroup(Long childId, Long daycareGroupId) {
-        Child child = findByIdWithAllDetails(childId);
-        DaycareGroup oldGroup = child.getDaycareGroup();
-        if (oldGroup != null) {
-            oldGroup.getChildren().remove(child);
+        if (daycareGroupId == 1L) {
+            daycareGroupId = null;
         }
-        DaycareGroup newGroup = daycareGroupService.findById(daycareGroupId);
-        child.setDaycareGroup(newGroup);
-        newGroup.getChildren().add(child);
-        return child;
+        return childRepository.findByDaycareGroup_Id(daycareGroupId);
     }
 
     @Transactional

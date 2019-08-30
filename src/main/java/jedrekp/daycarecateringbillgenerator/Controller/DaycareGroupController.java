@@ -29,4 +29,12 @@ public class DaycareGroupController {
     public ResponseEntity<Collection<DaycareGroup>> getAllDaycareGroups() {
         return new ResponseEntity<>(daycareGroupService.findAll(), HttpStatus.OK);
     }
+
+    @PutMapping("/daycareGroups/{daycareGroupId}/children/{childId}")
+    @JsonView(JsonViewFilter.WithChildren.class)
+    public ResponseEntity<DaycareGroup> addSingleChildToDayCareGroup(@PathVariable Long daycareGroupId,
+                                                                     @PathVariable Long childId) {
+        return new ResponseEntity<>(
+                daycareGroupService.addSingleChildToDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
+    }
 }

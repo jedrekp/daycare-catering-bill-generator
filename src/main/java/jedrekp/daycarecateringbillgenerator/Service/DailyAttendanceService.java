@@ -34,19 +34,19 @@ public class DailyAttendanceService {
                 .orElse(new DailyAttendance(dailyAttendanceDTO.getDate()));
 
 
-        //remove children marked as absent from dailyAttendance if they were previously marked as present
-        Set<Child> childrenToMarkAsAbsent = dailyAttendance.getPresentChildren()
+        //remove absent children from dailyAttendance if they were previously marked as present
+        Set<Child> childrenToRemove = dailyAttendance.getPresentChildren()
                 .stream()
                 .filter(child -> dailyAttendanceDTO.getAbsentChildrenIds().contains(child.getId()))
                 .collect(Collectors.toSet());
-        dailyAttendance.getPresentChildren().removeAll(childrenToMarkAsAbsent);
+        dailyAttendance.getPresentChildren().removeAll(childrenToRemove);
 
-        //add children marked as present
-        Set<Child> childrenToMarkAsPresent = dailyAttendanceDTO.getPresentChildrenIds()
+        //add children marked as present to dailyAttendance
+        Set<Child> childrenToAdd = dailyAttendanceDTO.getPresentChildrenIds()
                 .stream()
                 .map(childService::findById)
                 .collect(Collectors.toSet());
-        dailyAttendance.getPresentChildren().addAll(childrenToMarkAsPresent);
+        dailyAttendance.getPresentChildren().addAll(childrenToAdd);
 
         return dailyAttendanceRepository.save(dailyAttendance);
     }

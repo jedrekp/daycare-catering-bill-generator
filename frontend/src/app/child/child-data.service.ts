@@ -2,9 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Child } from './child';
 
+
+class AssignedOptionDTO {
+  constructor(
+    private effectiveDate: string,
+    private cateringOptionId: number) { }
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class ChildDataService {
 
   constructor(private httpClient: HttpClient) { }
@@ -21,10 +29,6 @@ export class ChildDataService {
     return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}`, child)
   }
 
-  assignToGroup(childId: number, groupId: number) {
-    return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}/daycareGroups/${groupId}`, null)
-  }
-
   assignNewOptionToChild(childId: number, assignedOptionId: number, effectiveDate: string) {
     return this.httpClient.post<Child>(`http://localhost:8081/children/${childId}/assignedOptions`,
       new AssignedOptionDTO(effectiveDate, assignedOptionId))
@@ -37,8 +41,4 @@ export class ChildDataService {
 
 }
 
-class AssignedOptionDTO {
-  constructor(
-    private effectiveDate: string,
-    private cateringOptionId: number) { }
-}
+

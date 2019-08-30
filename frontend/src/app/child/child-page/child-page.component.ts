@@ -25,7 +25,7 @@ export class ChildPageComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private childDataService: ChildDataService,
-    private daycaregroupDataService: DaycareGroupDataService,
+    private daycareGroupDataService: DaycareGroupDataService,
   ) { }
 
   ngOnInit() {
@@ -48,7 +48,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   retrieveDaycareGroups() {
-    this.daycaregroupDataService.retrieveGroups().subscribe(
+    this.daycareGroupDataService.retrieveGroups().subscribe(
       daycareGroups => {
         this.daycareGroups = daycareGroups
         this.newGroup = daycareGroups[0]
@@ -68,10 +68,10 @@ export class ChildPageComponent implements OnInit {
   }
 
   assignToNewGroup() {
-    this.childDataService.assignToGroup(this.child.id, this.newGroup.id).subscribe(
-      child => {
-        this.child = child
-        this.sortAssignedOptionsbyEffectiveDate(this.child.assignedOptions)
+    this.daycareGroupDataService.addSingleChildToDaycareGroup(this.newGroup.id, this.child.id).subscribe(
+      daycareGroup => {
+        console.log(this.child.id);
+        this.retrieveChild(this.child.id)
       })
   }
 
