@@ -7,6 +7,7 @@ import { ChildCreateEditComponent } from '../child-create-edit/child-create-edit
 import { ChildAssignOptionComponent } from '../child-assign-option/child-assign-option.component';
 import { DaycareGroup } from 'src/app/daycare-group/daycare-group';
 import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-data.service';
+import { AssignToGroupComponent } from 'src/app/daycare-group/assign-to-group/assign-to-group.component';
 
 @Component({
   selector: 'app-child-page',
@@ -60,18 +61,22 @@ export class ChildPageComponent implements OnInit {
     this.modalRef = this.modalService.show(ChildCreateEditComponent,
       { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
-      childId => {
-        if (childId) {
-          this.retrieveChild(childId)
+      onClose => {
+        if (onClose) {
+          this.retrieveChild(this.child.id)
         }
       })
   }
 
-  assignToNewGroup() {
-    this.daycareGroupDataService.addSingleChildToDaycareGroup(this.newGroup.id, this.child.id).subscribe(
-      daycareGroup => {
-        console.log(this.child.id);
-        this.retrieveChild(this.child.id)
+  openAssignChildToGroupModal() {
+    let initialState = { childId: this.child.id }
+    this.modalRef = this.modalService.show(AssignToGroupComponent,
+      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+    this.modalRef.content.onClose.subscribe(
+      onClose => {
+        if (onClose) {
+          this.retrieveChild(this.child.id)
+        }
       })
   }
 
@@ -80,9 +85,9 @@ export class ChildPageComponent implements OnInit {
     this.modalRef = this.modalService.show(ChildAssignOptionComponent,
       { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
-      childId => {
-        if (childId) {
-          this.retrieveChild(childId)
+      onClose => {
+        if (onClose) {
+          this.retrieveChild(this.child.id)
         }
       })
   }

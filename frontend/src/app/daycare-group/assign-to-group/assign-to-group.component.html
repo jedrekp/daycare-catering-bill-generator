@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h4 class="modal-title">Assign to group</h4>
+</div>
+
+<form novalidate [formGroup]="assignChildToGroupForm" (ngSubmit)="onSubmit()">
+
+    <div class="modal-body">
+
+        <div class="form-group">
+            <label>Catering option</label>
+            <select class="custom-select" formControlName="daycareGroup">
+                <option *ngFor="let daycareGroup of daycareGroups" [ngValue]="daycareGroup">
+                    {{daycareGroup.groupName}}
+                </option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-warning">Save</button>
+        <button type="button" class="btn btn-warning" (click)="onCancel()">Cancel</button>
+    </div>
+
+</form>

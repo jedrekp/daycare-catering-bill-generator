@@ -14,6 +14,7 @@ import { ChildCreateEditComponent } from './child/child-create-edit/child-create
 import { MenuBarComponent } from './menu-bar/menu-bar.component';
 import { ChildPageComponent } from './child/child-page/child-page.component';
 import { ChildAssignOptionComponent } from './child/child-assign-option/child-assign-option.component';
+import { AssignToGroupComponent } from './daycare-group/assign-to-group/assign-to-group.component';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { ChildAssignOptionComponent } from './child/child-assign-option/child-as
     MenuBarComponent,
     ChildPageComponent,
     ChildAssignOptionComponent,
+    AssignToGroupComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,7 +39,8 @@ import { ChildAssignOptionComponent } from './child/child-assign-option/child-as
   ],
   entryComponents: [
     ChildCreateEditComponent,
-    ChildAssignOptionComponent
+    ChildAssignOptionComponent,
+    AssignToGroupComponent
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

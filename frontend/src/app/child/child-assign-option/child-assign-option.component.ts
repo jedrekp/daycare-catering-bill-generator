@@ -16,7 +16,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class ChildAssignOptionComponent implements OnInit {
 
   @Input() private childId: number
-  private onClose: Subject<number>
+  private onClose: Subject<boolean>
   private assignCateringOptionForm: FormGroup
   private cateringOptions: CateringOption[]
 
@@ -28,11 +28,12 @@ export class ChildAssignOptionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.onClose = new Subject<number>()
+    this.onClose = new Subject<boolean>()
     this.assignCateringOptionForm = new FormGroup({
-      effectiveDate: new FormControl(this.setCurrentDateOrMondayIfWeekend()),
+      effectiveDate: new FormControl(),
       cateringOption: new FormControl()
     })
+    this.assignCateringOptionForm.patchValue({ effectiveDate: this.setCurrentDateOrMondayIfWeekend() })
     this.retrieveCateringOptions()
   }
 
@@ -62,7 +63,7 @@ export class ChildAssignOptionComponent implements OnInit {
       .subscribe(
         child => {
           this.bsModalRef.hide()
-          this.onClose.next(child.id)
+          this.onClose.next(true)
         })
   }
 
