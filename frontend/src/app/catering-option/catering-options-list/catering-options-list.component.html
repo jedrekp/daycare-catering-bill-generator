@@ -1,0 +1,21 @@
+<div class="col-md-5 mx-auto">
+
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>Option Name</th>
+                <th>Daily cost</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let option of activeCateringOptions">
+                <td>{{option.optionName}}</td>
+                <td>{{option.dailyCost}}</td>
+                <td>
+                    <button class="btn btn-sm btn-info" (click)="openEditCateringOptionModal()">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

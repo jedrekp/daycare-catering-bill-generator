@@ -13,8 +13,9 @@ export class CateringOptionDataService {
     return this.httpClient.get<CateringOption[]>('http://localhost:8081/cateringOptions')
   }
 
-  retrieveAllActiveCateringOptions() {
-    let params = new HttpParams().set('disabled', 'false')
+  retriveCateringOptionsByDisabled(isDisabled: string) {
+    let params = new HttpParams().set('disabled', isDisabled)
     return this.httpClient.get<CateringOption[]>('http://localhost:8081/cateringOptions', { params: params })
   }
+
 }
