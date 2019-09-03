@@ -25,7 +25,7 @@ export class ChildCreateEditComponent implements OnInit {
 
   ngOnInit() {
     this.onClose = new Subject<number>()
-    if (this.child.id == -1) {
+    if (this.child.id === -1) {
       this.header = 'New child'
     } else {
       this.header = `Edit child #${this.child.id}`
@@ -46,7 +46,7 @@ export class ChildCreateEditComponent implements OnInit {
         this.child.id, this.childBasicInfoForm.get('firstName').value,
         this.childBasicInfoForm.get('lastName').value
       )
-      if (this.child.id == -1) {
+      if (this.child.id === -1) {
         this.childDataService.createChild(childToSubmit).subscribe(
           child => {
             this.bsModalRef.hide()
