@@ -17,6 +17,7 @@ import { ChildPageComponent } from './child/child-page/child-page.component';
 import { ChildAssignOptionComponent } from './child/child-assign-option/child-assign-option.component';
 import { AssignToGroupComponent } from './daycare-group/assign-to-group/assign-to-group.component';
 import { CateringOptionsListComponent } from './catering-option/catering-options-list/catering-options-list.component';
+import { CateringOptionCreateEditComponent } from './catering-option/catering-option-create-edit/catering-option-create-edit.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { CateringOptionsListComponent } from './catering-option/catering-options
     ChildAssignOptionComponent,
     AssignToGroupComponent,
     CateringOptionsListComponent,
+    CateringOptionCreateEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,7 +46,8 @@ import { CateringOptionsListComponent } from './catering-option/catering-options
   entryComponents: [
     ChildCreateEditComponent,
     ChildAssignOptionComponent,
-    AssignToGroupComponent
+    AssignToGroupComponent,
+    CateringOptionCreateEditComponent
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

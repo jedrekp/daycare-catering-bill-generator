@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{header}}</h4>
+</div>
+
+<form novalidate [formGroup]="cateringOptionForm" (ngSubmit)="onSubmit()">
+
+    <div class="modal-body">
+
+        <div class="form-group">
+            <label>Option name</label>
+            <input type="text" class="form-control" formControlName="optionName" />
+        </div>
+        <alert
+            *ngIf="cateringOptionForm.get('optionName').hasError('required') && cateringOptionForm.get('optionName').touched"
+            type="danger" class="mt-1">
+            Option name <strong>cannot</strong> be empty.
+        </alert>
+        <alert *ngIf="cateringOptionForm.get('optionName').hasError('maxlength')" type="danger" class="mt-1">
+            Option name <strong>cannot</strong> exceed <strong>25</strong> characters.
+        </alert>
+
+        <div class="form-group">
+            <label>Daily cost</label>
+            <input type="text" class="form-control" formControlName="dailyCost" />
+        </div>
+        <alert
+            *ngIf="cateringOptionForm.get('dailyCost').hasError('required') && cateringOptionForm.get('dailyCost').touched"
+            type="danger" class="mt-1">
+            Daily cost <strong>cannot</strong> be empty.
+        </alert>
+        <alert *ngIf="cateringOptionForm.get('dailyCost').hasError('pattern')" type="danger" class="mt-1">
+            Incorrect price format.
+        </alert>
+        <alert *ngIf="cateringOptionForm.get('dailyCost').hasError('max')" type="danger" class="mt-1">
+            Daily price <strong>cannot</strong> be higher <strong>20</strong> PLN.
+        </alert>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-info">Save</button>
+        <button type="button" class="btn btn-warning" (click)="onCancel()">Cancel</button>
+    </div>
+
+</form>
