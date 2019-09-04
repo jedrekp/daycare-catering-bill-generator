@@ -21,18 +21,35 @@
 
         <div class="form-group">
             <label>Daily cost</label>
-            <input type="text" class="form-control" formControlName="dailyCost" />
+            <div class="input-group">
+                <input type="number" class="form-control"
+                    onkeydown="return event.keyCode !== 69 && event.keyCode !== 187 && event.keyCode !== 188 && event.keyCode !== 189"
+                    formControlName="dailyCost" />
+                <div class="input-group-append">
+                    <span class="input-group-text">PLN</span>
+                </div>
+            </div>
         </div>
         <alert
-            *ngIf="cateringOptionForm.get('dailyCost').hasError('required') && cateringOptionForm.get('dailyCost').touched"
+            *ngIf="cateringOptionForm.get('dailyCost').hasError('required') || cateringOptionForm.get('dailyCost').hasError('pattern')"
             type="danger" class="mt-1">
-            Daily cost <strong>cannot</strong> be empty.
-        </alert>
-        <alert *ngIf="cateringOptionForm.get('dailyCost').hasError('pattern')" type="danger" class="mt-1">
-            Incorrect price format.
+            <strong>Incorrect</strong> price format.
         </alert>
         <alert *ngIf="cateringOptionForm.get('dailyCost').hasError('max')" type="danger" class="mt-1">
-            Daily price <strong>cannot</strong> be higher <strong>20</strong> PLN.
+            Daily cost <strong>cannot</strong> exceed <strong>30</strong> PLN.
+        </alert>
+
+        <div *ngIf="cateringOption.id != -1" class="form-group">
+            <label>Disabled</label>
+            <select class="custom-select" formControlName="disabled">
+                <option [ngValue]="false">No</option>
+                <option [ngValue]="true">Yes</option>
+            </select>
+        </div>
+
+        <alert *ngIf="cateringOptionForm.get('disabled').value" type="warning" class="mt-1">
+            <p>Disabled catering option can <strong>no longer</strong> be assigned.</p>
+            <p>It <strong>does not</strong> remove the option from children to whom it is assigned already.</p>
         </alert>
 
     </div>

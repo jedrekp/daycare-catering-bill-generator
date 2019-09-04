@@ -11,22 +11,35 @@ export class CateringOptionsListComponent implements OnInit {
 
   private activeCateringOptions: CateringOption[]
   private disabledCateringOptions: CateringOption[]
+  private header: string
+  private showDisabled: boolean
 
   constructor(private cateringOptionDataService: CateringOptionDataService) { }
 
   ngOnInit() {
+    this.switchToActive()
     this.retrieveCateringOptions()
   }
 
   retrieveCateringOptions() {
-    this.cateringOptionDataService.retriveCateringOptionsByDisabled('false').subscribe(
+    this.cateringOptionDataService.retriveCateringOptionsByDisabled(false).subscribe(
       cateringOptions => {
         this.activeCateringOptions = cateringOptions
       })
-    this.cateringOptionDataService.retriveCateringOptionsByDisabled('true').subscribe(
+    this.cateringOptionDataService.retriveCateringOptionsByDisabled(true).subscribe(
       cateringOptions => {
         this.disabledCateringOptions = cateringOptions
       })
+  }
+
+  switchToDisabled() {
+    this.showDisabled = true
+    this.header = 'Disabled catering options'
+  }
+
+  switchToActive() {
+    this.showDisabled = false
+    this.header = 'Active catering options'
   }
 
 }

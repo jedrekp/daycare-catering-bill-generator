@@ -43,7 +43,7 @@ export class AssignToGroupComponent implements OnInit {
       this.assignChildToGroupForm.get('daycareGroup').value.id,
       this.childId
     ).subscribe(
-      daycareGroup => {
+      response => {
         this.bsModalRef.hide()
         this.onClose.next(true)
       })
@@ -51,6 +51,6 @@ export class AssignToGroupComponent implements OnInit {
 
   onCancel() {
     this.bsModalRef.hide()
-    this.onClose.next(null)
+    this.onClose.next(false)
   }
 }

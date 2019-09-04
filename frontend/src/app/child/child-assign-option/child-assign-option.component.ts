@@ -38,7 +38,7 @@ export class ChildAssignOptionComponent implements OnInit {
   }
 
   retrieveCateringOptions() {
-    this.cateringOptionDataService.retriveCateringOptionsByDisabled('false').subscribe(
+    this.cateringOptionDataService.retriveCateringOptionsByDisabled(false).subscribe(
       cateringOptions => {
         this.cateringOptions = cateringOptions
         this.assignCateringOptionForm.patchValue({ cateringOption: cateringOptions[0] })
@@ -47,9 +47,9 @@ export class ChildAssignOptionComponent implements OnInit {
 
   setCurrentDateOrMondayIfWeekend(): Date {
     let date = new Date();
-    if (date.getDay() == 0) {
+    if (date.getDay() === 0) {
       date.setDate(date.getDate() + 1)
-    } else if (date.getDay() == 6) {
+    } else if (date.getDay() === 6) {
       date.setDate(date.getDate() + 2)
     }
     return date
@@ -61,7 +61,7 @@ export class ChildAssignOptionComponent implements OnInit {
       this.assignCateringOptionForm.get('cateringOption').value.id,
       this.datePipe.transform(this.assignCateringOptionForm.get('effectiveDate').value, 'yyyy/MM/dd'))
       .subscribe(
-        child => {
+        response => {
           this.bsModalRef.hide()
           this.onClose.next(true)
         })
@@ -69,6 +69,6 @@ export class ChildAssignOptionComponent implements OnInit {
 
   onCancel() {
     this.bsModalRef.hide()
-    this.onClose.next(null)
+    this.onClose.next(false)
   }
 }
