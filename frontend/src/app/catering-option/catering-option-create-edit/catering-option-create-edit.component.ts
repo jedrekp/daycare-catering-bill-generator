@@ -31,10 +31,10 @@ export class CateringOptionCreateEditComponent implements OnInit {
     } else {
       this.header = `Edit catering option ${this.cateringOption.id}`
     }
-    let priceFormat = /^([1-9](\d+)?(\.)?(\d)?(\d)?|0|0\.(\d)?(\d)?)$/
+    const priceFormat = /^\d+(\.)?(\d{1,2})?$/
     this.cateringOptionForm = new FormGroup({
       optionName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
-      dailyCost: new FormControl(0, [Validators.required, Validators.pattern(priceFormat), Validators.max(20)]),
+      dailyCost: new FormControl(0, [Validators.required, Validators.pattern(priceFormat), Validators.max(30)]),
       disabled: new FormControl(false)
     })
     this.cateringOptionForm.patchValue({
@@ -45,7 +45,23 @@ export class CateringOptionCreateEditComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(parseFloat(this.cateringOptionForm.get('dailyCost').value))
+    if (this.cateringOptionForm.valid) {
+      let cateringOptionToSubmit = new CateringOption(
+        this.cateringOption.id,
+        this.cateringOptionForm.get('optionName').value,
+        this.cateringOptionForm.get('dailyCost').value,
+        this.cateringOptionForm.get('disabled').value
+      )
+      if (this.cateringOption.id === -1) {
+        this.cateringOptionDataService.createCateringOption(cateringOptionToSubmit).subscribe(
+          response => {
+            this.bsModalRef.hide()
+            this.onClose.next(true)
+          })
+      } else {
+        console.log('EDIT')
+      }
+    }
   }
 
   onCancel() {
