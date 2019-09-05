@@ -34,6 +34,7 @@ export class MenuBarComponent implements OnInit {
     this.modalRef.content.onClose.subscribe(
       childId => {
         if (childId) {
+          this.router.navigated = false
           this.router.navigate(['child-page', childId])
         }
       })
