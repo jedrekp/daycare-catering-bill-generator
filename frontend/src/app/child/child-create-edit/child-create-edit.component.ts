@@ -48,15 +48,15 @@ export class ChildCreateEditComponent implements OnInit {
       )
       if (this.child.id === -1) {
         this.childDataService.createChild(childToSubmit).subscribe(
-          response => {
+          child => {
             this.bsModalRef.hide()
-            this.onClose.next(this.child.id)
+            this.onClose.next(child.id)
           })
       } else {
         this.childDataService.editChild(this.child.id, childToSubmit).subscribe(
-          response => {
+          child => {
             this.bsModalRef.hide()
-            this.onClose.next(this.child.id)
+            this.onClose.next(child.id)
           })
       }
     }

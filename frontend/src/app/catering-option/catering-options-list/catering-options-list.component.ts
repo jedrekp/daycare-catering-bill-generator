@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CateringOption } from '../CateringOption';
 import { CateringOptionDataService } from '../catering-option-data.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CateringOptionCreateEditComponent } from '../catering-option-create-edit/catering-option-create-edit.component';
 
 @Component({
   selector: 'app-catering-options-list',
@@ -9,12 +11,17 @@ import { CateringOptionDataService } from '../catering-option-data.service';
 })
 export class CateringOptionsListComponent implements OnInit {
 
+  public modalRef: BsModalRef
+
   private activeCateringOptions: CateringOption[]
   private disabledCateringOptions: CateringOption[]
   private header: string
   private showDisabled: boolean
 
-  constructor(private cateringOptionDataService: CateringOptionDataService) { }
+  constructor(
+    private cateringOptionDataService: CateringOptionDataService,
+    private modalService: BsModalService
+  ) { }
 
   ngOnInit() {
     this.switchToActive()
@@ -40,6 +47,18 @@ export class CateringOptionsListComponent implements OnInit {
   switchToActive() {
     this.showDisabled = false
     this.header = 'Active catering options'
+  }
+
+  openEditCateringOptionModal(cateringOptionToEdit: CateringOption) {
+    let initialState = { cateringOption: cateringOptionToEdit }
+    this.modalRef = this.modalService.show(CateringOptionCreateEditComponent,
+      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+    this.modalRef.content.onClose.subscribe(
+      onClose => {
+        if (onClose) {
+          this.retrieveCateringOptions();
+        }
+      })
   }
 
 }

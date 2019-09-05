@@ -28,13 +28,12 @@ export class MenuBarComponent implements OnInit {
   ngOnInit() { }
 
   openCreateChildModal() {
-    let initialState = { child: new Child(-1, '', '') };
+    let initialState = { child: new Child(-1, '', '') }
     this.modalRef = this.modalService.show(ChildCreateEditComponent,
       { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
       childId => {
         if (childId) {
-          this.router.navigated = false
           this.router.navigate(['child-page', childId])
         }
       })

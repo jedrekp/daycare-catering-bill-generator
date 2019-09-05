@@ -1,3 +1,8 @@
-.modal-top-20{
+body, html {
+    background-color: #DCDBDD;
+    height: 100%;
+}
+
+.modal-top-20 {
     top: 20% !important;
 }
