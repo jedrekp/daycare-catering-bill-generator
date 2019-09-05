@@ -30,7 +30,7 @@ export class MenuBarComponent implements OnInit {
   openCreateChildModal() {
     let initialState = { child: new Child(-1, '', '') }
     this.modalRef = this.modalService.show(ChildCreateEditComponent,
-      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
       childId => {
         if (childId) {
@@ -43,7 +43,7 @@ export class MenuBarComponent implements OnInit {
   openCreateCateringOptionModal() {
     let initialState = { cateringOption: new CateringOption(-1, '', 0, false) };
     this.modalRef = this.modalService.show(CateringOptionCreateEditComponent,
-      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {

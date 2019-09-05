@@ -59,7 +59,7 @@ export class ChildPageComponent implements OnInit {
   openEditChildModal() {
     let initialState = { child: new Child(this.child.id, this.child.firstName, this.child.lastName) };
     this.modalRef = this.modalService.show(ChildCreateEditComponent,
-      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
@@ -71,7 +71,7 @@ export class ChildPageComponent implements OnInit {
   openAssignChildToGroupModal() {
     let initialState = { childId: this.child.id }
     this.modalRef = this.modalService.show(AssignToGroupComponent,
-      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
@@ -83,7 +83,7 @@ export class ChildPageComponent implements OnInit {
   openAssignNewOptionModal() {
     let initialState = { childId: this.child.id }
     this.modalRef = this.modalService.show(ChildAssignOptionComponent,
-      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {

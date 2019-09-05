@@ -15,6 +15,10 @@ public interface CateringOptionRepository extends JpaRepository<CateringOption, 
 
     Collection<CateringOption> findAllByDisabled(boolean disabled);
 
+    boolean existsByOptionName(String optionName);
+
+    boolean existsByOptionNameAndIdNot(String optionName, Long id);
+
     @Query(value = "SELECT co.* FROM assigned_option ao " +
             "INNER JOIN catering_option co ON co.id = ao.catering_option_id " +
             "WHERE ao.effective_date <= :date AND ao.child_id = :childId " +

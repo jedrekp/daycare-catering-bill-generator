@@ -59,7 +59,12 @@ export class CateringOptionCreateEditComponent implements OnInit {
             this.onClose.next(true)
           })
       } else {
-        console.log('EDIT')
+        this.cateringOptionDataService.editCateringOption(
+          cateringOptionToSubmit, this.cateringOption.id).subscribe(
+            response => {
+              this.bsModalRef.hide()
+              this.onClose.next(true)
+            })
       }
     }
   }

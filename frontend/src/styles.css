@@ -3,6 +3,18 @@ body, html {
     height: 100%;
 }
 
-.modal-top-20 {
-    top: 20% !important;
+a{
+    cursor: pointer;
+}
+
+.modal-top-10 {
+    top: 10% !important;
+}
+
+.bg-purple{
+    background-color: #643B7C;
+}
+
+.border-purple{
+    border: 2px solid #643B7C;
 }

@@ -1,46 +1,60 @@
-<div class="row justify-content-end">
-    <div class="col-md-2 mx-5 my-3">
-        <button *ngIf="!showDisabled" class="btn btn-info btn-block" (click)="switchToDisabled()">Show disabled</button>
-        <button *ngIf="showDisabled" class="btn btn-info btn-block" (click)="switchToActive()">Show active</button>
+<div class="col-md-8 mx-auto my-3 my-md-5">
+
+    <div class="card text-center border-purple">
+        <div class="card-header bg-purple">
+            <h5 class="text-white float-left m-0">Catering options</h5>
+            <ul class="nav nav-tabs card-header-tabs float-right">
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="switchToActive()" [class.active]="!showDisabled"
+                        [class.text-dark]="!showDisabled">Active</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="switchToDisabled()" [class.active]="showDisabled"
+                        [class.text-dark]="showDisabled">Disabled</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-striped table-dark text-center">
+
+                <thead>
+                    <tr>
+                        <th>Option Name</th>
+                        <th>Daily cost</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <ng-container *ngIf="!showDisabled">
+                        <tr *ngFor="let option of activeCateringOptions">
+                            <td>{{option.optionName}}</td>
+                            <td>{{option.dailyCost}} PLN</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-light"
+                                    (click)="openEditCateringOptionModal(option)">Edit
+                                    option</button>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <ng-container *ngIf="showDisabled">
+                        <tr *ngFor="let option of disabledCateringOptions">
+                            <td>{{option.optionName}}</td>
+                            <td>{{option.dailyCost}} PLN</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-light"
+                                    (click)="openEditCateringOptionModal(option)">Edit
+                                    option</button>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-
-<div class="col-md-8 mx-auto">
-
-    <h3 class="text-center mb-3">{{header}}</h3>
-
-    <table class="table table-striped table-dark text-center">
-        <thead>
-            <tr>
-                <th>Option Name</th>
-                <th>Daily cost</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            <ng-container *ngIf="!showDisabled">
-                <tr *ngFor="let option of activeCateringOptions">
-                    <td>{{option.optionName}}</td>
-                    <td>{{option.dailyCost}} PLN</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-light" (click)="openEditCateringOptionModal(option)">Edit
-                            option</button>
-                    </td>
-                </tr>
-            </ng-container>
-
-            <ng-container *ngIf="showDisabled">
-                <tr *ngFor="let option of disabledCateringOptions">
-                    <td>{{option.optionName}}</td>
-                    <td>{{option.dailyCost}} PLN</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-light" (click)="openEditCateringOptionModal(option)">Edit
-                            option</button>
-                    </td>
-                </tr>
-            </ng-container>
-
-        </tbody>
-    </table>
 </div>

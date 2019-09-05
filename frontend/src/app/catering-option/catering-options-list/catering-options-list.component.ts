@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CateringOption } from '../CateringOption';
 import { CateringOptionDataService } from '../catering-option-data.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -52,7 +52,7 @@ export class CateringOptionsListComponent implements OnInit {
   openEditCateringOptionModal(cateringOptionToEdit: CateringOption) {
     let initialState = { cateringOption: cateringOptionToEdit }
     this.modalRef = this.modalService.show(CateringOptionCreateEditComponent,
-      { class: 'modal-top-20 modal-sm', initialState, ignoreBackdropClick: true })
+      { class: 'modal-top-10 modal-md', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {

@@ -22,4 +22,9 @@ export class CateringOptionDataService {
     return this.httpClient.post<CateringOption>('http://localhost:8081/cateringOptions', cateringOption)
   }
 
+  editCateringOption(cateringOption: CateringOption, cateringOptionId: number) {
+    return this.httpClient.put<CateringOption>(`http://localhost:8081/cateringOptions/${cateringOptionId}`,
+      cateringOption)
+  }
+
 }

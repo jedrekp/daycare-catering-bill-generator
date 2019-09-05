@@ -22,17 +22,24 @@ public class CateringOptionController {
     CateringOptionRepository cateringOptionRepository;
 
     @PostMapping("/cateringOptions")
-    public ResponseEntity<CateringOption> addNewDiet(@RequestBody CateringOption cateringOption) {
+    public ResponseEntity<CateringOption> addNewCateringOption(@RequestBody CateringOption cateringOption) {
         return new ResponseEntity<>(cateringOptionService.save(cateringOption), HttpStatus.OK);
     }
 
+    @PutMapping("/cateringOptions/{cateringOptionId}")
+    public ResponseEntity<CateringOption> editCateringOption(@PathVariable Long cateringOptionId,
+                                                             @RequestBody CateringOption cateringOption) {
+        return new ResponseEntity<>(
+                cateringOptionService.editCateringOption(cateringOption, cateringOptionId), HttpStatus.OK);
+    }
+
     @GetMapping("/cateringOptions")
-    public ResponseEntity<Collection<CateringOption>> getAllDiets() {
+    public ResponseEntity<Collection<CateringOption>> getAllCateringOptions() {
         return new ResponseEntity<>(cateringOptionService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/cateringOptions", params = "disabled")
-    public ResponseEntity<Collection<CateringOption>> getAllDietsByDisabled(@RequestParam boolean disabled) {
+    public ResponseEntity<Collection<CateringOption>> getAllCateringOptionsByDisabled(@RequestParam boolean disabled) {
         return new ResponseEntity<>(cateringOptionService.findAllByDisabled(disabled), HttpStatus.OK);
     }
 }
