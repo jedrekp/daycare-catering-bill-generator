@@ -29,7 +29,7 @@ export class CateringOptionCreateEditComponent implements OnInit {
     if (this.cateringOption.id === -1) {
       this.header = 'New catering option'
     } else {
-      this.header = `Edit catering option ${this.cateringOption.id}`
+      this.header = `Edit catering option #${this.cateringOption.id}`
     }
     const priceFormat = /^\d+(\.)?(\d{1,2})?$/
     this.cateringOptionForm = new FormGroup({

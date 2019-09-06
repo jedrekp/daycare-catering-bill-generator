@@ -2,14 +2,33 @@ nav {
     height: 70px;
 }
 
-nav .navbar-nav li a {
-    font-size: 1.1em;
-    color: #ccc;
-    letter-spacing: 0;
+.navbar-custom{
+    background-color: #B5446E;
 }
 
-nav .navbar-nav li a:hover {
-    color:#fff;
-    
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color: white;
+}
+
+.navbar-custom .navbar-nav .nav-link {
+    color: #ddd;
+    letter-spacing: 0;
+    font-size: 1.1em;
+}
+
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:focus .nav-link,
+.navbar-custom .nav-item:hover .nav-link,
+.navbar-custom .btn-group.active .nav-link,
+.navbar-custom .btn-group:focus .nav-link,
+.navbar-custom .btn-group:hover .nav-link {
+    color: white;
     letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.navbar-custom .btn-group .dropdown-menu .dropdown-item:hover {
+    background-color: #B5446E;
+    color:white;
 }
