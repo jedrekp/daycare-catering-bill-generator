@@ -1,5 +1,5 @@
-<div class="modal-header">
-  <h4 class="modal-title">{{header}}</h4>
+<div class="modal-header bg-purple border-purple text-white">
+  <h4 class="modal-title mx-auto">{{header}}</h4>
 </div>
 
 <form novalidate [formGroup]="childBasicInfoForm" (ngSubmit)="onSubmit()">
@@ -34,8 +34,8 @@
   </div>
 
   <div class="modal-footer">
-    <button type="submit" class="btn btn-info">Save</button>
-    <button type="button" class="btn btn-warning" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn btn-outline-purple">Save</button>
+    <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
   </div>
 
 </form>

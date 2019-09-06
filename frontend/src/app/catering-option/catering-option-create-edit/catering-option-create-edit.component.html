@@ -1,5 +1,5 @@
-<div class="modal-header">
-    <h4 class="modal-title">{{header}}</h4>
+<div class="modal-header bg-purple text-white border-white">
+    <h4 class="modal-title mx-auto">{{header}}</h4>
 </div>
 
 <form novalidate [formGroup]="cateringOptionForm" (ngSubmit)="onSubmit()">
@@ -26,7 +26,7 @@
                     onkeydown="return event.keyCode !== 69 && event.keyCode !== 187 && event.keyCode !== 188 && event.keyCode !== 189"
                     formControlName="dailyCost" />
                 <div class="input-group-append">
-                    <span class="input-group-text">PLN</span>
+                    <span class="input-group-text bg-purple text-white">PLN</span>
                 </div>
             </div>
         </div>
@@ -48,15 +48,16 @@
         </div>
 
         <alert *ngIf="cateringOptionForm.get('disabled').value" type="warning" class="mt-1">
-            <p>Disabled catering option can <strong>no longer</strong> be assigned.</p>
-            <p>It <strong>does not</strong> remove the option from children to whom it is assigned already.</p>
+            <p>Disabled catering option can <strong>no longer</strong> be assigned to any children.</p>
+            <p>Please note, that disabled option <strong>is not</strong> removed from children, to whom it is already
+                assigned.</p>
         </alert>
 
     </div>
 
     <div class="modal-footer">
-        <button type="submit" class="btn btn-info">Save</button>
-        <button type="button" class="btn btn-warning" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-outline-purple">Save</button>
+        <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
     </div>
 
 </form>

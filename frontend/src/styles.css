@@ -1,20 +1,60 @@
 body, html {
-    background-color: #DCDBDD;
+    background-color: #484D6D;
     height: 100%;
 }
 
-a{
+a {
     cursor: pointer;
+}
+
+.container {
+    background-color: #DCDBDD;
+    min-height: 100%;
 }
 
 .modal-top-10 {
     top: 10% !important;
 }
 
-.bg-purple{
-    background-color: #643B7C;
+.bg-purple {
+    background-color: #B5446E;
 }
 
-.border-purple{
-    border: 2px solid #643B7C;
+.bg-darkblue{
+    background-color: #484D6D;
 }
+
+.border-darkblue {
+    border: 2px solid #484D6D;
+}
+
+.btn-outline-purple {
+    color: #B5446E;
+    background-color: #ffffff;
+    border-color: #B5446E;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    border-radius: 0;
+}
+
+.btn-outline-purple:hover, .btn-outline-purple:active, .btn-outline-purple:focus, .btn-outline-purple.active {
+    background: #B5446E;
+    color: #ffffff;
+    border-color: #B5446E;
+    box-shadow: none;
+}
+
+.form-control:focus, .custom-select:focus {
+    border-color: #B5446E;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #B5446E;
+  }
+  
+  .modal-content, .navbar{
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 12px #B5446E;
+  }
+
+  .modal-header{
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+  }
