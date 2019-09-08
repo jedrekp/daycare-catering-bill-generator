@@ -13,10 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "daily_attendance")
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "daily_attendance")
 public class DailyAttendance {
 
     @Id

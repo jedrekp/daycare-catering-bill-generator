@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -27,15 +28,23 @@ public class ChildService {
     @Autowired
     CateringOptionService cateringOptionService;
 
+    @Transactional
     public Child save(Child child) {
+        if (childRepository.existsByFirstNameAndLastName(child.getFirstName(), child.getLastName())) {
+            throw new EntityExistsException("A child with the same first name and last name already exists");
+        }
         return childRepository.save(child);
     }
 
     @Transactional
     public Child editChild(Long childId, Child child) {
+        if (childRepository.existsByFirstNameAndLastNameAndIdNot(child.getFirstName(), child.getLastName(), child.getId())) {
+            throw new EntityExistsException("A child with the same first name and last name already exists");
+        }
         Child childToEdit = findById(childId);
         childToEdit.setFirstName(child.getFirstName());
         childToEdit.setLastName(child.getLastName());
+        childToEdit.setParentEmail(child.getParentEmail());
         return childToEdit;
     }
 

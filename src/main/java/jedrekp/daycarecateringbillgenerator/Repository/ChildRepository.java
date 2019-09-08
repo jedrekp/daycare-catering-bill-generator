@@ -14,6 +14,10 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 
     Collection<Child> findByDaycareGroup_Id(Long daycareGroupId);
 
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
+
+    boolean existsByFirstNameAndLastNameAndIdNot(String firstName, String lastName, Long id);
+
     @Query("SELECT c FROM Child c LEFT JOIN FETCH c.daycareGroup " +
             "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
             "WHERE c.id = :childId")

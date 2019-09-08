@@ -12,7 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "child")
+@Table(name = "child",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"first_name", "last_name"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,6 +31,10 @@ public class Child {
     @Column(name = "last_name")
     @JsonView(JsonViewFilter.BasicInfo.class)
     private String lastName;
+
+    @Column(name = "parent_email")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    private String parentEmail;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
     @JoinColumn(name = "daycare_group_id")
