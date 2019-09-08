@@ -31,10 +31,23 @@
       Last name <strong>cannot</strong> exceed <strong>25</strong> characters.
     </alert>
 
+    <div class="form-group">
+      <label>Parent email</label>
+      <input type="email" class="form-control" formControlName="parentEmail" />
+    </div>
+    <alert
+      *ngIf="childBasicInfoForm.get('parentEmail').hasError('required') && childBasicInfoForm.get('parentEmail').touched"
+      type="danger" class="mt-1">
+      Parent email <strong>cannot</strong> be empty.
+    </alert>
+    <alert *ngIf="childBasicInfoForm.get('parentEmail').hasError('email')" type="danger" class="mt-1">
+      <strong>Invalid</strong> email format.
+    </alert>
+
   </div>
 
   <div class="modal-footer">
-    <button type="submit" class="btn btn-outline-purple">Save</button>
+    <button type="submit" class="btn btn-outline-purple" [disabled]="!childBasicInfoForm.valid">Save</button>
     <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
   </div>
 

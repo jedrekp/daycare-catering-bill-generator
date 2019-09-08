@@ -32,11 +32,13 @@ export class ChildCreateEditComponent implements OnInit {
     }
     this.childBasicInfoForm = new FormGroup({
       firstName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
-      lastName: new FormControl('', [Validators.required, Validators.maxLength(25)])
+      lastName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
+      parentEmail: new FormControl('', [Validators.required, Validators.email])
     })
     this.childBasicInfoForm.patchValue({
       firstName: this.child.firstName,
-      lastName: this.child.lastName
+      lastName: this.child.lastName,
+      parentEmail: this.child.parentEmail
     })
   }
 
@@ -44,7 +46,8 @@ export class ChildCreateEditComponent implements OnInit {
     if (this.childBasicInfoForm.valid) {
       let childToSubmit = new Child(
         this.child.id, this.childBasicInfoForm.get('firstName').value,
-        this.childBasicInfoForm.get('lastName').value
+        this.childBasicInfoForm.get('lastName').value,
+        this.childBasicInfoForm.get('parentEmail').value
       )
       if (this.child.id === -1) {
         this.childDataService.createChild(childToSubmit).subscribe(

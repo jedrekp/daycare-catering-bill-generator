@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DaycareGroupDataService } from '../daycare-group-data.service';
 import { Subject } from 'rxjs';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DaycareGroup } from '../daycare-group';
 
 @Component({
@@ -25,7 +25,7 @@ export class AssignToGroupComponent implements OnInit {
   ngOnInit() {
     this.onClose = new Subject<boolean>()
     this.assignChildToGroupForm = new FormGroup({
-      daycareGroup: new FormControl()
+      daycareGroup: new FormControl(null, [Validators.required])
     })
     this.retrieveDaycareGroups()
   }

@@ -7,7 +7,6 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { DatePipe } from '@angular/common';
 
@@ -41,7 +40,6 @@ import { CateringOptionCreateEditComponent } from './catering-option/catering-op
     BrowserAnimationsModule,
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    TabsModule.forRoot(),
     AlertModule.forRoot(),
     BsDropdownModule.forRoot()
   ],

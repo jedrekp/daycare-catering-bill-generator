@@ -5,7 +5,7 @@ import { ChildDataService } from '../child-data.service';
 import { CateringOption } from 'src/app/catering-option/CateringOption';
 import { CateringOptionDataService } from 'src/app/catering-option/catering-option-data.service';
 import { DatePipe } from '@angular/common';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-child-assign-option',
@@ -19,6 +19,7 @@ export class ChildAssignOptionComponent implements OnInit {
   private onClose: Subject<boolean>
   private assignCateringOptionForm: FormGroup
   private cateringOptions: CateringOption[]
+  private minDate: Date
 
   constructor(
     private bsModalRef: BsModalRef,
@@ -31,10 +32,11 @@ export class ChildAssignOptionComponent implements OnInit {
     this.onClose = new Subject<boolean>()
     this.assignCateringOptionForm = new FormGroup({
       effectiveDate: new FormControl(),
-      cateringOption: new FormControl()
+      cateringOption: new FormControl(null, [Validators.required])
     })
     this.assignCateringOptionForm.patchValue({ effectiveDate: this.setCurrentDateOrMondayIfWeekend() })
     this.retrieveCateringOptions()
+    this.minDate = new Date(2019, 0, 1)
   }
 
   retrieveCateringOptions() {

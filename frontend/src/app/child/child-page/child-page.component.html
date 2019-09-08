@@ -1,60 +1,121 @@
-<div *ngIf="child" class="col-md-5 mx-auto">
+<div class="text-center mx-auto my-4">
+    <h2 class="heading-puprle">Child #{{child.id}}</h2>
+</div>
 
-    <h2 class="text-center my-3">Child #{{child.id}}</h2>
+<div class="row justify-content-center">
 
+    <div class="col-10 col-md-4 mr-md-4">
 
-    <table class="table text-center">
-        <tbody>
-            <tr>
-                <th>First name:</th>
-                <td>{{child.firstName}}</td>
-            </tr>
-            <tr>
-                <th>Last name:</th>
-                <td>{{child.lastName}}</td>
-            </tr>
-            <tr>
-                <th>Daycare group:</th>
-                <td>
-                    <span *ngIf="child.daycareGroup">{{child.daycareGroup.groupName}} </span>
-                    <span *ngIf="!child.daycareGroup">unassigned</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="card mb-4 px-0 border-darkblue text-center" id="basic-info-card">
 
+            <div class="card-header bg-darkblue">
+                <h5 class="card-title my-0">Basic Information</h5>
+            </div>
 
-    <button class="btn btn-sm btn-success mx-auto" (click)="openEditChildModal()">Edit basic info</button>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0 table-hover">
+                        <tbody>
+                            <tr>
+                                <td class="font-weight-bold">First name:</td>
+                                <td>
+                                    {{child.firstName}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold">Last name:</td>
+                                <td>{{child.lastName}}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="font-weight-bold">Parent email:</span></td>
+                                <td>{{child.parentEmail}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-    <button class="btn btn-sm btn-info mx-auto float-right" (click)="openAssignChildToGroupModal()">
-        Assign to group
-    </button>
+            <div class="card-footer">
+                <button class="btn btn-outline-darkblue" (click)="openEditChildModal()">Edit basic info</button>
+            </div>
 
+        </div>
 
-    <h4 class="text-center my-3">Assigned catering options</h4>
+        <div class="card mb-4 px-0 border-darkblue text-center" id="daycare-group-card">
 
-    <table class="table table-striped text-center">
-        <thead>
-            <tr>
-                <th>Effective from</th>
-                <th>Option Name</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let assignedOption of child.assignedOptions">
-                <td>{{assignedOption.effectiveDate}}</td>
-                <td>{{assignedOption.cateringOption.optionName}}</td>
-                <td>
-                    <button class="btn btn-sm btn-danger"
-                        (click)="removeAssignedOption(assignedOption.id)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            <div class="card-header bg-darkblue">
+                <h5 class="card-title my-0">Daycare Group</h5>
+            </div>
 
-    <button class="btn btn-sm btn-info mx-auto float-right" (click)="openAssignNewOptionModal()">
-        Assign new option
-    </button>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0 table-hover">
+                        <tbody>
+                            <tr>
+                                <td><span class="font-weight-bold">Group name:</span></td>
+                                <td>
+                                    <span *ngIf="child.daycareGroup">{{child.daycareGroup.groupName}} </span>
+                                    <span *ngIf="!child.daycareGroup">unassigned</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="font-weight-bold">Supervisor:</span></td>
+                                <td>Placeholder</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="btn btn-outline-darkblue  mx-auto" (click)="openAssignChildToGroupModal()">
+                    Assign to group
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-10 col-md-6">
+
+        <div class="card mb-4 px-0 border-darkblue text-center" id="assigned-options-card">
+
+            <div class="card-header bg-darkblue">
+                <h5 class="card-title my-0">Assigned Catering Options</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0 table-hover">
+                        <thead>
+                            <tr>
+                                <th>Effective From</th>
+                                <th>Option name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let assignedOption of child.assignedOptions">
+                                <td class="date-cell">{{assignedOption.effectiveDate}}</td>
+                                <td>{{assignedOption.cateringOption.optionName}}</td>
+                                <td>
+                                    <button class="btn btn-outline-purple"
+                                        (click)="removeAssignedOption(assignedOption.id)">Delete</button>
+                                </td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="btn btn-outline-darkblue" (click)="openAssignNewOptionModal()">
+                    Assign new option
+                </button>
+            </div>
+
+        </div>
+
+    </div>
 
 </div>

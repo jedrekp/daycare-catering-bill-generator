@@ -7,6 +7,7 @@ export class Child {
         public id: number,
         public firstName: string,
         public lastName: string,
+        public parentEmail: string,
         public daycareGroup: DaycareGroup = null,
         public assignedOptions: AssignedOption[] = []
     ) { }
