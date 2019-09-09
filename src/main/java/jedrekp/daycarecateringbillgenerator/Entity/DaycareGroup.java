@@ -24,7 +24,7 @@ public class DaycareGroup {
     @JsonView(JsonViewFilter.BasicInfo.class)
     private Long id;
 
-    @Column(name = "group_name")
+    @Column(name = "group_name", unique = true)
     @JsonView(JsonViewFilter.BasicInfo.class)
     private String groupName;
 

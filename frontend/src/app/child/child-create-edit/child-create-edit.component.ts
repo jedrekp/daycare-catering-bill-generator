@@ -31,8 +31,8 @@ export class ChildCreateEditComponent implements OnInit {
       this.header = `Edit child #${this.child.id}`
     }
     this.childBasicInfoForm = new FormGroup({
-      firstName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
-      lastName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
+      firstName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+      lastName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
       parentEmail: new FormControl('', [Validators.required, Validators.email])
     })
     this.childBasicInfoForm.patchValue({

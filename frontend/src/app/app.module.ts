@@ -2,12 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgxNavbarModule } from 'ngx-bootstrap-navbar';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { DatePipe } from '@angular/common';
 
 import { AppComponent } from './app.component';
@@ -18,6 +20,9 @@ import { ChildAssignOptionComponent } from './child/child-assign-option/child-as
 import { AssignToGroupComponent } from './daycare-group/assign-to-group/assign-to-group.component';
 import { CateringOptionsListComponent } from './catering-option/catering-options-list/catering-options-list.component';
 import { CateringOptionCreateEditComponent } from './catering-option/catering-option-create-edit/catering-option-create-edit.component';
+import { DaycareGroupCreateEditComponent } from './daycare-group/daycare-group-create-edit/daycare-group-create-edit.component';
+import { DaycareGroupListComponent } from './daycare-group/daycare-group-list/daycare-group-list.component';
+import { DaycareGroupPageComponent } from './daycare-group/daycare-group-page/daycare-group-page.component';
 
 
 @NgModule({
@@ -30,6 +35,9 @@ import { CateringOptionCreateEditComponent } from './catering-option/catering-op
     AssignToGroupComponent,
     CateringOptionsListComponent,
     CateringOptionCreateEditComponent,
+    DaycareGroupCreateEditComponent,
+    DaycareGroupListComponent,
+    DaycareGroupPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,16 +46,19 @@ import { CateringOptionCreateEditComponent } from './catering-option/catering-op
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NgxNavbarModule,
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     AlertModule.forRoot(),
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    CollapseModule.forRoot()
   ],
   entryComponents: [
     ChildCreateEditComponent,
     ChildAssignOptionComponent,
     AssignToGroupComponent,
-    CateringOptionCreateEditComponent
+    CateringOptionCreateEditComponent,
+    DaycareGroupCreateEditComponent
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

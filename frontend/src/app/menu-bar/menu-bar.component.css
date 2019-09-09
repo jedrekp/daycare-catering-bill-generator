@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Merriweather&display=swap');
 nav {
     height: 70px;
 }
@@ -27,4 +26,11 @@ nav {
 .navbar-custom .btn-group .dropdown-menu .dropdown-item:hover {
     background-color: #B5446E;
     color: white;
+}
+
+.custom-collapse{
+    background-color: #B5446E;
+    margin: 0;
+    z-index: 1;
+    width:100%;
 }

@@ -16,7 +16,7 @@
       First name <strong>cannot</strong> be empty.
     </alert>
     <alert *ngIf="childBasicInfoForm.get('firstName').hasError('maxlength')" type="danger" class="mt-1">
-      First name <strong>cannot</strong> exceed <strong>25</strong> characters.
+      First name <strong>cannot</strong> exceed <strong>20</strong> characters.
     </alert>
 
     <div class="form-group">
@@ -28,7 +28,7 @@
       Last name <strong>cannot</strong> be empty.
     </alert>
     <alert *ngIf="childBasicInfoForm.get('lastName').hasError('maxlength')" type="danger" class="mt-1">
-      Last name <strong>cannot</strong> exceed <strong>25</strong> characters.
+      Last name <strong>cannot</strong> exceed <strong>20</strong> characters.
     </alert>
 
     <div class="form-group">

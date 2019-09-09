@@ -6,6 +6,8 @@ import { Child } from '../child/child';
 import { ChildCreateEditComponent } from '../child/child-create-edit/child-create-edit.component';
 import { CateringOption } from '../catering-option/CateringOption';
 import { CateringOptionCreateEditComponent } from '../catering-option/catering-option-create-edit/catering-option-create-edit.component';
+import { DaycareGroup } from '../daycare-group/daycare-group';
+import { DaycareGroupCreateEditComponent } from '../daycare-group/daycare-group-create-edit/daycare-group-create-edit.component';
 
 @Component({
   selector: 'app-menu-bar',
@@ -13,12 +15,12 @@ import { CateringOptionCreateEditComponent } from '../catering-option/catering-o
   styleUrls: ['./menu-bar.component.css']
 })
 export class MenuBarComponent implements OnInit {
-
+  public isCollapsed = true;
   public modalRef: BsModalRef
 
   constructor(
     private router: Router,
-    private modalService: BsModalService
+    private modalService: BsModalService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false
@@ -51,6 +53,20 @@ export class MenuBarComponent implements OnInit {
           this.router.navigate(['catering-options-list'])
         }
       })
+  }
+
+  openCreateDaycareGroupModal() {
+    let initialState = { daycareGroup: new DaycareGroup(-1, '') }
+    this.modalRef = this.modalService.show(DaycareGroupCreateEditComponent,
+      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
+    this.modalRef.content.onClose.subscribe(
+      groupId => {
+        if (groupId) {
+          this.router.navigated = false
+          this.router.navigate(['child-page', groupId])
+        }
+      }
+    )
   }
 
 }

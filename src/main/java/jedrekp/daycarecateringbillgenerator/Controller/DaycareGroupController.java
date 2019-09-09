@@ -24,6 +24,19 @@ public class DaycareGroupController {
         return new ResponseEntity<>(daycareGroupService.save(daycareGroup), HttpStatus.OK);
     }
 
+    @PutMapping("/daycareGroups/{daycareGroupId}")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    public ResponseEntity<DaycareGroup> editDaycareGroup(@PathVariable Long daycareGroupId,
+                                                         @RequestBody DaycareGroup daycareGroup) {
+        return new ResponseEntity<>(daycareGroupService.editDaycareGroup(daycareGroupId, daycareGroup), HttpStatus.OK);
+    }
+
+    @GetMapping("/daycareGroups/{daycareGroupId}")
+    @JsonView(JsonViewFilter.WithChildren.class)
+    public ResponseEntity<DaycareGroup> getDaycareGroup(@PathVariable Long daycareGroupId) {
+        return new ResponseEntity<>(daycareGroupService.findByIdWithChildren(daycareGroupId), HttpStatus.OK);
+    }
+
     @GetMapping("/daycareGroups")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Collection<DaycareGroup>> getAllDaycareGroups() {

@@ -1,0 +1,29 @@
+<div class="modal-header bg-purple border-purple text-white">
+    <h4 class="modal-title mx-auto">{{header}}</h4>
+</div>
+
+<form novalidate [formGroup]="daycareGroupForm" (ngSubmit)="onSubmit()">
+
+    <div class="modal-body">
+
+        <div class="form-group">
+            <label>Group name</label>
+            <input type="text" class="form-control" formControlName="groupName" />
+        </div>
+        <alert
+            *ngIf="daycareGroupForm.get('groupName').hasError('required') && daycareGroupForm.get('groupName').touched"
+            type="danger" class="mt-1">
+            Group name <strong>cannot</strong> be empty.
+        </alert>
+        <alert *ngIf="daycareGroupForm.get('groupName').hasError('maxlength')" type="danger" class="mt-1">
+            Group name <strong>cannot</strong> exceed <strong>20</strong> characters.
+        </alert>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-purple" [disabled]="!daycareGroupForm.valid">Save</button>
+        <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
+    </div>
+
+</form>

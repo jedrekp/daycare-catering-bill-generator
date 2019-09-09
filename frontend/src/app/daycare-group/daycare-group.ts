@@ -5,7 +5,7 @@ export class DaycareGroup {
     constructor(
         public id: number,
         public groupName: string,
-        public children: Child[],
+        public children: Child[] = []
     ) { }
 
 }

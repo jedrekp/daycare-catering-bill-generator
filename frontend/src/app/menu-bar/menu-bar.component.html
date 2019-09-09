@@ -1,30 +1,46 @@
-<nav class="navbar navbar-expand-md navbar-custom mb-3 mb-md-5">
+<nav class="navbar navbar-expand-lg navbar-custom mb-lg-5">
     <span class="navbar-brand text-center">Daycare Catering<br>
         Bill Generator
     </span>
-    <ul class="navbar-nav">
 
-        <li class="nav-item mr-1">
-            <a class="nav-link" (click)="openCreateChildModal()">
-                New child
-            </a>
-        </li>
+    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed">
+        EXP
+    </button>
 
-        <li class="nav-item mr-1">
-            <a routerLink="/child-page/1" class="nav-link">
-                Child page
-            </a>
-        </li>
+    <div class="collapse navbar-collapse" [collapse]="isCollapsed" [isAnimated]="true"
+        [class.custom-collapse]="!isCollapsed">
+        <ul class="navbar-nav">
 
-        <li class="btn-group mr-1" dropdown>
-            <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
-                Catering options
-            </a>
-            <div class="dropdown-menu" *dropdownMenu>
-                <a class="dropdown-item" (click)="openCreateCateringOptionModal()">Add new option</a>
-                <a class="dropdown-item" routerLink="/catering-options-list">Display available options</a>
-            </div>
-        </li>
+            <li class="btn-group mr-1" dropdown>
+                <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
+                    Children
+                </a>
+                <div class="dropdown-menu" *dropdownMenu>
+                    <a class="dropdown-item" (click)="openCreateChildModal()">New child</a>
+                    <a class="dropdown-item" routerLink="/child-page/1">Child pages</a>
+                </div>
+            </li>
 
-    </ul>
+            <li class="btn-group mr-1" dropdown>
+                <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
+                    Catering options
+                </a>
+                <div class="dropdown-menu" *dropdownMenu>
+                    <a class="dropdown-item" (click)="openCreateCateringOptionModal()">Add new option</a>
+                    <a class="dropdown-item" routerLink="/catering-options-list">Display available options</a>
+                </div>
+            </li>
+
+            <li class="btn-group mr-1" dropdown>
+                <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
+                    Daycare groups
+                </a>
+                <div class="dropdown-menu" *dropdownMenu>
+                    <a class="dropdown-item" (click)="openCreateDaycareGroupModal()">Add new group</a>
+                    <a class="dropdown-item" routerLink="/catering-options-list">Display available options</a>
+                </div>
+            </li>
+
+        </ul>
+    </div>
 </nav>
