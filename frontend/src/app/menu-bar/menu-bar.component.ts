@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
 
+
 import { Child } from '../child/child';
 import { ChildCreateEditComponent } from '../child/child-create-edit/child-create-edit.component';
 import { CateringOption } from '../catering-option/CateringOption';
@@ -15,7 +16,8 @@ import { DaycareGroupCreateEditComponent } from '../daycare-group/daycare-group-
   styleUrls: ['./menu-bar.component.css']
 })
 export class MenuBarComponent implements OnInit {
-  public isCollapsed = true;
+
+  private navbarOpen: boolean;
   public modalRef: BsModalRef
 
   constructor(
@@ -29,6 +31,19 @@ export class MenuBarComponent implements OnInit {
 
   ngOnInit() { }
 
+  toggleNavbar() {
+    this.navbarOpen = !this.navbarOpen
+  }
+
+  closeNavbar() {
+    this.navbarOpen = false
+  }
+
+  navigateFromMenu(route: string) {
+    this.closeNavbar()
+    this.router.navigate([route])
+  }
+
   openCreateChildModal() {
     let initialState = { child: new Child(-1, '', '', '') }
     this.modalRef = this.modalService.show(ChildCreateEditComponent,
@@ -38,6 +53,7 @@ export class MenuBarComponent implements OnInit {
         if (childId) {
           this.router.navigated = false
           this.router.navigate(['child-page', childId])
+          this.closeNavbar()
         }
       })
   }
@@ -51,6 +67,7 @@ export class MenuBarComponent implements OnInit {
         if (onClose) {
           this.router.navigated = false
           this.router.navigate(['catering-options-list'])
+          this.closeNavbar()
         }
       })
   }
@@ -64,6 +81,7 @@ export class MenuBarComponent implements OnInit {
         if (groupId) {
           this.router.navigated = false
           this.router.navigate(['child-page', groupId])
+          this.closeNavbar()
         }
       }
     )

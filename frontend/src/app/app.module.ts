@@ -2,14 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgxNavbarModule } from 'ngx-bootstrap-navbar';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { DatePipe } from '@angular/common';
 
 import { AppComponent } from './app.component';
@@ -46,12 +44,10 @@ import { DaycareGroupPageComponent } from './daycare-group/daycare-group-page/da
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NgxNavbarModule,
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     AlertModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    CollapseModule.forRoot()
+    BsDropdownModule.forRoot()
   ],
   entryComponents: [
     ChildCreateEditComponent,
