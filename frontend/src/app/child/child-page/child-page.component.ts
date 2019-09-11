@@ -5,7 +5,6 @@ import { ChildDataService } from '../child-data.service';
 import { Child, AssignedOption } from '../child';
 import { ChildCreateEditComponent } from '../child-create-edit/child-create-edit.component';
 import { ChildAssignOptionComponent } from '../child-assign-option/child-assign-option.component';
-import { DaycareGroup } from 'src/app/daycare-group/daycare-group';
 import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-data.service';
 import { AssignToGroupComponent } from 'src/app/daycare-group/assign-to-group/assign-to-group.component';
 
@@ -19,8 +18,6 @@ export class ChildPageComponent implements OnInit {
   private modalRef: BsModalRef
 
   private child: Child
-  private daycareGroups: DaycareGroup[]
-  private newGroup: DaycareGroup
 
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +29,6 @@ export class ChildPageComponent implements OnInit {
   ngOnInit() {
     this.child = new Child(-1,'','','')
     this.retrieveChild(this.route.snapshot.params['childId'])
-    this.retrieveDaycareGroups()
   }
 
   retrieveChild(childId: number) {
@@ -47,14 +43,6 @@ export class ChildPageComponent implements OnInit {
     assignedOptions.sort((val1, val2) => {
       return <any>new Date(val2.effectiveDate) - <any>new Date(val1.effectiveDate)
     })
-  }
-
-  retrieveDaycareGroups() {
-    this.daycareGroupDataService.retrieveGroups().subscribe(
-      daycareGroups => {
-        this.daycareGroups = daycareGroups
-        this.newGroup = daycareGroups[0]
-      })
   }
 
   openEditChildModal() {

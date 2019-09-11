@@ -7,7 +7,7 @@ import { CateringOptionCreateEditComponent } from '../catering-option-create-edi
 @Component({
   selector: 'app-catering-options-list',
   templateUrl: './catering-options-list.component.html',
-  styleUrls: ['./catering-options-list.component.css']
+  styleUrls: ['./catering-options-list.component.css'] 
 })
 export class CateringOptionsListComponent implements OnInit {
 

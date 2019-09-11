@@ -80,11 +80,9 @@ export class MenuBarComponent implements OnInit {
       groupId => {
         if (groupId) {
           this.router.navigated = false
-          this.router.navigate(['child-page', groupId])
+          this.router.navigate(['daycare-group-page', groupId])
           this.closeNavbar()
         }
-      }
-    )
+      })
   }
-
 }

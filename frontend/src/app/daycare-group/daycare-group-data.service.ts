@@ -11,8 +11,12 @@ export class DaycareGroupDataService {
     private httpClient: HttpClient
   ) { }
 
-  retrieveGroups() {
+  retrieveDaycareGroups() {
     return this.httpClient.get<DaycareGroup[]>('http://localhost:8081/daycareGroups')
+  }
+
+  retrieveSingleDaycareGroup(daycareGroupId: number) {
+    return this.httpClient.get<DaycareGroup>(`http://localhost:8081/daycareGroups/${daycareGroupId}`)
   }
 
   createDaycareGroup(daycareGroup: DaycareGroup) {

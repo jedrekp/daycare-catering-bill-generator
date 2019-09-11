@@ -31,7 +31,7 @@ export class AssignToGroupComponent implements OnInit {
   }
 
   retrieveDaycareGroups() {
-    this.daycareGroupDataService.retrieveGroups().subscribe(
+    this.daycareGroupDataService.retrieveDaycareGroups().subscribe(
       daycareGroups => {
         this.daycareGroups = daycareGroups
         this.assignChildToGroupForm.patchValue({ daycareGroup: daycareGroups[0] })

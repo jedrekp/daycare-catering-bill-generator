@@ -1,1 +1,89 @@
-<p>daycare-group-page works!</p>
+<div class="text-center mx-auto my-4">
+    <h2 class="heading-puprle">Daycare group #{{daycareGroup.id}}</h2>
+</div>
+
+<div class="row justify-content-center">
+
+    <div class="col-10 col-md-4 mr-md-4">
+
+        <div class="card mb-4 px-0 border-darkblue" id="group-info-card">
+
+            <div class="card-header bg-darkblue">
+                <h5 class="card-title my-0">Group Information</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0 table-hover">
+                        <tbody>
+                            <tr>
+                                <td class="font-weight-bold">Group name:</td>
+                                <td>
+                                    {{daycareGroup.groupName}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="font-weight-bold">Children count:</span></td>
+                                <td>{{daycareGroup.children.length}} </td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold">Supervisor:</td>
+                                <td>Placeholder</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="btn btn-outline-darkblue mr-lg-1" (click)="openEditGroupModal()">Edit
+                    Information</button>
+                <button class="btn btn-outline-darkblue" (click)="deleteGroup()">Edit Information</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-10 col-md-6 mr-md-4">
+
+        <div class="card mb-4 px-0 border-darkblue text-center" id="children-list-card">
+
+            <div class="card-header bg-darkblue">
+                <h5 class="card-title my-0">List of children</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-borderless text-center">
+
+                        <thead>
+
+                            <tr>
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th>Child page</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr *ngFor="let child of daycareGroup.children">
+                                <td>{{child.firstName}}</td>
+                                <td>{{child.lastName}}</td>
+                                <td>
+                                    <button class="btn btn-outline-purple"
+                                        (click)="openEditCateringOptionModal(option)">Open
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
