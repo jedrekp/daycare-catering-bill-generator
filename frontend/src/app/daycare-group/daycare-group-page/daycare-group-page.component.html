@@ -36,9 +36,17 @@
             </div>
 
             <div class="card-footer">
-                <button class="btn btn-outline-darkblue mr-lg-1" (click)="openEditGroupModal()">Edit
-                    Information</button>
-                <button class="btn btn-outline-darkblue" (click)="deleteGroup()">Edit Information</button>
+
+                <div class="row justify-content-center">
+                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                        (click)="openEditGroupModal()">
+                        Edit Information
+                    </button>
+
+                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-7" (click)="deleteGroup()">Delete
+                        group</button>
+                </div>
+
             </div>
 
         </div>
@@ -62,6 +70,7 @@
                                 <th>First name</th>
                                 <th>Last name</th>
                                 <th>Child page</th>
+                                <th>Remove from group</th>
                             </tr>
 
                         </thead>
@@ -72,8 +81,13 @@
                                 <td>{{child.firstName}}</td>
                                 <td>{{child.lastName}}</td>
                                 <td>
-                                    <button class="btn btn-outline-purple"
-                                        (click)="openEditCateringOptionModal(option)">Open
+                                    <button class="btn btn-outline-purple" [routerLink]="['/child-page', child.id]">
+                                        Open
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-purple" (click)="removeChildFromGroup(child.id)">
+                                        Remove
                                     </button>
                                 </td>
                             </tr>

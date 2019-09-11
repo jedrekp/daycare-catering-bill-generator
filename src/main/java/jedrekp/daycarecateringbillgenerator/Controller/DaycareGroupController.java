@@ -26,9 +26,14 @@ public class DaycareGroupController {
 
     @PutMapping("/daycareGroups/{daycareGroupId}")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<DaycareGroup> editDaycareGroup(@PathVariable Long daycareGroupId,
-                                                         @RequestBody DaycareGroup daycareGroup) {
+    public ResponseEntity<DaycareGroup> editDaycareGroup(@PathVariable Long daycareGroupId, @RequestBody DaycareGroup daycareGroup) {
         return new ResponseEntity<>(daycareGroupService.editDaycareGroup(daycareGroupId, daycareGroup), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/daycareGroups/{daycareGroupId}")
+    public ResponseEntity deleteDaycareGroup(@PathVariable Long daycareGroupId) {
+        daycareGroupService.deleteDaycareGroup(daycareGroupId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/daycareGroups/{daycareGroupId}")
@@ -45,9 +50,14 @@ public class DaycareGroupController {
 
     @PutMapping("/daycareGroups/{daycareGroupId}/children/{childId}")
     @JsonView(JsonViewFilter.WithChildren.class)
-    public ResponseEntity<DaycareGroup> addSingleChildToDayCareGroup(@PathVariable Long daycareGroupId,
-                                                                     @PathVariable Long childId) {
+    public ResponseEntity<DaycareGroup> addChildToDayCareGroup(@PathVariable Long daycareGroupId, @PathVariable Long childId) {
         return new ResponseEntity<>(
-                daycareGroupService.addSingleChildToDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
+                daycareGroupService.addChildToDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/daycareGroups/{daycareGroupId}/children/{childId}")
+    @JsonView(JsonViewFilter.WithChildren.class)
+    public ResponseEntity<DaycareGroup> removeChildFromGroup(@PathVariable Long daycareGroupId, @PathVariable Long childId) {
+        return new ResponseEntity<>(daycareGroupService.removeChildFromDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
     }
 }

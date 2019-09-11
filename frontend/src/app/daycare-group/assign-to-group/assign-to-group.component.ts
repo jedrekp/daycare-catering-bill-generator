@@ -39,7 +39,7 @@ export class AssignToGroupComponent implements OnInit {
   }
 
   onSubmit() {
-    this.daycareGroupDataService.addSingleChildToDaycareGroup(
+    this.daycareGroupDataService.addChildToDaycareGroup(
       this.assignChildToGroupForm.get('daycareGroup').value.id,
       this.childId
     ).subscribe(

@@ -28,9 +28,17 @@ export class DaycareGroupDataService {
       daycareGroup)
   }
 
-  addSingleChildToDaycareGroup(daycareGroupId: number, childId: number) {
+  deleteDaycareGroup(daycareGroupId: number) {
+    return this.httpClient.delete(`http://localhost:8081/daycareGroups/${daycareGroupId}`)
+  }
+
+  addChildToDaycareGroup(daycareGroupId: number, childId: number) {
     return this.httpClient.put<DaycareGroup>(
       `http://localhost:8081/daycareGroups/${daycareGroupId}/children/${childId}`, null)
+  }
+
+  removeChildFromDaycareGroup(daycareGroupId: number, childId: number){
+    return this.httpClient.delete<DaycareGroup>(`http://localhost:8081/daycareGroups/${daycareGroupId}/children/${childId}`)
   }
 
 }

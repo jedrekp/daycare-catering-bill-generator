@@ -27,7 +27,7 @@ export class ChildPageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.child = new Child(-1,'','','')
+    this.child = new Child(-1, '', '', '')
     this.retrieveChild(this.route.snapshot.params['childId'])
   }
 
@@ -66,6 +66,13 @@ export class ChildPageComponent implements OnInit {
         if (onClose) {
           this.retrieveChild(this.child.id)
         }
+      })
+  }
+
+  removeFromGroup() {
+    this.daycareGroupDataService.removeChildFromDaycareGroup(this.child.daycareGroup.id, this.child.id).subscribe(
+      response => {
+        this.retrieveChild(this.child.id)
       })
   }
 

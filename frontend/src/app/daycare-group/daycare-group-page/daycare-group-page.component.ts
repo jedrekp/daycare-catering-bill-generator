@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DaycareGroup } from '../daycare-group';
 import { DaycareGroupDataService } from '../daycare-group-data.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DaycareGroupCreateEditComponent } from '../daycare-group-create-edit/daycare-group-create-edit.component';
 
@@ -18,8 +18,10 @@ export class DaycareGroupPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private daycareGroupDataService: DaycareGroupDataService,
-    private modalService: BsModalService
+    private router: Router,
+    private modalService: BsModalService,
+    private daycareGroupDataService: DaycareGroupDataService
+
   ) { }
 
   ngOnInit() {
@@ -52,6 +54,20 @@ export class DaycareGroupPageComponent implements OnInit {
         if (onClose) {
           this.retrieveDaycareGroup(this.daycareGroup.id)
         }
+      })
+  }
+
+  deleteGroup() {
+    this.daycareGroupDataService.deleteDaycareGroup(this.daycareGroup.id).subscribe(
+      response => {
+        this.router.navigate([''])
+      })
+  }
+
+  removeChildFromGroup(childId: number) {
+    this.daycareGroupDataService.removeChildFromDaycareGroup(this.daycareGroup.id, childId).subscribe(
+      response => {
+        this.retrieveDaycareGroup(this.daycareGroup.id)
       })
   }
 }
