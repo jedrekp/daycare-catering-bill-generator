@@ -60,7 +60,7 @@ export class DaycareGroupPageComponent implements OnInit {
   deleteGroup() {
     this.daycareGroupDataService.deleteDaycareGroup(this.daycareGroup.id).subscribe(
       response => {
-        this.router.navigate([''])
+        this.router.navigate(['daycare-group-list'])
       })
   }
 
