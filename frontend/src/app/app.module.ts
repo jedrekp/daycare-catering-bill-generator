@@ -21,6 +21,7 @@ import { CateringOptionCreateEditComponent } from './catering-option/catering-op
 import { DaycareGroupCreateEditComponent } from './daycare-group/daycare-group-create-edit/daycare-group-create-edit.component';
 import { DaycareGroupListComponent } from './daycare-group/daycare-group-list/daycare-group-list.component';
 import { DaycareGroupPageComponent } from './daycare-group/daycare-group-page/daycare-group-page.component';
+import { InformationModalComponent } from './dialog/information-modal/information-modal.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { DaycareGroupPageComponent } from './daycare-group/daycare-group-page/da
     DaycareGroupCreateEditComponent,
     DaycareGroupListComponent,
     DaycareGroupPageComponent,
+    InformationModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +52,7 @@ import { DaycareGroupPageComponent } from './daycare-group/daycare-group-page/da
     BsDropdownModule.forRoot()
   ],
   entryComponents: [
+    InformationModalComponent,
     ChildCreateEditComponent,
     ChildAssignOptionComponent,
     AssignToGroupComponent,

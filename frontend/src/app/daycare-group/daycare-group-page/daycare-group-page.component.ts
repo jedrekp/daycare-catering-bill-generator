@@ -4,6 +4,7 @@ import { DaycareGroupDataService } from '../daycare-group-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DaycareGroupCreateEditComponent } from '../daycare-group-create-edit/daycare-group-create-edit.component';
+import { InformationModalComponent } from 'src/app/dialog/information-modal/information-modal.component';
 
 @Component({
   selector: 'app-daycare-group-page',
@@ -60,6 +61,16 @@ export class DaycareGroupPageComponent implements OnInit {
   deleteGroup() {
     this.daycareGroupDataService.deleteDaycareGroup(this.daycareGroup.id).subscribe(
       response => {
+        this.openGroupDeletedInformationModal()
+      })
+  }
+
+  openGroupDeletedInformationModal() {
+    let initialState = { title: 'Info', message: `Daycare group #${this.daycareGroup.id} has been deleted.` }
+    this.modalRef = this.modalService.show(InformationModalComponent,
+      { class: 'modal-top-10 modal-md', initialState, ignoreBackdropClick: true })
+    this.modalRef.content.onClose.subscribe(
+      onClose => {
         this.router.navigate(['daycare-group-list'])
       })
   }
