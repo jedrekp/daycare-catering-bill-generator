@@ -4,6 +4,7 @@ import { DaycareGroupDataService } from '../daycare-group-data.service';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DaycareGroup } from '../daycare-group';
+import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 
 @Component({
   selector: 'app-assign-to-group',
@@ -18,7 +19,8 @@ export class AssignToGroupComponent implements OnInit {
   private daycareGroups: DaycareGroup[]
 
   constructor(
-    private bsModalRef: BsModalRef,
+    private modalRef: BsModalRef,
+    private dialogModalService: DialogModalService,
     private daycareGroupDataService: DaycareGroupDataService
   ) { }
 
@@ -44,13 +46,16 @@ export class AssignToGroupComponent implements OnInit {
       this.childId
     ).subscribe(
       response => {
-        this.bsModalRef.hide()
+        this.modalRef.hide()
         this.onClose.next(true)
+      },
+      err => {
+        this.dialogModalService.openNestedInformationModal('Cannot assign to group', err.message)
       })
   }
 
   onCancel() {
-    this.bsModalRef.hide()
+    this.modalRef.hide()
     this.onClose.next(false)
   }
 }

@@ -4,7 +4,7 @@ import { DaycareGroupDataService } from '../daycare-group-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DaycareGroupCreateEditComponent } from '../daycare-group-create-edit/daycare-group-create-edit.component';
-import { InformationModalComponent } from 'src/app/dialog/information-modal/information-modal.component';
+import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 
 @Component({
   selector: 'app-daycare-group-page',
@@ -13,14 +13,15 @@ import { InformationModalComponent } from 'src/app/dialog/information-modal/info
 })
 export class DaycareGroupPageComponent implements OnInit {
 
-  private modalRef: BsModalRef
+  private bsModalRef: BsModalRef
 
   private daycareGroup: DaycareGroup
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: BsModalService,
+    private bsModalService: BsModalService,
+    private dialogModalService: DialogModalService,
     private daycareGroupDataService: DaycareGroupDataService
 
   ) { }
@@ -48,12 +49,17 @@ export class DaycareGroupPageComponent implements OnInit {
 
   openEditGroupModal() {
     let initialState = { daycareGroup: new DaycareGroup(this.daycareGroup.id, this.daycareGroup.groupName) }
-    this.modalRef = this.modalService.show(DaycareGroupCreateEditComponent,
+    this.bsModalRef = this.bsModalService.show(DaycareGroupCreateEditComponent,
       { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
-    this.modalRef.content.onClose.subscribe(
+    this.bsModalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
-          this.retrieveDaycareGroup(this.daycareGroup.id)
+          this.bsModalRef = this.dialogModalService.openInformationModal('Group edited',
+            `Daycare group#${this.daycareGroup.id} has been succesfully edited.`)
+          this.bsModalRef.content.onClose.subscribe(
+            onClose => {
+              this.retrieveDaycareGroup(this.daycareGroup.id)
+            })
         }
       })
   }
@@ -61,24 +67,25 @@ export class DaycareGroupPageComponent implements OnInit {
   deleteGroup() {
     this.daycareGroupDataService.deleteDaycareGroup(this.daycareGroup.id).subscribe(
       response => {
-        this.openGroupDeletedInformationModal()
-      })
-  }
-
-  openGroupDeletedInformationModal() {
-    let initialState = { title: 'Info', message: `Daycare group #${this.daycareGroup.id} has been deleted.` }
-    this.modalRef = this.modalService.show(InformationModalComponent,
-      { class: 'modal-top-10 modal-md', initialState, ignoreBackdropClick: true })
-    this.modalRef.content.onClose.subscribe(
-      onClose => {
-        this.router.navigate(['daycare-group-list'])
+        this.bsModalRef = this.dialogModalService.openInformationModal('Group deleted',
+          `Daycare group#${this.daycareGroup.id} has been succesfully deleted.`)
+        this.bsModalRef.content.onClose.subscribe(
+          onClose => {
+            this.router.navigate(['daycare-group-list'])
+          })
       })
   }
 
   removeChildFromGroup(childId: number) {
     this.daycareGroupDataService.removeChildFromDaycareGroup(this.daycareGroup.id, childId).subscribe(
       response => {
-        this.retrieveDaycareGroup(this.daycareGroup.id)
+        this.bsModalRef = this.dialogModalService.openInformationModal('Child removed',
+          `Child#${childId} has been succesfully removed from daycare group#${this.daycareGroup.id}.`)
+        this.bsModalRef.content.onClose.subscribe(
+          onclose => {
+            this.retrieveDaycareGroup(this.daycareGroup.id)
+          })
       })
   }
+
 }

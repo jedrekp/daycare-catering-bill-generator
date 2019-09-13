@@ -20,7 +20,7 @@ export class CateringOptionCreateEditComponent implements OnInit {
   private cateringOptionForm: FormGroup
 
   constructor(
-    private bsModalRef: BsModalRef,
+    private modalRef: BsModalRef,
     private cateringOptionDataService: CateringOptionDataService
   ) { }
 
@@ -55,14 +55,14 @@ export class CateringOptionCreateEditComponent implements OnInit {
       if (this.cateringOption.id === -1) {
         this.cateringOptionDataService.createCateringOption(cateringOptionToSubmit).subscribe(
           response => {
-            this.bsModalRef.hide()
+            this.modalRef.hide()
             this.onClose.next(true)
           })
       } else {
         this.cateringOptionDataService.editCateringOption(
           cateringOptionToSubmit, this.cateringOption.id).subscribe(
             response => {
-              this.bsModalRef.hide()
+              this.modalRef.hide()
               this.onClose.next(true)
             })
       }
@@ -70,7 +70,7 @@ export class CateringOptionCreateEditComponent implements OnInit {
   }
 
   onCancel() {
-    this.bsModalRef.hide()
+    this.modalRef.hide()
     this.onClose.next(false)
   }
 
