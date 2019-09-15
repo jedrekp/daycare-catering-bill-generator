@@ -3,11 +3,12 @@ import { CateringOption } from '../CateringOption';
 import { CateringOptionDataService } from '../catering-option-data.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CateringOptionCreateEditComponent } from '../catering-option-create-edit/catering-option-create-edit.component';
+import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 
 @Component({
   selector: 'app-catering-options-list',
   templateUrl: './catering-options-list.component.html',
-  styleUrls: ['./catering-options-list.component.css'] 
+  styleUrls: ['./catering-options-list.component.css']
 })
 export class CateringOptionsListComponent implements OnInit {
 
@@ -20,6 +21,7 @@ export class CateringOptionsListComponent implements OnInit {
 
   constructor(
     private cateringOptionDataService: CateringOptionDataService,
+    private dialogModalService: DialogModalService,
     private modalService: BsModalService
   ) { }
 
@@ -54,8 +56,10 @@ export class CateringOptionsListComponent implements OnInit {
     this.modalRef = this.modalService.show(CateringOptionCreateEditComponent,
       { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
-      onClose => {
-        if (onClose) {
+      cateringOption => {
+        if (cateringOption) {
+          this.modalRef = this.dialogModalService.openInformationModal('Option edited',
+            `Catering option #${cateringOption.id} has been succesfully edited.`)
           this.retrieveCateringOptions();
         }
       })

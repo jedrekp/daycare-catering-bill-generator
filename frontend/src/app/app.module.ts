@@ -22,6 +22,7 @@ import { DaycareGroupCreateEditComponent } from './daycare-group/daycare-group-c
 import { DaycareGroupListComponent } from './daycare-group/daycare-group-list/daycare-group-list.component';
 import { DaycareGroupPageComponent } from './daycare-group/daycare-group-page/daycare-group-page.component';
 import { InformationModalComponent } from './dialog/information-modal/information-modal.component';
+import { ConfirmationModalComponent } from './dialog/confirmation-modal/confirmation-modal.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { InformationModalComponent } from './dialog/information-modal/informatio
     DaycareGroupListComponent,
     DaycareGroupPageComponent,
     InformationModalComponent,
+    ConfirmationModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,6 +55,7 @@ import { InformationModalComponent } from './dialog/information-modal/informatio
   ],
   entryComponents: [
     InformationModalComponent,
+    ConfirmationModalComponent,
     ChildCreateEditComponent,
     ChildAssignOptionComponent,
     AssignToGroupComponent,

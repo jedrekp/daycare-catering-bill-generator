@@ -4,6 +4,7 @@ import { CateringOptionDataService } from '../catering-option-data.service';
 import { CateringOption } from '../CateringOption';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 
 
 
@@ -15,17 +16,18 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class CateringOptionCreateEditComponent implements OnInit {
 
   @Input() private cateringOption: CateringOption
-  private onClose: Subject<boolean>
+  private onClose: Subject<CateringOption>
   private header: string
   private cateringOptionForm: FormGroup
 
   constructor(
     private modalRef: BsModalRef,
+    private dialogModalService: DialogModalService,
     private cateringOptionDataService: CateringOptionDataService
   ) { }
 
   ngOnInit() {
-    this.onClose = new Subject<boolean>()
+    this.onClose = new Subject<CateringOption>()
     if (this.cateringOption.id === -1) {
       this.header = 'New catering option'
     } else {
@@ -54,16 +56,22 @@ export class CateringOptionCreateEditComponent implements OnInit {
       )
       if (this.cateringOption.id === -1) {
         this.cateringOptionDataService.createCateringOption(cateringOptionToSubmit).subscribe(
-          response => {
+          cateringOption => {
             this.modalRef.hide()
-            this.onClose.next(true)
+            this.onClose.next(cateringOption)
+          },
+          err => {
+            this.dialogModalService.openNestedInformationModal('Cannot create option', err.message)
           })
       } else {
         this.cateringOptionDataService.editCateringOption(
           cateringOptionToSubmit, this.cateringOption.id).subscribe(
-            response => {
+            cateringOption => {
               this.modalRef.hide()
-              this.onClose.next(true)
+              this.onClose.next(cateringOption)
+            },
+            err => {
+              this.dialogModalService.openNestedInformationModal('Cannot edit option', err.message)
             })
       }
     }
@@ -71,7 +79,7 @@ export class CateringOptionCreateEditComponent implements OnInit {
 
   onCancel() {
     this.modalRef.hide()
-    this.onClose.next(false)
+    this.onClose.next(null)
   }
 
 }

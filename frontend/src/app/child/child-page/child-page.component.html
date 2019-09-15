@@ -1,5 +1,5 @@
 <div class="text-center mx-auto my-4">
-    <h2 class="heading-puprle">Child #{{child.id}}</h2>
+    <h2 class="heading-darkblue">Child#{{child.id}}</h2>
 </div>
 
 <div class="row justify-content-center">
@@ -61,7 +61,7 @@
                                 <td><span class="font-weight-bold">Group name:</span></td>
                                 <td>
                                     <span *ngIf="child.daycareGroup">{{child.daycareGroup.groupName}} </span>
-                                    <span *ngIf="!child.daycareGroup">None</span>
+                                    <span *ngIf="!child.daycareGroup" class="text-secondary">None</span>
                                 </td>
                             </tr>
                             <tr>
@@ -125,7 +125,7 @@
                                 <td>{{assignedOption.cateringOption.optionName}}</td>
                                 <td>
                                     <button class="btn btn-outline-purple"
-                                        (click)="removeAssignedOption(assignedOption.id)">Delete</button>
+                                        (click)="removeAssignedOption(assignedOption)">Delete</button>
                                 </td>
                         </tbody>
                     </table>

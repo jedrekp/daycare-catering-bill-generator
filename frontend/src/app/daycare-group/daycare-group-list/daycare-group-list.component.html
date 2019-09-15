@@ -1,5 +1,5 @@
 <div class="text-center mx-auto my-4">
-    <h2 class="heading-puprle">Daycare groups</h2>
+    <h2 class="heading-darkblue">Daycare groups</h2>
 </div>
 
 <div class="row">
@@ -17,6 +17,7 @@
 
                     <thead>
                         <tr>
+                            <th>Group Id</th>
                             <th>Group name</th>
                             <th>Group page</th>
                             <th>Delete group</th>
@@ -25,6 +26,7 @@
 
                     <tbody>
                         <tr *ngFor="let group of daycareGroups">
+                            <td>#{{group.id}}</td>
                             <td>{{group.groupName}}</td>
                             <td>
                                 <button class="btn btn-outline-purple" [routerLink]="['/daycare-group-page',group.id]">
@@ -32,7 +34,7 @@
                                 </button>
                             </td>
                             <td>
-                                <button class="btn btn-outline-purple" (click)="deleteGroup(group.id)">
+                                <button class="btn btn-outline-purple" (click)="deleteGroup(group)">
                                     Delete
                                 </button>
                             </td>

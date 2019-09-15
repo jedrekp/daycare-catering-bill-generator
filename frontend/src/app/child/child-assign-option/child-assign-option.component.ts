@@ -6,6 +6,8 @@ import { CateringOption } from 'src/app/catering-option/CateringOption';
 import { CateringOptionDataService } from 'src/app/catering-option/catering-option-data.service';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
+import { ERROR_HEADER } from 'src/app/const';
 
 @Component({
   selector: 'app-child-assign-option',
@@ -16,7 +18,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class ChildAssignOptionComponent implements OnInit {
 
   @Input() private childId: number
-  private onClose: Subject<boolean>
+  private onClose: Subject<CateringOption>
   private assignCateringOptionForm: FormGroup
   private cateringOptions: CateringOption[]
   private minDate: Date
@@ -24,12 +26,13 @@ export class ChildAssignOptionComponent implements OnInit {
   constructor(
     private bsModalRef: BsModalRef,
     private datePipe: DatePipe,
+    private dialogModalService: DialogModalService,
     private childDataService: ChildDataService,
     private cateringOptionDataService: CateringOptionDataService
   ) { }
 
   ngOnInit() {
-    this.onClose = new Subject<boolean>()
+    this.onClose = new Subject<CateringOption>()
     this.assignCateringOptionForm = new FormGroup({
       effectiveDate: new FormControl(),
       cateringOption: new FormControl(null, [Validators.required])
@@ -65,12 +68,15 @@ export class ChildAssignOptionComponent implements OnInit {
       .subscribe(
         response => {
           this.bsModalRef.hide()
-          this.onClose.next(true)
+          this.onClose.next(this.assignCateringOptionForm.get('cateringOption').value)
+        },
+        err => {
+          this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
         })
   }
 
   onCancel() {
     this.bsModalRef.hide()
-    this.onClose.next(false)
+    this.onClose.next(null)
   }
 }

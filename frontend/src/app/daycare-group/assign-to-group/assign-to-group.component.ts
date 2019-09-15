@@ -14,7 +14,7 @@ import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 export class AssignToGroupComponent implements OnInit {
 
   @Input() private childId: number
-  private onClose: Subject<boolean>
+  private onClose: Subject<DaycareGroup>
   private assignChildToGroupForm: FormGroup
   private daycareGroups: DaycareGroup[]
 
@@ -25,7 +25,7 @@ export class AssignToGroupComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.onClose = new Subject<boolean>()
+    this.onClose = new Subject<DaycareGroup>()
     this.assignChildToGroupForm = new FormGroup({
       daycareGroup: new FormControl(null, [Validators.required])
     })
@@ -45,9 +45,9 @@ export class AssignToGroupComponent implements OnInit {
       this.assignChildToGroupForm.get('daycareGroup').value.id,
       this.childId
     ).subscribe(
-      response => {
+      daycareGroup => {
         this.modalRef.hide()
-        this.onClose.next(true)
+        this.onClose.next(daycareGroup)
       },
       err => {
         this.dialogModalService.openNestedInformationModal('Cannot assign to group', err.message)
@@ -56,6 +56,6 @@ export class AssignToGroupComponent implements OnInit {
 
   onCancel() {
     this.modalRef.hide()
-    this.onClose.next(false)
+    this.onClose.next(null)
   }
 }

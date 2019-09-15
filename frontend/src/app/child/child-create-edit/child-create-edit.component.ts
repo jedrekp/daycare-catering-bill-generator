@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { Child } from '../child';
 import { ChildDataService } from '../child-data.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
+import { ERROR_HEADER } from 'src/app/const';
 
 @Component({
   selector: 'app-child-create-edit',
@@ -20,6 +22,7 @@ export class ChildCreateEditComponent implements OnInit {
 
   constructor(
     private bsModalRef: BsModalRef,
+    private dialogModalService: DialogModalService,
     private childDataService: ChildDataService
   ) { }
 
@@ -54,12 +57,18 @@ export class ChildCreateEditComponent implements OnInit {
           child => {
             this.bsModalRef.hide()
             this.onClose.next(child.id)
+          },
+          err => {
+            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
           })
       } else {
         this.childDataService.editChild(this.child.id, childToSubmit).subscribe(
           child => {
             this.bsModalRef.hide()
             this.onClose.next(child.id)
+          },
+          err => {
+            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
           })
       }
     }
