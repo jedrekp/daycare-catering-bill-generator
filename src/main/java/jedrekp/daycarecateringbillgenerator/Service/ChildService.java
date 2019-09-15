@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 public class ChildService {
@@ -31,7 +29,7 @@ public class ChildService {
     @Transactional
     public Child save(Child child) {
         if (childRepository.existsByFirstNameAndLastName(child.getFirstName(), child.getLastName())) {
-            throw new EntityExistsException("A child with the same first name and last name already exists");
+            throw new EntityExistsException("Another child with the same first name and last name already exists");
         }
         return childRepository.save(child);
     }
@@ -39,7 +37,7 @@ public class ChildService {
     @Transactional
     public Child editChild(Long childId, Child child) {
         if (childRepository.existsByFirstNameAndLastNameAndIdNot(child.getFirstName(), child.getLastName(), child.getId())) {
-            throw new EntityExistsException("A child with the same first name and last name already exists");
+            throw new EntityExistsException("Another child with the same first name and last name already exists");
         }
         Child childToEdit = findById(childId);
         childToEdit.setFirstName(child.getFirstName());
@@ -59,7 +57,7 @@ public class ChildService {
 
     @Transactional(readOnly = true)
     public Collection<Child> findChildrenFromGroup(Long daycareGroupId) {
-        if (daycareGroupId == 1L) {
+        if (daycareGroupId == -1L) {
             daycareGroupId = null;
         }
         return childRepository.findByDaycareGroup_Id(daycareGroupId);
@@ -67,20 +65,20 @@ public class ChildService {
 
     @Transactional
     public Child assignCateringOption(Long childId, AssignedOptionDTO assignedOptionDTO) {
-        Child child = findByIdWithAllDetails(childId);
+        if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(assignedOptionDTO.getEffectiveDate(), childId)) {
+            throw new IllegalArgumentException(
+                    "Child#" + childId + " already has another catering option assigned with this effective date.\n" +
+                            "It must be removed first");
+        }
         CateringOption cateringOption = cateringOptionService.findById(assignedOptionDTO.getCateringOptionId());
         if (cateringOption.isDisabled()) {
-            throw new IllegalArgumentException("Catering Option:  " + cateringOption.getOptionName() + " is disabled." +
-                    " It can no longer be assigned");
+            throw new IllegalArgumentException("Catering option#" + cateringOption.getId() + " is disabled.\n" +
+                    "It can no longer be assigned");
         }
-        getAssignedOptionByEffectiveDateIfExistsAlready(child, assignedOptionDTO.getEffectiveDate())
-                .ifPresentOrElse(assignedOption -> assignedOption.setCateringOption(cateringOption),
-                        () -> {
-                            AssignedOption assignedOption = new AssignedOption(
-                                    assignedOptionDTO.getEffectiveDate(), child, cateringOption);
-                            child.getAssignedOptions().add(assignedOption);
-                            assignedOptionRepository.save(assignedOption);
-                        });
+        Child child = findByIdWithAllDetails(childId);
+        AssignedOption assignedOption = new AssignedOption(assignedOptionDTO.getEffectiveDate(), child, cateringOption);
+        child.getAssignedOptions().add(assignedOption);
+        assignedOptionRepository.save(assignedOption);
         return child;
     }
 
@@ -91,13 +89,6 @@ public class ChildService {
                 .orElseThrow(EntityNotFoundException::new);
         child.getAssignedOptions().remove(assignedOption);
         assignedOptionRepository.delete(assignedOption);
-    }
-
-    private Optional<AssignedOption> getAssignedOptionByEffectiveDateIfExistsAlready(Child child, LocalDate effectiveDate) {
-        return child.getAssignedOptions()
-                .stream()
-                .filter(assignedOption -> assignedOption.getEffectiveDate().equals(effectiveDate))
-                .findAny();
     }
 
 }

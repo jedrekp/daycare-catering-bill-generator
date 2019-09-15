@@ -21,7 +21,7 @@ public class CateringOptionService {
     public CateringOption save(CateringOption cateringOption) {
         if (cateringOptionRepository.existsByOptionName(cateringOption.getOptionName())) {
             throw new EntityExistsException(
-                    "Catering option with this name already exists. Please choose a different name");
+                    "Another catering option with the same name already exists. Please choose a different name");
         }
         return cateringOptionRepository.save(cateringOption);
     }
@@ -30,7 +30,7 @@ public class CateringOptionService {
     public CateringOption editCateringOption(CateringOption cateringOption, Long cateringOptionId) {
         if (cateringOptionRepository.existsByOptionNameAndIdNot(cateringOption.getOptionName(), cateringOptionId)) {
             throw new EntityExistsException(
-                    "Catering option with this name already exists. Please choose a different name");
+                    "Another catering option with the name already exists. Please choose a different name");
         }
         CateringOption cateringOptionToEdit = findById(cateringOptionId);
         cateringOptionToEdit.setOptionName(cateringOption.getOptionName());

@@ -23,7 +23,7 @@ public class DaycareGroupService {
     @Transactional
     public DaycareGroup save(DaycareGroup daycareGroup) {
         if (daycareGroupRepository.existsByGroupName(daycareGroup.getGroupName())) {
-            throw new EntityExistsException("Daycare group with chosen group name already exists");
+            throw new EntityExistsException("Another daycare group with the same group name already exists");
         }
         return daycareGroupRepository.save(daycareGroup);
     }
@@ -31,7 +31,7 @@ public class DaycareGroupService {
     @Transactional
     public DaycareGroup editDaycareGroup(Long daycareGroupId, DaycareGroup daycareGroup) {
         if (daycareGroupRepository.existsByGroupNameAndIdNot(daycareGroup.getGroupName(), daycareGroupId)) {
-            throw new EntityExistsException("Daycare group with chosen group name already exists");
+            throw new EntityExistsException("Another daycare group with the same group name already exists");
         }
         DaycareGroup daycareGroupToEdit = findById(daycareGroupId);
         daycareGroupToEdit.setGroupName(daycareGroup.getGroupName());
@@ -63,7 +63,7 @@ public class DaycareGroupService {
     public DaycareGroup addChildToDaycareGroup(Long daycareGroupId, Long childId) {
         Child child = childService.findById(childId);
         if (child.getDaycareGroup() != null) {
-            throw new IllegalArgumentException("Child " + child.getId() + " is already assigned to a daycare group");
+            throw new IllegalArgumentException("Child#" + child.getId() + " is already assigned to a daycare group");
         }
         DaycareGroup daycareGroup = findByIdWithChildren(daycareGroupId);
         child.setDaycareGroup(daycareGroup);
@@ -79,7 +79,7 @@ public class DaycareGroupService {
             daycareGroup.getChildren().remove(child);
             child.setDaycareGroup(null);
         } else {
-            throw new IllegalArgumentException("Child " + child.getId() + " is not in this daycare group");
+            throw new IllegalArgumentException("Child#" + child.getId() + " is not in this daycare group");
         }
         return daycareGroup;
     }
