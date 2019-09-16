@@ -56,7 +56,7 @@ public class ChildService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Child> findChildrenFromGroup(Long daycareGroupId) {
+    public Collection<Child> findChildrenByDaycareGroup(Long daycareGroupId) {
         if (daycareGroupId == -1L) {
             daycareGroupId = null;
         }

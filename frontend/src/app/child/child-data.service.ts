@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Child } from './child';
 
 
@@ -19,6 +19,11 @@ export class ChildDataService {
 
   retrieveChild(childId: number) {
     return this.httpClient.get<Child>(`http://localhost:8081/children/${childId}`)
+  }
+
+  retrieveChildrenByGroupID(daycareGroupId: number) {
+    let params = new HttpParams().set('daycareGroupId', daycareGroupId.toString())
+    return this.httpClient.get<Child[]>('http://localhost:8081/children', { params: params })
   }
 
   createChild(child: Child) {

@@ -1,0 +1,49 @@
+<div class="text-center mx-auto my-4">
+    <h2 class="heading-darkblue">Unassigned children</h2>
+</div>
+
+<div class="row">
+
+    <div class="card col-10 col-md-8 mx-auto p-0 text-center border-darkblue">
+
+        <div class="card-header bg-darkblue">
+            <h5 class="card-title my-0">Children count: {{children.length}}</h5>
+        </div>
+
+        <div class="card-body pt-4">
+
+            <div class="table-responsive">
+                <table class="table table-hover table-borderless text-center">
+
+                    <thead>
+                        <tr>
+                            <th>Child Id</th>
+                            <th>First name</th>
+                            <th>Last Name</th>
+                            <th>Child page</th>
+                            <th>Assign to daycare group</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let child of children">
+                            <td>#{{child.id}}</td>
+                            <td>{{child.firstName}}</td>
+                            <td>{{child.lastName}}</td>
+                            <td>
+                                <button class="btn btn-outline-purple" [routerLink]="['/child-page',child.id]">
+                                    Open
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-purple" (click)="openAssignChildToGroupModal(child)">
+                                    Assign
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

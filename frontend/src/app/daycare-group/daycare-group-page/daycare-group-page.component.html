@@ -67,6 +67,7 @@
                         <thead>
 
                             <tr>
+                                <th>Child Id</th>
                                 <th>First name</th>
                                 <th>Last name</th>
                                 <th>Child page</th>
@@ -78,6 +79,7 @@
                         <tbody>
 
                             <tr *ngFor="let child of daycareGroup.children">
+                                <td>#{{child.id}}</td>
                                 <td>{{child.firstName}}</td>
                                 <td>{{child.lastName}}</td>
                                 <td>

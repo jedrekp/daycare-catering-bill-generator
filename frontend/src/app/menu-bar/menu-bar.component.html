@@ -19,6 +19,8 @@
                 <div class="dropdown-menu" *dropdownMenu>
                     <a class="dropdown-item" (click)="openCreateChildModal()">New child</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/child-page/1')">Child pages</a>
+                    <a class="dropdown-item" (click)="navigateFromMenu('/unassigned-children-list')">
+                        Display unassigned children</a>
                 </div>
             </li>
 
@@ -28,8 +30,8 @@
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
                     <a class="dropdown-item" (click)="openCreateCateringOptionModal()">Add new option</a>
-                    <a class="dropdown-item" (click)="navigateFromMenu('/catering-options-list')">Display available
-                        options</a>
+                    <a class="dropdown-item" (click)="navigateFromMenu('/catering-options-list')">
+                        Display available options</a>
                 </div>
             </li>
 
@@ -39,7 +41,8 @@
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
                     <a class="dropdown-item" (click)="openCreateDaycareGroupModal()">Add new group</a>
-                    <a class="dropdown-item" (click)="navigateFromMenu('/daycare-group-list')">Display all groups</a>
+                    <a class="dropdown-item" (click)="navigateFromMenu('/daycare-group-list')">
+                        Display all groups</a>
                 </div>
             </li>
 

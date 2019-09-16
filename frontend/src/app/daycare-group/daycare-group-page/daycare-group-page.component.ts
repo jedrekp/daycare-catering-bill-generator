@@ -37,14 +37,14 @@ export class DaycareGroupPageComponent implements OnInit {
     this.daycareGroupDataService.retrieveSingleDaycareGroup(groupId).subscribe(
       daycarareGroup => {
         this.daycareGroup = daycarareGroup
-        this.sortChildrenByLastName()
+        this.sortChildrenById()
       })
   }
 
-  sortChildrenByLastName() {
+  sortChildrenById() {
     this.daycareGroup.children.sort(function (a, b) {
-      if (a.lastName < b.lastName) { return -1; }
-      if (a.lastName > b.lastName) { return 1; }
+      if (a.id < b.id) { return -1; }
+      if (a.id > b.id) { return 1; }
       return 0;
     })
   }

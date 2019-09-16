@@ -23,6 +23,7 @@ import { DaycareGroupListComponent } from './daycare-group/daycare-group-list/da
 import { DaycareGroupPageComponent } from './daycare-group/daycare-group-page/daycare-group-page.component';
 import { InformationModalComponent } from './dialog/information-modal/information-modal.component';
 import { ConfirmationModalComponent } from './dialog/confirmation-modal/confirmation-modal.component';
+import { UnassignedChildrenListComponent } from './child/unassigned-children-list/unassigned-children-list.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { ConfirmationModalComponent } from './dialog/confirmation-modal/confirma
     DaycareGroupPageComponent,
     InformationModalComponent,
     ConfirmationModalComponent,
+    UnassignedChildrenListComponent,
   ],
   imports: [
     BrowserModule,

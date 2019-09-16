@@ -36,10 +36,10 @@ public class ChildController {
         return new ResponseEntity<>(childService.findByIdWithAllDetails(childId), HttpStatus.OK);
     }
 
-    @GetMapping("/children/daycareGroups/{daycareGroupId}")
+    @GetMapping(value = "/children", params = "daycareGroupId")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Collection<Child>> getAllChildrenFromDaycareGroup(@PathVariable Long daycareGroupId) {
-        return new ResponseEntity<>(childService.findChildrenFromGroup(daycareGroupId), HttpStatus.OK);
+    public ResponseEntity<Collection<Child>> getChildrenByDaycareGroup(@RequestParam Long daycareGroupId) {
+        return new ResponseEntity<>(childService.findChildrenByDaycareGroup(daycareGroupId), HttpStatus.OK);
     }
 
     @PostMapping("/children/{childId}/assignedOptions")
