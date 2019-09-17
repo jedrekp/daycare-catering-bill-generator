@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-custom mb-lg-5">
+<nav class="navbar navbar-expand-lg navbar-custom mb-5">
     <span class="navbar-brand text-left py-0">
         Daycare Catering<br>
         Bill Generator
@@ -17,10 +17,10 @@
                     Children
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
-                    <a class="dropdown-item" (click)="openCreateChildModal()">New child</a>
-                    <a class="dropdown-item" (click)="navigateFromMenu('/child-page/1')">Child pages</a>
+                    <a class="dropdown-item" (click)="openCreateChildModal()">Add new child</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/unassigned-children-list')">
-                        Display unassigned children</a>
+                        View unassigned children</a>
+                    <a class="dropdown-item" (click)="navigateFromMenu('/child-page/1')">View children in archive</a>
                 </div>
             </li>
 
@@ -42,7 +42,7 @@
                 <div class="dropdown-menu" *dropdownMenu>
                     <a class="dropdown-item" (click)="openCreateDaycareGroupModal()">Add new group</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/daycare-group-list')">
-                        Display all groups</a>
+                        Display list of groups</a>
                 </div>
             </li>
 

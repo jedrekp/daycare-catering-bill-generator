@@ -23,8 +23,11 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><span class="font-weight-bold">Children count:</span></td>
-                                <td>{{daycareGroup.children.length}} </td>
+                                <td><span class="font-weight-bold">Population:</span></td>
+                                <td>{{daycareGroup.children.length}}
+                                    <span *ngIf="daycareGroup.children.length==1"> child</span>
+                                    <span *ngIf="daycareGroup.children.length!=1"> children</span>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="font-weight-bold">Supervisor:</td>
