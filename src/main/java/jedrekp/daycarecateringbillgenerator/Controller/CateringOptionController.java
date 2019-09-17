@@ -23,7 +23,7 @@ public class CateringOptionController {
 
     @PostMapping("/cateringOptions")
     public ResponseEntity<CateringOption> addNewCateringOption(@RequestBody CateringOption cateringOption) {
-        return new ResponseEntity<>(cateringOptionService.save(cateringOption), HttpStatus.OK);
+        return new ResponseEntity<>(cateringOptionService.saveNewCateringOption(cateringOption), HttpStatus.OK);
     }
 
     @PutMapping("/cateringOptions/{cateringOptionId}")
@@ -31,11 +31,6 @@ public class CateringOptionController {
                                                              @RequestBody CateringOption cateringOption) {
         return new ResponseEntity<>(
                 cateringOptionService.editCateringOption(cateringOption, cateringOptionId), HttpStatus.OK);
-    }
-
-    @GetMapping("/cateringOptions")
-    public ResponseEntity<Collection<CateringOption>> getAllCateringOptions() {
-        return new ResponseEntity<>(cateringOptionService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/cateringOptions", params = "disabled")

@@ -21,12 +21,13 @@ public class DaycareGroupController {
     @PostMapping("/daycareGroups")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<DaycareGroup> addNewDaycareGroup(@RequestBody DaycareGroup daycareGroup) {
-        return new ResponseEntity<>(daycareGroupService.save(daycareGroup), HttpStatus.OK);
+        return new ResponseEntity<>(daycareGroupService.saveNewDaycareGroup(daycareGroup), HttpStatus.OK);
     }
 
     @PutMapping("/daycareGroups/{daycareGroupId}")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<DaycareGroup> editDaycareGroup(@PathVariable Long daycareGroupId, @RequestBody DaycareGroup daycareGroup) {
+    public ResponseEntity<DaycareGroup> editDaycareGroup(@PathVariable Long daycareGroupId,
+                                                         @RequestBody DaycareGroup daycareGroup) {
         return new ResponseEntity<>(daycareGroupService.editDaycareGroup(daycareGroupId, daycareGroup), HttpStatus.OK);
     }
 
@@ -39,7 +40,7 @@ public class DaycareGroupController {
     @GetMapping("/daycareGroups/{daycareGroupId}")
     @JsonView(JsonViewFilter.WithChildren.class)
     public ResponseEntity<DaycareGroup> getDaycareGroup(@PathVariable Long daycareGroupId) {
-        return new ResponseEntity<>(daycareGroupService.findByIdWithChildren(daycareGroupId), HttpStatus.OK);
+        return new ResponseEntity<>(daycareGroupService.findSingleGroupByIdWithChildren(daycareGroupId), HttpStatus.OK);
     }
 
     @GetMapping("/daycareGroups")

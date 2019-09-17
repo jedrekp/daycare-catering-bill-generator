@@ -1,5 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.Entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,15 +18,19 @@ public class CateringOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(JsonViewFilter.BasicInfo.class)
     private Long id;
 
     @Column(name = "option_name", unique = true)
+    @JsonView(JsonViewFilter.BasicInfo.class)
     private String optionName;
 
     @Column(name = "daily_cost")
+    @JsonView(JsonViewFilter.BasicInfo.class)
     private BigDecimal dailyCost;
 
     @Column(name = "disabled")
-    private boolean disabled = false;
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    private boolean disabled;
 
 }

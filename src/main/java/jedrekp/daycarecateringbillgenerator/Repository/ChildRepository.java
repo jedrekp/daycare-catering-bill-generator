@@ -12,14 +12,26 @@ import java.util.Optional;
 @Repository
 public interface ChildRepository extends JpaRepository<Child, Long> {
 
-    Collection<Child> findByDaycareGroup_Id(Long daycareGroupId);
+    Optional<Child> findByIdAndArchived(Long childId, boolean archived);
 
-    boolean existsByFirstNameAndLastName(String firstName, String lastName);
-
-    boolean existsByFirstNameAndLastNameAndIdNot(String firstName, String lastName, Long id);
+    @Query("SELECT c FROM Child c " +
+            "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
+            "WHERE c.id = :childId and c.archived = false")
+    Optional<Child> findByIdWithAssignedOptions(@Param("childId") Long childId);
 
     @Query("SELECT c FROM Child c LEFT JOIN FETCH c.daycareGroup " +
             "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
             "WHERE c.id = :childId")
     Optional<Child> findByIdWithAllDetails(@Param("childId") Long childId);
+
+    Collection<Child> findAllByArchived(boolean archived);
+
+    Collection<Child> findAllByDaycareGroup_IdAndArchived(Long daycareGroupId, boolean archived);
+
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
+
+    boolean existsByFirstNameAndLastNameAndIdNot(String firstName, String lastName, Long id);
+
+
+
 }

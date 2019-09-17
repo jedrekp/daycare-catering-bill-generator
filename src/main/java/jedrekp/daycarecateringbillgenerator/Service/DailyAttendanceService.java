@@ -44,7 +44,7 @@ public class DailyAttendanceService {
         //add children marked as present to dailyAttendance
         Set<Child> childrenToAdd = dailyAttendanceDTO.getPresentChildrenIds()
                 .stream()
-                .map(childService::findById)
+                .map(childId -> (childService.findSingleChildByIdAndArchived(childId, false)))
                 .collect(Collectors.toSet());
         dailyAttendance.getPresentChildren().addAll(childrenToAdd);
 

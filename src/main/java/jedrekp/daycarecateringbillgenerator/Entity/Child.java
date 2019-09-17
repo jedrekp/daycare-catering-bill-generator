@@ -36,6 +36,10 @@ public class Child {
     @JsonView(JsonViewFilter.BasicInfo.class)
     private String parentEmail;
 
+    @Column(name = "archived")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    private boolean archived;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
     @JoinColumn(name = "daycare_group_id")
     @JsonIgnoreProperties({"children"})
@@ -43,6 +47,7 @@ public class Child {
 
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JsonIgnoreProperties({"child", "cateringOption.children"})
+    @JsonView(JsonViewFilter.WithAssignedOptions.class)
     private Set<AssignedOption> assignedOptions = new HashSet<>();
 
 }

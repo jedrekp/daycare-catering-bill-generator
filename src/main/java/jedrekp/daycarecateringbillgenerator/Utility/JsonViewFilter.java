@@ -8,4 +8,7 @@ public class JsonViewFilter {
     public interface WithChildren extends BasicInfo {
     }
 
+    public interface WithAssignedOptions extends BasicInfo {
+    }
+
 }

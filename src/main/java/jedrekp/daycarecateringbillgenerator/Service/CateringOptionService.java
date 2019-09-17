@@ -18,10 +18,13 @@ public class CateringOptionService {
     CateringOptionRepository cateringOptionRepository;
 
     @Transactional
-    public CateringOption save(CateringOption cateringOption) {
+    public CateringOption saveNewCateringOption(CateringOption cateringOption) {
         if (cateringOptionRepository.existsByOptionName(cateringOption.getOptionName())) {
             throw new EntityExistsException(
                     "Another catering option with the same name already exists. Please choose a different name");
+        }
+        if (cateringOption.isDisabled()) {
+            throw new IllegalArgumentException("New catering option cannot be disabled");
         }
         return cateringOptionRepository.save(cateringOption);
     }
@@ -43,8 +46,10 @@ public class CateringOptionService {
         return cateringOptionRepository.findById(cateringOptionId).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Collection<CateringOption> findAll() {
-        return cateringOptionRepository.findAll();
+    @Transactional(readOnly = true)
+    public CateringOption findOptionInEffectForChild(Long childId, LocalDate date) {
+        return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
@@ -52,9 +57,5 @@ public class CateringOptionService {
         return cateringOptionRepository.findAllByDisabled(disabled);
     }
 
-    @Transactional(readOnly = true)
-    public CateringOption findOptionInEffectForChild(Long childId, LocalDate date) {
-        return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
-                .orElseThrow(EntityNotFoundException::new);
-    }
+
 }

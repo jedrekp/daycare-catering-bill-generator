@@ -27,7 +27,10 @@ public class ChildService {
     CateringOptionService cateringOptionService;
 
     @Transactional
-    public Child save(Child child) {
+    public Child saveNewChild(Child child) {
+        if (child.isArchived()) {
+            throw new IllegalArgumentException("New child cannot be saved directly to archive");
+        }
         if (childRepository.existsByFirstNameAndLastName(child.getFirstName(), child.getLastName())) {
             throw new EntityExistsException("Another child with the same first name and last name already exists");
         }
@@ -35,24 +38,47 @@ public class ChildService {
     }
 
     @Transactional
-    public Child editChild(Long childId, Child child) {
-        if (childRepository.existsByFirstNameAndLastNameAndIdNot(child.getFirstName(), child.getLastName(), child.getId())) {
+    public Child editChild(Long childId, Child childFromRequest) {
+        if (childRepository.existsByFirstNameAndLastNameAndIdNot(childFromRequest.getFirstName(),
+                childFromRequest.getLastName(), childId)) {
             throw new EntityExistsException("Another child with the same first name and last name already exists");
         }
-        Child childToEdit = findById(childId);
-        childToEdit.setFirstName(child.getFirstName());
-        childToEdit.setLastName(child.getLastName());
-        childToEdit.setParentEmail(child.getParentEmail());
+        Child childToEdit = findSingleChildById(childId);
+        childToEdit.setFirstName(childFromRequest.getFirstName());
+        childToEdit.setLastName(childFromRequest.getLastName());
+        childToEdit.setParentEmail(childFromRequest.getParentEmail());
+
+        // Remove child from daycare group before moving it to archive
+        if (childFromRequest.isArchived() && childToEdit.getDaycareGroup() != null) {
+            childToEdit.getDaycareGroup().getChildren().remove(childToEdit);
+            childToEdit.setDaycareGroup(null);
+        }
+        childToEdit.setArchived(childFromRequest.isArchived());
         return childToEdit;
     }
 
-    public Child findById(Long childId) {
+    public Child findSingleChildById(Long childId) {
         return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
     }
 
+    public Child findSingleChildByIdAndArchived(Long childId, boolean archived) {
+        return childRepository.findByIdAndArchived(childId, archived).orElseThrow(EntityNotFoundException::new);
+    }
+
     @Transactional(readOnly = true)
-    public Child findByIdWithAllDetails(Long childId) {
+    public Child findByIdWithAssignedOptions(Long childId) {
+        return childRepository.findByIdWithAssignedOptions(childId)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Child findSingleChildByIdWithAllDetails(Long childId) {
         return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Child> findChildrenByArchived(boolean archived) {
+        return childRepository.findAllByArchived(archived);
     }
 
     @Transactional(readOnly = true)
@@ -60,7 +86,7 @@ public class ChildService {
         if (daycareGroupId == -1L) {
             daycareGroupId = null;
         }
-        return childRepository.findByDaycareGroup_Id(daycareGroupId);
+        return childRepository.findAllByDaycareGroup_IdAndArchived(daycareGroupId,false);
     }
 
     @Transactional
@@ -75,7 +101,7 @@ public class ChildService {
             throw new IllegalArgumentException("Catering option#" + cateringOption.getId() + " is disabled.\n" +
                     "It can no longer be assigned");
         }
-        Child child = findByIdWithAllDetails(childId);
+        Child child = findByIdWithAssignedOptions(childId);
         AssignedOption assignedOption = new AssignedOption(assignedOptionDTO.getEffectiveDate(), child, cateringOption);
         child.getAssignedOptions().add(assignedOption);
         assignedOptionRepository.save(assignedOption);
@@ -83,12 +109,13 @@ public class ChildService {
     }
 
     @Transactional
-    public void removeAssignedOption(Long childId, Long assignedOptionId) {
-        Child child = findById(childId);
+    public Child removeAssignedOption(Long childId, Long assignedOptionId) {
+        Child child = findByIdWithAssignedOptions(childId);
         AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
                 .orElseThrow(EntityNotFoundException::new);
         child.getAssignedOptions().remove(assignedOption);
         assignedOptionRepository.delete(assignedOption);
+        return child;
     }
 
 }

@@ -22,7 +22,7 @@ public class ChildController {
     @PostMapping("/children")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Child> addNewChild(@RequestBody Child child) {
-        return new ResponseEntity<>(childService.save(child), HttpStatus.OK);
+        return new ResponseEntity<>(childService.saveNewChild(child), HttpStatus.OK);
     }
 
     @PutMapping("/children/{childId}")
@@ -32,8 +32,8 @@ public class ChildController {
     }
 
     @GetMapping("/children/{childId}")
-    public ResponseEntity<Child> getChild(@PathVariable Long childId) {
-        return new ResponseEntity<>(childService.findByIdWithAllDetails(childId), HttpStatus.OK);
+    public ResponseEntity<Child> getSingleChild(@PathVariable Long childId) {
+        return new ResponseEntity<>(childService.findSingleChildByIdWithAllDetails(childId), HttpStatus.OK);
     }
 
     @GetMapping(value = "/children", params = "daycareGroupId")
@@ -42,16 +42,23 @@ public class ChildController {
         return new ResponseEntity<>(childService.findChildrenByDaycareGroup(daycareGroupId), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/children", params = "archived")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    public ResponseEntity<Collection<Child>> getChildrenByArchived(@RequestParam boolean archived) {
+        return new ResponseEntity<>(childService.findChildrenByArchived(archived), HttpStatus.OK);
+    }
+
     @PostMapping("/children/{childId}/assignedOptions")
+    @JsonView(JsonViewFilter.WithAssignedOptions.class)
     public ResponseEntity<Child> assignNewCateringOptionToChild(@PathVariable Long childId,
                                                                 @RequestBody AssignedOptionDTO assignedOptionDTO) {
         return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/children/{childId}/assignedOptions/{assignedOptionId}")
+    @JsonView(JsonViewFilter.WithAssignedOptions.class)
     public ResponseEntity<Child> removeAssignedOptionFromChild(@PathVariable Long childId, @PathVariable
             Long assignedOptionId) {
-        childService.removeAssignedOption(childId, assignedOptionId);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(childService.removeAssignedOption(childId, assignedOptionId), HttpStatus.OK);
     }
 }

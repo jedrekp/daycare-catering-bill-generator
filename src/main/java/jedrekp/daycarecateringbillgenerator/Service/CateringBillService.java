@@ -29,7 +29,7 @@ public class CateringBillService {
     @Transactional(readOnly = true)
     public MonthlyCateringBillDTO generateCateringBill(Long childId, Month month, Integer year) {
 
-        Child child = childService.findById(childId);
+        Child child = childService.findSingleChildByIdAndArchived(childId,false);
 
         MonthlyCateringBillDTO cateringBill = new MonthlyCateringBillDTO(month, year, child.getId(), child.getFirstName());
 
