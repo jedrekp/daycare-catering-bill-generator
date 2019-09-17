@@ -30,7 +30,7 @@ export class ChildPageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.child = new Child(-1, '', '', '')
+    this.child = new Child(-1, '', '', '',false)
     this.retrieveChild(this.route.snapshot.params['childId'])
   }
 
@@ -49,7 +49,8 @@ export class ChildPageComponent implements OnInit {
   }
 
   openEditChildModal() {
-    let initialState = { child: new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail) };
+    let initialState = { child: new Child(this.child.id, this.child.firstName, this.child.lastName,
+       this.child.parentEmail,this.child.archived) };
     this.modalRef = this.bsModalService.show(ChildCreateEditComponent,
       { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(

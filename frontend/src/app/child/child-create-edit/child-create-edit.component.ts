@@ -48,9 +48,11 @@ export class ChildCreateEditComponent implements OnInit {
   public onSubmit() {
     if (this.childBasicInfoForm.valid) {
       let childToSubmit = new Child(
-        this.child.id, this.childBasicInfoForm.get('firstName').value,
+        this.child.id,
+        this.childBasicInfoForm.get('firstName').value,
         this.childBasicInfoForm.get('lastName').value,
-        this.childBasicInfoForm.get('parentEmail').value
+        this.childBasicInfoForm.get('parentEmail').value,
+        this.child.archived
       )
       if (this.child.id === -1) {
         this.childDataService.createChild(childToSubmit).subscribe(
