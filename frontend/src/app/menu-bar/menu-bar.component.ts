@@ -17,8 +17,9 @@ import { DaycareGroupCreateEditComponent } from '../daycare-group/daycare-group-
 })
 export class MenuBarComponent implements OnInit {
 
-  private navbarOpen: boolean;
-  public modalRef: BsModalRef
+  private modalRef: BsModalRef
+  private navbarOpen: boolean
+  private searchPhrase: String
 
   constructor(
     private router: Router,
@@ -54,6 +55,7 @@ export class MenuBarComponent implements OnInit {
           this.router.navigated = false
           this.router.navigate(['child-page', childId])
           this.closeNavbar()
+          this.searchPhrase = null
         }
       })
   }
@@ -68,6 +70,7 @@ export class MenuBarComponent implements OnInit {
           this.router.navigated = false
           this.router.navigate(['catering-options-list'])
           this.closeNavbar()
+          this.searchPhrase = null
         }
       })
   }
@@ -82,7 +85,18 @@ export class MenuBarComponent implements OnInit {
           this.router.navigated = false
           this.router.navigate(['daycare-group-page', groupId])
           this.closeNavbar()
+          this.searchPhrase = null
         }
       })
   }
+
+  findChildren() {
+    if (this.searchPhrase) {
+      this.router.navigated = false
+      this.router.navigate(['children-search-results', this.searchPhrase])
+      this.closeNavbar()
+      this.searchPhrase = null
+    }
+  }
+
 }

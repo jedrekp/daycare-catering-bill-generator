@@ -5,11 +5,13 @@ import { CateringOptionsListComponent } from './catering-option/catering-options
 import { DaycareGroupPageComponent } from './daycare-group/daycare-group-page/daycare-group-page.component';
 import { DaycareGroupListComponent } from './daycare-group/daycare-group-list/daycare-group-list.component';
 import { UnassignedChildrenListComponent } from './child/unassigned-children-list/unassigned-children-list.component';
+import { ChildrenSearchResultsComponent } from './child/children-search-results/children-search-results.component';
 
 
 const routes: Routes = [
   { path: 'child-page/:childId', component: ChildPageComponent },
   { path: 'unassigned-children-list', component: UnassignedChildrenListComponent },
+  { path: 'children-search-results/:searchPhrase', component: ChildrenSearchResultsComponent },
   { path: 'catering-options-list', component: CateringOptionsListComponent },
   { path: 'daycare-group-page/:groupId', component: DaycareGroupPageComponent },
   { path: 'daycare-group-list', component: DaycareGroupListComponent }

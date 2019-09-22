@@ -10,7 +10,7 @@
 
     <div class="collapse navbar-collapse bg-purple m-0 p-0" [class.show]="navbarOpen">
 
-        <ul class="navbar-nav">
+        <ul class="navbar-nav mr-auto">
 
             <li class="btn-group mr-1" dropdown container="body">
                 <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
@@ -26,17 +26,6 @@
 
             <li class="btn-group mr-1" dropdown container="body">
                 <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
-                    Catering options
-                </a>
-                <div class="dropdown-menu" *dropdownMenu>
-                    <a class="dropdown-item" (click)="openCreateCateringOptionModal()">Add new option</a>
-                    <a class="dropdown-item" (click)="navigateFromMenu('/catering-options-list')">
-                        Display available options</a>
-                </div>
-            </li>
-
-            <li class="btn-group mr-1" dropdown container="body">
-                <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
                     Daycare groups
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
@@ -46,6 +35,36 @@
                 </div>
             </li>
 
+            <li class="btn-group mr-1" dropdown container="body">
+                <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
+                    Catering
+                </a>
+                <div class="dropdown-menu" *dropdownMenu>
+                    <a class="dropdown-item" (click)="openCreateCateringOptionModal()">Add new option</a>
+                    <a class="dropdown-item" (click)="navigateFromMenu('/catering-options-list')">
+                        Display available options</a>
+                </div>
+            </li>
+
         </ul>
+
+        <div class="col-6 col-sm-5 col-md-4 col-lg-3 pl-0">
+            <form (ngSubmit)="findChildren()" #searchForm="ngForm" class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Find child" name="search"
+                        [(ngModel)]="searchPhrase">
+                    <div class="input-group-btn">
+                        <button class="btn btn-dark" type="submit">
+                            <i class="fa fa-search fa-lg text-white"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <ul class="navbar-nav">
+            <li><a class="nav-link">Log out</a></li>
+        </ul>
+
     </div>
 </nav>
