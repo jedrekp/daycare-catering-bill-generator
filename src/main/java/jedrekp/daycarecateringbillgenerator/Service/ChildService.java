@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.Collection;
+import java.util.*;
 
 @Service
 public class ChildService {
@@ -86,7 +86,28 @@ public class ChildService {
         if (daycareGroupId == -1L) {
             daycareGroupId = null;
         }
-        return childRepository.findAllByDaycareGroup_IdAndArchived(daycareGroupId,false);
+        return childRepository.findAllByDaycareGroup_IdAndArchived(daycareGroupId, false);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Child> findChildrenBySearchPhrase(String searchPhrase) {
+        Set<Child> children = new LinkedHashSet<>();
+
+        //splits searchPhrase to get all adjacent words combinations to cover cases where firstName or lastName consists of multiple words
+        Set<String> searchSubPhrases = splitSearchPhrase(searchPhrase);
+
+        //attempts to find children by both firstName and LastName, to put at the start of the list (only when multiple words have been entered)
+        if (searchSubPhrases.size() > 1) {
+            children.addAll(childRepository.findAllByFirstNameAndLastName(searchSubPhrases));
+        }
+
+        //attempts to find all children whose lastName matches one of the entered words
+        children.addAll(childRepository.findAllByLastName(searchSubPhrases));
+
+        //attempts to find all children whose firstName matches one of the entered words, to put at the end of the list
+        children.addAll(childRepository.findAllByFirstName(searchSubPhrases));
+
+        return children;
     }
 
     @Transactional
@@ -116,6 +137,22 @@ public class ChildService {
         child.getAssignedOptions().remove(assignedOption);
         assignedOptionRepository.delete(assignedOption);
         return child;
+    }
+
+    private Set<String> splitSearchPhrase(String searchPhrase) {
+        Set<String> searchSubPhrases = new HashSet<>();
+        searchPhrase = searchPhrase.toLowerCase().trim().replaceAll(" +", " ");
+        Collections.addAll(searchSubPhrases, searchPhrase.split(" "));
+        getAllAdjacentCombinationsViaRecursion(searchSubPhrases, searchPhrase);
+        return searchSubPhrases;
+    }
+
+    private void getAllAdjacentCombinationsViaRecursion(Set<String> searchSubPhrases, String searchPhrase) {
+        while (!searchSubPhrases.contains(searchPhrase) && searchPhrase.contains(" ")) {
+            searchSubPhrases.add(searchPhrase);
+            getAllAdjacentCombinationsViaRecursion(searchSubPhrases, searchPhrase.substring(0, searchPhrase.lastIndexOf(" ")));
+            getAllAdjacentCombinationsViaRecursion(searchSubPhrases, searchPhrase.substring(searchPhrase.indexOf(" ") + 1));
+        }
     }
 
 }

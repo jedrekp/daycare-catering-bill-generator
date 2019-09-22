@@ -7,13 +7,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface CateringOptionRepository extends JpaRepository<CateringOption, Long> {
 
-    Collection<CateringOption> findAllByDisabled(boolean disabled);
+    List<CateringOption> findAllByDisabled(boolean disabled);
 
     boolean existsByOptionName(String optionName);
 

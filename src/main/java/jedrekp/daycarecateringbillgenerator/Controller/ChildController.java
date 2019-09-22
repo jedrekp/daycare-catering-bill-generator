@@ -48,6 +48,12 @@ public class ChildController {
         return new ResponseEntity<>(childService.findChildrenByArchived(archived), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/children", params = "searchPhrase")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    public ResponseEntity<Collection<Child>> getChildrenBySearchPhrase(@RequestParam String searchPhrase) {
+        return new ResponseEntity<>(childService.findChildrenBySearchPhrase(searchPhrase), HttpStatus.OK);
+    }
+
     @PostMapping("/children/{childId}/assignedOptions")
     @JsonView(JsonViewFilter.WithAssignedOptions.class)
     public ResponseEntity<Child> assignNewCateringOptionToChild(@PathVariable Long childId,
