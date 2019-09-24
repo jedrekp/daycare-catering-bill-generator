@@ -41,10 +41,10 @@ a {
     border: 2px solid #484D6D;
 }
 
-.btn-outline-purple {
-    color: #B5446E;
+.btn-outline-darkblue {
+    color: #484D6D;
     background-color: white;
-    border-color: #B5446E;
+    border-color: #484D6D;
     font-weight: bold;
     letter-spacing: 0.05em;
     border-radius: 0;
@@ -57,18 +57,13 @@ a {
     box-shadow: none;
 }
 
-.btn-outline-darkblue {
-    color: #484D6D;
+.btn-outline-purple {
+    color: #B5446E;
     background-color: white;
-    border-color: #484D6D;
+    border-color: #B5446E;
     font-weight: bold;
     letter-spacing: 0.05em;
     border-radius: 0;
-}
-
-.btn-outline-purple:disabled, .btn-outline-purple:disabled {
-    color: gray;
-    border-color: gray;
 }
 
 .btn-outline-purple:hover:not([disabled]), .btn-outline-purple:active:not([disabled]), .btn-outline-purple:focus:not([disabled]) {
@@ -77,6 +72,26 @@ a {
     border-color: #B5446E;
     box-shadow: none;
 }
+
+.btn-outline-purple:disabled, .btn-outline-purple:disabled {
+    color: gray;
+    border-color: gray;
+}
+
+.btn-darkblue {
+    color: #fff;
+    background-color:#484D6D;
+    border-color: #484D6D;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    border-radius: 0;
+  }
+  
+  .btn-darkblue:hover:not([disabled]), .btn-darkblue:active:not([disabled]), .btn-darkblue:focus:not([disabled]){
+    background: #695E7F;
+    color: white;
+    box-shadow: none;
+  }
 
 .form-control:focus, .custom-select:focus {
     border-color:  #B5446E;

@@ -26,6 +26,11 @@ export class ChildDataService {
     return this.httpClient.get<Child[]>('http://localhost:8081/children', { params: params })
   }
 
+  findChildrenBySearchPhrase(searchPhrase: string) {
+    let params = new HttpParams().set('searchPhrase', searchPhrase)
+    return this.httpClient.get<Child[]>('http://localhost:8081/children', { params: params })
+  }
+
   createChild(child: Child) {
     return this.httpClient.post<Child>('http://localhost:8081/children/', child)
   }

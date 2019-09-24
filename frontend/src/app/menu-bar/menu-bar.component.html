@@ -48,13 +48,13 @@
 
         </ul>
 
-        <div class="col-6 col-sm-5 col-md-4 col-lg-3 pl-0">
+        <div class="col-8 col-sm-5 col-md-4 col-lg-3 pl-0">
             <form (ngSubmit)="findChildren()" #searchForm="ngForm" class="navbar-form" role="search">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Find child" name="search"
-                        [(ngModel)]="searchPhrase">
+                        [(ngModel)]="searchPhrase" autocomplete="off">
                     <div class="input-group-btn">
-                        <button class="btn btn-dark" type="submit">
+                        <button class="btn btn-darkblue" type="submit" id="search-submit">
                             <i class="fa fa-search fa-lg text-white"></i>
                         </button>
                     </div>

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ChildDataService } from '../child-data.service';
+import { Child } from '../child';
 
 @Component({
   selector: 'app-children-search-results',
@@ -7,9 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChildrenSearchResultsComponent implements OnInit {
 
-  constructor() { }
+  private children: Child[] = []
+
+  constructor(
+    private route: ActivatedRoute,
+    private childDataService: ChildDataService
+  ) { }
 
   ngOnInit() {
+    let searchPhrase = this.route.snapshot.params['searchPhrase']
+    this.childDataService.findChildrenBySearchPhrase(searchPhrase).subscribe(
+      children => {
+        this.children = children
+      })
   }
 
 }
