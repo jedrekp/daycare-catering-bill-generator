@@ -81,14 +81,13 @@ a {
 .btn-darkblue {
     color: #fff;
     background-color:#484D6D;
-    border-color: #484D6D;
     font-weight: bold;
     letter-spacing: 0.05em;
     border-radius: 0;
   }
   
   .btn-darkblue:hover:not([disabled]), .btn-darkblue:active:not([disabled]), .btn-darkblue:focus:not([disabled]){
-    background: #695E7F;
+    background: #262B4D;
     color: white;
     box-shadow: none;
   }
@@ -115,7 +114,5 @@ a {
 }
 
 .modal-header {
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
     border-radius: 0px;
 }

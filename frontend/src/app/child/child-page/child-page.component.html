@@ -1,5 +1,6 @@
 <div class="text-center mx-auto my-4">
     <h2 class="heading-darkblue">Child#{{child.id}}</h2>
+    <h4 *ngIf="child.archived" class="text-secondary mt-n2">in archive</h4>
 </div>
 
 <div class="row justify-content-center">
@@ -38,9 +39,10 @@
             <div class="card-footer">
 
                 <div class="row justify-content-center">
-                    <button class="btn btn-outline-darkblue col-8 col-md-7" (click)="openEditChildModal()">
+                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2" (click)="openEditChildModal()">
                         Edit information
                     </button>
+                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-7">Add to archive</button>
                 </div>
 
             </div>
