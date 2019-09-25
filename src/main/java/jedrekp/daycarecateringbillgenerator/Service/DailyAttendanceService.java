@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,5 +51,15 @@ public class DailyAttendanceService {
         dailyAttendance.getPresentChildren().addAll(childrenToAdd);
 
         return dailyAttendanceRepository.save(dailyAttendance);
+    }
+
+    @Transactional(readOnly = true)
+    public DailyAttendanceDTO getDailyAttendanceForDaycareGroup(Long daycareGroupId, LocalDate date) {
+        DailyAttendanceDTO dailyAttendanceDTO = new DailyAttendanceDTO(date);
+        Optional<DailyAttendance> optionalDailyAttendance = dailyAttendanceRepository
+                .findByDateAndDaycareGroupIdWithPresentChildren(date, daycareGroupId);
+        optionalDailyAttendance.ifPresent(o -> o.getPresentChildren()
+                .forEach(child -> dailyAttendanceDTO.getPresentChildrenIds().add(child.getId())));
+        return dailyAttendanceDTO;
     }
 }

@@ -25,6 +25,7 @@ import { InformationModalComponent } from './dialog/information-modal/informatio
 import { ConfirmationModalComponent } from './dialog/confirmation-modal/confirmation-modal.component';
 import { UnassignedChildrenListComponent } from './child/unassigned-children-list/unassigned-children-list.component';
 import { ChildrenSearchResultsComponent } from './child/children-search-results/children-search-results.component';
+import { TrackAttendanceComponent } from './attendance/track-attendance/track-attendance.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { ChildrenSearchResultsComponent } from './child/children-search-results/
     ConfirmationModalComponent,
     UnassignedChildrenListComponent,
     ChildrenSearchResultsComponent,
+    TrackAttendanceComponent,
   ],
   imports: [
     BrowserModule,

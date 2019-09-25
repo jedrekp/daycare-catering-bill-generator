@@ -34,7 +34,7 @@ export class ChildAssignOptionComponent implements OnInit {
   ngOnInit() {
     this.onClose = new Subject<CateringOption>()
     this.assignCateringOptionForm = new FormGroup({
-      effectiveDate: new FormControl(),
+      effectiveDate: new FormControl(null, [Validators.required]),
       cateringOption: new FormControl(null, [Validators.required])
     })
     this.assignCateringOptionForm.patchValue({ effectiveDate: this.setCurrentDateOrMondayIfWeekend() })
