@@ -3,7 +3,7 @@ import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-dat
 import { DaycareGroup } from 'src/app/daycare-group/daycare-group';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AttendanceDataService } from '../attendance-data.service';
-import { DailyAttendanceDTO } from '../daily-attendance-DTO';
+import { DailyAttendance } from '../daily-attendance';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -16,7 +16,7 @@ export class TrackAttendanceComponent implements OnInit {
   private selectDateAndGroupForm: FormGroup
   private daycareGroups: DaycareGroup[] = []
   private selectedDaycareGroup: DaycareGroup
-  private dailyAttendance: DailyAttendanceDTO
+  private dailyAttendance: DailyAttendance
   private minDate: Date
 
   constructor(
@@ -61,16 +61,14 @@ export class TrackAttendanceComponent implements OnInit {
         this.selectDateAndGroupForm.get('daycareGroup').value.id).subscribe(
           daycareGroup => {
             this.selectedDaycareGroup = daycareGroup
-          })
-
-      this.attendanceDataService.retrieveDailyAttendanceForGroup(
-        this.selectDateAndGroupForm.get('daycareGroup').value.id,
-        this.datePipe.transform(this.selectDateAndGroupForm.get('date').value, 'yyyy-MM-dd')).subscribe(
-          dailyAttendanceDTO => {
-            this.dailyAttendance = dailyAttendanceDTO
+            this.attendanceDataService.retrieveDailyAttendanceForGroup(
+              this.selectedDaycareGroup.id,
+              this.datePipe.transform(this.selectDateAndGroupForm.get('date').value, 'yyyy-MM-dd')).subscribe(
+                dailyAttendance => {
+                  this.dailyAttendance = dailyAttendance
+                })
           })
     }
-
   }
 
 }

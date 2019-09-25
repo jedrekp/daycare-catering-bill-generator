@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class DailyAttendanceDTO {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     private Set<Long> presentChildrenIds = new HashSet<>();

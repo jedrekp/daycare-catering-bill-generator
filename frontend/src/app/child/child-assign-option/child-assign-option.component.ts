@@ -46,7 +46,9 @@ export class ChildAssignOptionComponent implements OnInit {
     this.cateringOptionDataService.retriveCateringOptionsByDisabled(false).subscribe(
       cateringOptions => {
         this.cateringOptions = cateringOptions
-        this.assignCateringOptionForm.patchValue({ cateringOption: cateringOptions[0] })
+        if (cateringOptions.length > 0) {
+          this.assignCateringOptionForm.patchValue({ cateringOption: cateringOptions[0] })
+        }
       })
   }
 
@@ -61,18 +63,20 @@ export class ChildAssignOptionComponent implements OnInit {
   }
 
   onSubmit() {
-    this.childDataService.assignNewOptionToChild(
-      this.childId,
-      this.assignCateringOptionForm.get('cateringOption').value.id,
-      this.datePipe.transform(this.assignCateringOptionForm.get('effectiveDate').value, 'yyyy/MM/dd'))
-      .subscribe(
-        response => {
-          this.bsModalRef.hide()
-          this.onClose.next(this.assignCateringOptionForm.get('cateringOption').value)
-        },
-        err => {
-          this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
-        })
+    if (this.assignCateringOptionForm.valid) {
+      this.childDataService.assignNewOptionToChild(
+        this.childId,
+        this.assignCateringOptionForm.get('cateringOption').value.id,
+        this.datePipe.transform(this.assignCateringOptionForm.get('effectiveDate').value, 'yyyy-MM-dd'))
+        .subscribe(
+          response => {
+            this.bsModalRef.hide()
+            this.onClose.next(this.assignCateringOptionForm.get('cateringOption').value)
+          },
+          err => {
+            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
+          })
+    }
   }
 
   onCancel() {

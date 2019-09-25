@@ -3,6 +3,7 @@ package jedrekp.daycarecateringbillgenerator.Service;
 import jedrekp.daycarecateringbillgenerator.DTO.DailyAttendanceDTO;
 import jedrekp.daycarecateringbillgenerator.Entity.Child;
 import jedrekp.daycarecateringbillgenerator.Entity.DailyAttendance;
+import jedrekp.daycarecateringbillgenerator.Entity.DaycareGroup;
 import jedrekp.daycarecateringbillgenerator.Repository.DailyAttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class DailyAttendanceService {
 
     @Autowired
     ChildService childService;
+
+    @Autowired
+    DaycareGroupService daycareGroupService;
 
     @Transactional
     public DailyAttendance markAttendance(DailyAttendanceDTO dailyAttendanceDTO) {
@@ -55,11 +59,19 @@ public class DailyAttendanceService {
 
     @Transactional(readOnly = true)
     public DailyAttendanceDTO getDailyAttendanceForDaycareGroup(Long daycareGroupId, LocalDate date) {
+        DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdWithChildren(daycareGroupId);
         DailyAttendanceDTO dailyAttendanceDTO = new DailyAttendanceDTO(date);
+
         Optional<DailyAttendance> optionalDailyAttendance = dailyAttendanceRepository
                 .findByDateAndDaycareGroupIdWithPresentChildren(date, daycareGroupId);
         optionalDailyAttendance.ifPresent(o -> o.getPresentChildren()
                 .forEach(child -> dailyAttendanceDTO.getPresentChildrenIds().add(child.getId())));
+
+        daycareGroup.getChildren()
+                .stream().map(Child::getId)
+                .filter(id -> !dailyAttendanceDTO.getPresentChildrenIds().contains(id))
+                .forEach(dailyAttendanceDTO.getAbsentChildrenIds()::add);
+
         return dailyAttendanceDTO;
     }
 }

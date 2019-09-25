@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DailyAttendanceDTO } from './daily-attendance-DTO';
+import { DailyAttendance } from './daily-attendance';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class AttendanceDataService {
     let params = new HttpParams()
       .set('daycareGroupId', daycareGroupId.toString())
       .set('date', date)
-    return this.httpClient.get<DailyAttendanceDTO>('http://localhost:8081/dailyAttendances', { params: params })
+    return this.httpClient.get<DailyAttendance>('http://localhost:8081/dailyAttendances', { params: params })
   }
 
 }

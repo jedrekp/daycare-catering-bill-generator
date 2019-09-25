@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AssignedOptionDTO {
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate effectiveDate;
 
     @NotNull

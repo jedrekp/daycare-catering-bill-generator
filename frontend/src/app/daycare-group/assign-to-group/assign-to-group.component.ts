@@ -36,22 +36,26 @@ export class AssignToGroupComponent implements OnInit {
     this.daycareGroupDataService.retrieveDaycareGroups().subscribe(
       daycareGroups => {
         this.daycareGroups = daycareGroups
-        this.assignChildToGroupForm.patchValue({ daycareGroup: daycareGroups[0] })
+        if (daycareGroups.length > 0) {
+          this.assignChildToGroupForm.patchValue({ daycareGroup: daycareGroups[0] })
+        }
       })
   }
 
   onSubmit() {
-    this.daycareGroupDataService.addChildToDaycareGroup(
-      this.assignChildToGroupForm.get('daycareGroup').value.id,
-      this.childId
-    ).subscribe(
-      daycareGroup => {
-        this.modalRef.hide()
-        this.onClose.next(daycareGroup)
-      },
-      err => {
-        this.dialogModalService.openNestedInformationModal('Cannot assign to group', err.message)
-      })
+    if (this.assignChildToGroupForm.valid) {
+      this.daycareGroupDataService.addChildToDaycareGroup(
+        this.assignChildToGroupForm.get('daycareGroup').value.id,
+        this.childId
+      ).subscribe(
+        daycareGroup => {
+          this.modalRef.hide()
+          this.onClose.next(daycareGroup)
+        },
+        err => {
+          this.dialogModalService.openNestedInformationModal('Cannot assign to group', err.message)
+        })
+    }
   }
 
   onCancel() {

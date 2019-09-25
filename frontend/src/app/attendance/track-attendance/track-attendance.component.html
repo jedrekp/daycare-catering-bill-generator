@@ -30,4 +30,7 @@
 </div>
 
 <div *ngIf="selectedDaycareGroup">{{selectedDaycareGroup.groupName}}</div>
-<div *ngIf="dailyAttendance">{{dailyAttendance.date}}</div>
+<div *ngIf="dailyAttendance">{{dailyAttendance.date}}<br>
+    {{dailyAttendance.absentChildrenIds}}<br>
+    {{dailyAttendance.presentChildrenIds}}
+</div>

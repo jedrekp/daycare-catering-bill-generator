@@ -1,4 +1,4 @@
-export class DailyAttendanceDTO {
+export class DailyAttendance {
 
     constructor(
         public date: Date,
