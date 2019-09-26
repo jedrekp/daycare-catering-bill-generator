@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-data.service';
 import { DaycareGroup } from 'src/app/daycare-group/daycare-group';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AttendanceDataService } from '../attendance-data.service';
 import { DailyAttendance } from '../daily-attendance';
 import { DatePipe } from '@angular/common';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-track-attendance',
@@ -13,6 +14,7 @@ import { DatePipe } from '@angular/common';
 })
 export class TrackAttendanceComponent implements OnInit {
 
+  private modalRef: BsModalRef
   private selectDateAndGroupForm: FormGroup
   private daycareGroups: DaycareGroup[] = []
   private selectedDaycareGroup: DaycareGroup
@@ -20,6 +22,7 @@ export class TrackAttendanceComponent implements OnInit {
   private minDate: Date
 
   constructor(
+    private bsModalService: BsModalService,
     private datePipe: DatePipe,
     private daycareGroupDataService: DaycareGroupDataService,
     private attendanceDataService: AttendanceDataService
@@ -55,6 +58,11 @@ export class TrackAttendanceComponent implements OnInit {
       })
   }
 
+  openSelectModal(template: TemplateRef<any>) {
+    this.modalRef = this.bsModalService.show(
+      template, Object.assign({}, { class: 'modal-top-10 modal-sm', ignoreBackdropClick: true }))
+  }
+
   onSelect() {
     if (this.selectDateAndGroupForm.valid) {
       this.daycareGroupDataService.retrieveSingleDaycareGroup(
@@ -66,6 +74,7 @@ export class TrackAttendanceComponent implements OnInit {
               this.datePipe.transform(this.selectDateAndGroupForm.get('date').value, 'yyyy-MM-dd')).subscribe(
                 dailyAttendance => {
                   this.dailyAttendance = dailyAttendance
+                  this.modalRef.hide()
                 })
           })
     }

@@ -42,6 +42,7 @@ export class MenuBarComponent implements OnInit {
 
   navigateFromMenu(route: string) {
     this.closeNavbar()
+    this.router.navigated = false
     this.router.navigate([route])
   }
 
