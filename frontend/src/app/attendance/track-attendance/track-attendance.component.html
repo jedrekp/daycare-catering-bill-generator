@@ -7,8 +7,40 @@
         </div>
 
         <div *ngIf="selectedDaycareGroup && dailyAttendance" class="card-body pt-4">
-            {{selectedDaycareGroup.groupName}}
-            {{dailyAttendance.date}}
+
+            <div *ngFor="let child of selectedDaycareGroup.children">
+                <div class="row mb-2">
+
+                    <div class="col">{{child.firstName}} {{child.lastName}}</div>
+
+                    <div class="col">
+                        <button class="btn btn-outline-darkblue"
+                            *ngIf="dailyAttendance.presentChildrenIds.indexOf(child.id) != -1">
+                            <i class="fa fa-check-square-o fa-lg"></i>
+                        </button>
+                        <button class="btn btn-outline-darkblue"
+                            *ngIf="dailyAttendance.presentChildrenIds.indexOf(child.id) == -1">
+                            <i class="fa fa-square fa-lg"></i>
+                        </button>
+                        Present
+                    </div>
+
+                    <div class="col">
+                        <button class="btn btn-outline-purple"
+                            *ngIf="dailyAttendance.absentChildrenIds.indexOf(child.id) != -1">
+                            <i class="fa fa-check fa-lg"></i>
+                        </button>
+                        <button class="btn btn-outline-purple"
+                            *ngIf="dailyAttendance.absentChildrenIds.indexOf(child.id) == -1">
+                            <i class="fa fa-square-o fa-lg"></i>
+                        </button>
+                        Not present
+                    </div>
+
+
+                </div>
+            </div>
+
         </div>
 
         <div *ngIf="!selectedDaycareGroup || !dailyAttendance" class="card-body pt-4">
