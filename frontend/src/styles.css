@@ -37,9 +37,14 @@ a {
     font-family: 'Montserrat', sans-serif;
 }
 
+.border-purple{
+border: 2px solid #B5446E;
+}
+
 .border-darkblue {
     border: 2px solid #484D6D;
 }
+
 
 .btn-outline-darkblue {
     color: #484D6D;
@@ -109,7 +114,7 @@ a {
     top: 25%;
 }
 
-.card {
+.card, #date-group-select {
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 12px #484D6D
 }
 

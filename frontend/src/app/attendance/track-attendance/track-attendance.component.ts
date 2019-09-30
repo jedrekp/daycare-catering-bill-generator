@@ -58,11 +58,6 @@ export class TrackAttendanceComponent implements OnInit {
       })
   }
 
-  openSelectModal(template: TemplateRef<any>) {
-    this.modalRef = this.bsModalService.show(
-      template, Object.assign({}, { class: 'modal-top-10 modal-sm', ignoreBackdropClick: true }))
-  }
-
   onSelect() {
     if (this.selectDateAndGroupForm.valid) {
       this.daycareGroupDataService.retrieveSingleDaycareGroup(
@@ -74,10 +69,23 @@ export class TrackAttendanceComponent implements OnInit {
               this.datePipe.transform(this.selectDateAndGroupForm.get('date').value, 'yyyy-MM-dd')).subscribe(
                 dailyAttendance => {
                   this.dailyAttendance = dailyAttendance
-                  this.modalRef.hide()
                 })
           })
     }
   }
 
+  markAsPresent(id: number) {
+    let index = this.dailyAttendance.absentChildrenIds.indexOf(id)
+    this.dailyAttendance.presentChildrenIds.push(
+      this.dailyAttendance.absentChildrenIds.splice(index, 1)[0]
+    )
+  }
+
+  markAsAbsent(id: number) {
+    let index = this.dailyAttendance.presentChildrenIds.indexOf(id)
+    this.dailyAttendance.absentChildrenIds.push(
+      this.dailyAttendance.presentChildrenIds.splice(index, 1)[0])
+  }
+
 }
+

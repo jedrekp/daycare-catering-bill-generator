@@ -1,0 +1,44 @@
+#date-input {
+    max-width: 115px;
+    background-color: white;
+    border: 1px solid #B5446E;
+}
+
+#group-input{
+    max-width: 150px;
+    border: 1px solid #B5446E;
+}
+
+#select-button{
+    max-width: 75px;
+}
+
+@media (max-width: 576px){
+    .form-inline{
+        flex-direction: column;
+    }
+    #date-group-select{
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #date-input,#group-input,#select-button{
+        min-width: 200px;
+        max-width: 200px;
+    }
+}
+
+td, th {
+    text-align: center;
+    vertical-align: middle;
+    width: 25%;
+}
+
+#attendance-cell, #attendance-header{
+    text-align: left;
+}
+
+tbody tr, thead tr {
+    border-bottom: 2px solid #484D6D;
+    white-space: nowrap;
+}
