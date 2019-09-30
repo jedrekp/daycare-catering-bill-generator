@@ -68,7 +68,7 @@ export class DaycareGroupPageComponent implements OnInit {
 
   deleteGroup() {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to delete daycare group#${this.daycareGroup.id}.\n
+      `You are about to delete daycare group #${this.daycareGroup.id} ${this.daycareGroup.groupName}.\n
       Any children, that are currently assigned to it will be left with no group.`)
     this.modalRef.content.onClose.subscribe(
       onClose => {
@@ -76,7 +76,7 @@ export class DaycareGroupPageComponent implements OnInit {
           this.daycareGroupDataService.deleteDaycareGroup(this.daycareGroup.id).subscribe(
             response => {
               this.modalRef = this.dialogModalService.openInformationModal('Group deleted',
-                `Daycare group#${this.daycareGroup.id} has been succesfully deleted.`)
+                `Daycare group #${this.daycareGroup.id} ${this.daycareGroup.groupName} has been succesfully deleted.`)
               this.modalRef.content.onClose.subscribe(
                 onClose => {
                   this.router.navigate(['daycare-group-list'])
@@ -91,14 +91,14 @@ export class DaycareGroupPageComponent implements OnInit {
 
   removeChildFromGroup(child: Child) {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to remove child#${child.id} (${child.firstName} ${child.lastName}) from daycare group#${this.daycareGroup.id}`)
+      `You are about to remove child #${child.id} (${child.firstName} ${child.lastName}) from daycare group #${this.daycareGroup.id}`)
     this.modalRef.content.onClose.subscribe(
       onclose => {
         if (onclose) {
           this.daycareGroupDataService.removeChildFromDaycareGroup(this.daycareGroup.id, child.id).subscribe(
             response => {
               this.modalRef = this.dialogModalService.openInformationModal('Child removed',
-                `Child#${child.id} (${child.firstName} ${child.lastName}) has been succesfully removed from daycare group#${this.daycareGroup.id}.`)
+                `Child #${child.id} (${child.firstName} ${child.lastName}) has been succesfully removed from daycare group #${this.daycareGroup.id}.`)
               this.modalRef.content.onClose.subscribe(
                 onclose => {
                   this.retrieveDaycareGroup(this.daycareGroup.id)

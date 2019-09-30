@@ -50,8 +50,8 @@ export class UnassignedChildrenListComponent implements OnInit {
       daycareGroup => {
         if (daycareGroup) {
           this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Child#${child.id} (${child.firstName} ${child.lastName})` +
-            ` has been succesfully assigned to daycare group#${daycareGroup.id} (${daycareGroup.groupName}).`)
+            `Child #${child.id} (${child.firstName} ${child.lastName})` +
+            ` has been succesfully assigned to daycare group #${daycareGroup.id} (${daycareGroup.groupName}).`)
           this.modalRef.content.onClose.subscribe(
             onClose => {
               this.retrieveChildren()

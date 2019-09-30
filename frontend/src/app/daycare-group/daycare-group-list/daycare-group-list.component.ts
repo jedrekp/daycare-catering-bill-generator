@@ -35,7 +35,7 @@ export class DaycareGroupListComponent implements OnInit {
 
   deleteGroup(daycareGroup: DaycareGroup) {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to delete daycare group#${daycareGroup.id}.\n
+      `You are about to delete daycare group #${daycareGroup.id} ${daycareGroup.groupName}.\n
       Any children, that are currently assigned to it, will be left with no group.`)
     this.modalRef.content.onClose.subscribe(
       onClose => {
@@ -43,7 +43,7 @@ export class DaycareGroupListComponent implements OnInit {
           this.daycareGroupDataService.deleteDaycareGroup(daycareGroup.id).subscribe(
             response => {
               this.modalRef = this.dialogModalService.openInformationModal('Group deleted',
-                `Daycare group#${daycareGroup.id} (${daycareGroup.groupName}) has been succesfully deleted.`)
+                `Daycare group #${daycareGroup.id} (${daycareGroup.groupName}) has been succesfully deleted.`)
               this.modalRef.content.onClose.subscribe(
                 onclose => {
                   this.retrieveDaycareGroups()

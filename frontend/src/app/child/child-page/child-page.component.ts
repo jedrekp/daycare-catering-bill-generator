@@ -57,7 +57,7 @@ export class ChildPageComponent implements OnInit {
       childId => {
         if (childId) {
           this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Child#${this.child.id} has been succesfully edited.`)
+            `Child #${this.child.id} has been succesfully edited.`)
           this.modalRef.content.onClose.subscribe(
             onClose => {
               this.retrieveChild(this.child.id)
@@ -74,7 +74,7 @@ export class ChildPageComponent implements OnInit {
       daycareGroup => {
         if (daycareGroup) {
           this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Child#${this.child.id} has been succesfully assigned to daycare group#${daycareGroup.id} (${daycareGroup.groupName}).`)
+            `Child #${this.child.id} is now assigned to daycare group #${daycareGroup.id} (${daycareGroup.groupName}).`)
           this.modalRef.content.onClose.subscribe(
             onClose => {
               this.retrieveChild(this.child.id)
@@ -85,14 +85,14 @@ export class ChildPageComponent implements OnInit {
 
   removeFromGroup() {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to remove child#${this.child.id} from daycare group#${this.child.daycareGroup.id} (${this.child.daycareGroup.groupName}).`)
+      `You are about to remove child #${this.child.id} from daycare group #${this.child.daycareGroup.id} (${this.child.daycareGroup.groupName}).`)
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
           this.daycareGroupDataService.removeChildFromDaycareGroup(this.child.daycareGroup.id, this.child.id).subscribe(
             response => {
               this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                `Child#${this.child.id} is no longer assigned to daycare group#${this.child.daycareGroup.id} (${this.child.daycareGroup.groupName}).`)
+                `Child# ${this.child.id} is no longer assigned to daycare group #${this.child.daycareGroup.id} (${this.child.daycareGroup.groupName}).`)
               this.modalRef.content.onClose.subscribe(
                 onclose => {
                   this.retrieveChild(this.child.id)
@@ -113,7 +113,7 @@ export class ChildPageComponent implements OnInit {
       cateringOption => {
         if (cateringOption) {
           this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Catering option#${cateringOption.id} (${cateringOption.optionName}) has been succesfully assigned to child#${this.child.id}.`)
+            `Catering option #${cateringOption.id} (${cateringOption.optionName}) has been succesfully assigned to child #${this.child.id}.`)
           this.modalRef.content.onClose.subscribe(
             onClose => {
               this.retrieveChild(this.child.id)
@@ -124,15 +124,16 @@ export class ChildPageComponent implements OnInit {
 
   removeAssignedOption(assignedOption: AssignedOption) {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to remove catering option#${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) from child#${this.child.id}.\n
-      This will have impact on future catering bills that cover months, for which this option is in effect.`)
+      `You are about to remove catering option #${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
+      This change may affect future catering bills covering months, for which this option is in effect.\n
+      It will not affect catering bills that have already been generated`)
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
           this.childDataService.removeAssignedOptionFromChild(this.child.id, assignedOption.id).subscribe(
             response => {
               this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                `Catering option#${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) is no longer assigned to child#${this.child.id}.`)
+                `Catering option#${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) is no longer assigned to child #${this.child.id}.`)
               this.retrieveChild(this.child.id);
             },
             err => {
