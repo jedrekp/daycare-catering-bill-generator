@@ -42,3 +42,22 @@ tbody tr, thead tr {
     border-bottom: 2px solid #484D6D;
     white-space: nowrap;
 }
+
+.checkbox-present, .checkbox-not-present {
+    background-color: white;
+    border-color: #B5446E;
+    border-radius: 0;
+}
+
+.checkbox-present{
+    color: #B5446E;
+}
+
+.checkbox-not-present{
+    color:white;
+}
+
+.checkbox-present:hover, .checkbox-present:active, .checkbox-present:focus,
+.checkbox-not-present:hover, .checkbox-not-present:active, .checkbox-not-present:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px  #B5446E;
+}

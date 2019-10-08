@@ -18,4 +18,8 @@ export class AttendanceDataService {
     return this.httpClient.get<DailyAttendance>('http://localhost:8081/dailyAttendances', { params: params })
   }
 
+  submitAttendance(dailyAttendance: DailyAttendance) {
+    return this.httpClient.post<DailyAttendance>('http://localhost:8081/dailyAttendances', dailyAttendance)
+  }
+
 }

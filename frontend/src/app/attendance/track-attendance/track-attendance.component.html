@@ -41,35 +41,34 @@
 
         <div *ngIf="selectedDaycareGroup && dailyAttendance" class="card-body pt-4">
 
-            <div class="table-responsive">
+            <div style="overflow-x: auto;">
                 <table class="table table-hover table-borderless text-center">
 
                     <thead>
                         <tr>
-                            <th>Child Id</th>
                             <th>First name</th>
                             <th>Last Name</th>
+                            <th>Child Id</th>
                             <th id="attendance-header">Attendance</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr *ngFor="let child of selectedDaycareGroup.children">
-                            <td>#{{child.id}}</td>
                             <td>{{child.firstName}}</td>
                             <td>{{child.lastName}}</td>
+                            <td>#{{child.id}}</td>
                             <td id="attendance-cell">
 
                                 <span *ngIf="dailyAttendance.presentChildrenIds.indexOf(child.id) != -1">
-                                    <button class="btn btn-outline-purple" (click)="markAsAbsent(child.id)">
+                                    <button class="btn btn-sm checkbox-present" (click)="markAsAbsent(child.id)">
                                         <i class="fa fa-check"></i>
                                     </button>
                                     Present
                                 </span>
 
                                 <span *ngIf="dailyAttendance.absentChildrenIds.indexOf(child.id) != -1">
-                                    <button class="btn btn-outline-purple" (click)="markAsPresent(child.id)"
-                                        style="color:white">
+                                    <button class="btn btn-sm checkbox-not-present" (click)="markAsPresent(child.id)">
                                         <i class="fa fa-check"></i>
                                     </button>
                                     Not Present
@@ -90,8 +89,9 @@
         </div>
 
         <div class="card-footer">
-            <button class="btn btn-outline-darkblue mx-auto" (click)="true">
-                Submit list
+            <button class="btn btn-outline-darkblue mx-auto" (click)="submitAttendanceList()"
+                [disabled]="!selectedDaycareGroup || !dailyAttendance">
+                Submit attendance list
             </button>
         </div>
 

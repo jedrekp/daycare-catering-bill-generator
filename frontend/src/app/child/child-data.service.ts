@@ -32,7 +32,7 @@ export class ChildDataService {
   }
 
   createChild(child: Child) {
-    return this.httpClient.post<Child>('http://localhost:8081/children/', child)
+    return this.httpClient.post<Child>('http://localhost:8081/children', child)
   }
 
   editChild(childId: number, child: Child) {

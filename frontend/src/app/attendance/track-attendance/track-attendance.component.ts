@@ -6,6 +6,7 @@ import { AttendanceDataService } from '../attendance-data.service';
 import { DailyAttendance } from '../daily-attendance';
 import { DatePipe } from '@angular/common';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 
 @Component({
   selector: 'app-track-attendance',
@@ -25,7 +26,8 @@ export class TrackAttendanceComponent implements OnInit {
     private bsModalService: BsModalService,
     private datePipe: DatePipe,
     private daycareGroupDataService: DaycareGroupDataService,
-    private attendanceDataService: AttendanceDataService
+    private attendanceDataService: AttendanceDataService,
+    private dialogModalService: DialogModalService
   ) { }
 
   ngOnInit() {
@@ -86,6 +88,16 @@ export class TrackAttendanceComponent implements OnInit {
     this.dailyAttendance.absentChildrenIds.push(
       this.dailyAttendance.presentChildrenIds.splice(index, 1)[0])
   }
+
+  submitAttendanceList() {
+    this.attendanceDataService.submitAttendance(this.dailyAttendance).subscribe(
+      response => {
+        this.dialogModalService.openInformationModal('Action completed',
+          `Attendance list for daycare group #${this.selectedDaycareGroup.id} (${this.selectedDaycareGroup.groupName})
+           has been sucessfully submited.`)
+      })
+  }
+
 
 }
 
