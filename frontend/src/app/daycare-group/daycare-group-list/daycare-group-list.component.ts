@@ -4,7 +4,7 @@ import { DaycareGroupDataService } from '../daycare-group-data.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
-import { CONFIRMATION_HEADER, ERROR_HEADER } from 'src/app/const';
+import { CONFIRMATION_HEADER, ERROR_HEADER, ACTION_COMPLETED_HEADER } from 'src/app/const';
 
 @Component({
   selector: 'app-daycare-group-list',
@@ -42,7 +42,7 @@ export class DaycareGroupListComponent implements OnInit {
         if (onClose) {
           this.daycareGroupDataService.deleteDaycareGroup(daycareGroup.id).subscribe(
             response => {
-              this.modalRef = this.dialogModalService.openInformationModal('Group deleted',
+              this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
                 `Daycare group #${daycareGroup.id} (${daycareGroup.groupName}) has been succesfully deleted.`)
               this.modalRef.content.onClose.subscribe(
                 onclose => {
@@ -50,7 +50,7 @@ export class DaycareGroupListComponent implements OnInit {
                 })
             },
             err => {
-              this.dialogModalService.openInformationModal(ERROR_HEADER,err.message)
+              this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
             })
         }
       })

@@ -30,16 +30,7 @@ export class UnassignedChildrenListComponent implements OnInit {
     this.childDataService.retrieveChildrenByGroupID(-1).subscribe(
       children => {
         this.children = children
-        this.sortChildrenById()
       })
-  }
-
-  sortChildrenById() {
-    this.children.sort(function (a, b) {
-      if (a.id < b.id) { return -1; }
-      if (a.id > b.id) { return 1; }
-      return 0;
-    })
   }
 
   openAssignChildToGroupModal(child: Child) {

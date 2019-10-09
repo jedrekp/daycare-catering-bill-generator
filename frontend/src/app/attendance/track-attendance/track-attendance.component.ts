@@ -7,6 +7,7 @@ import { DailyAttendance } from '../daily-attendance';
 import { DatePipe } from '@angular/common';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
+import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
 
 @Component({
   selector: 'app-track-attendance',
@@ -92,9 +93,12 @@ export class TrackAttendanceComponent implements OnInit {
   submitAttendanceList() {
     this.attendanceDataService.submitAttendance(this.dailyAttendance).subscribe(
       response => {
-        this.dialogModalService.openInformationModal('Action completed',
+        this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
           `Attendance list for daycare group #${this.selectedDaycareGroup.id} (${this.selectedDaycareGroup.groupName})
            has been sucessfully submited.`)
+      },
+      err => {
+        this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
       })
   }
 

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DaycareGroup } from '../daycare-group';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
+import { ERROR_HEADER } from 'src/app/const';
 
 @Component({
   selector: 'app-assign-to-group',
@@ -53,7 +54,7 @@ export class AssignToGroupComponent implements OnInit {
           this.onClose.next(daycareGroup)
         },
         err => {
-          this.dialogModalService.openNestedInformationModal('Cannot assign to group', err.message)
+          this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
         })
     }
   }

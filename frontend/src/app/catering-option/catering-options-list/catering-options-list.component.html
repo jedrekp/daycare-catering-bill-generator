@@ -24,8 +24,8 @@
                     <thead>
 
                         <tr>
-                            <th>Option Id</th>
                             <th>Option name</th>
+                            <th>Option Id</th>
                             <th>Daily cost</th>
                             <th>Action</th>
                         </tr>
@@ -36,8 +36,8 @@
 
                         <ng-container *ngIf="!showDisabled">
                             <tr *ngFor="let option of activeCateringOptions">
-                                <td>#{{option.id}}</td>
                                 <td>{{option.optionName}}</td>
+                                <td>#{{option.id}}</td>
                                 <td>{{option.dailyCost | number:'1.2-2'}} PLN</td>
                                 <td>
                                     <button class="btn btn-outline-purple"
@@ -50,8 +50,8 @@
 
                         <ng-container *ngIf="showDisabled">
                             <tr *ngFor="let option of disabledCateringOptions">
-                                <td>#{{option.id}}</td>
                                 <td>{{option.optionName}}</td>
+                                <td>#{{option.id}}</td>
                                 <td>{{option.dailyCost | number:'1.2-2'}} PLN</td>
                                 <td>
                                     <button class="btn btn-outline-light btn-outline-purple"

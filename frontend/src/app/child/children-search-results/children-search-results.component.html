@@ -16,9 +16,9 @@
 
                     <thead>
                         <tr>
-                            <th>Child Id</th>
                             <th>First name</th>
                             <th>Last Name</th>
+                            <th>Child Id</th>
                             <th>Status</th>
                             <th>Child page</th>
                         </tr>
@@ -26,9 +26,9 @@
 
                     <tbody>
                         <tr *ngFor="let child of children">
-                            <td>#{{child.id}}</td>
                             <td>{{child.firstName}}</td>
                             <td>{{child.lastName}}</td>
+                            <td>#{{child.id}}</td>
                             <td *ngIf="child.archived" class="text-secondary">In archive</td>
                             <td *ngIf="!child.archived" class="text-success">Active</td>
                             <td>

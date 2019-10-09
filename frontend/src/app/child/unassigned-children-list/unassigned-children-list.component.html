@@ -13,9 +13,9 @@
 
                     <thead>
                         <tr>
-                            <th>Child Id</th>
                             <th>First name</th>
                             <th>Last Name</th>
+                            <th>Child Id</th>
                             <th>Child page</th>
                             <th>Assign to daycare group</th>
                         </tr>
@@ -23,9 +23,9 @@
 
                     <tbody>
                         <tr *ngFor="let child of children">
-                            <td>#{{child.id}}</td>
                             <td>{{child.firstName}}</td>
                             <td>{{child.lastName}}</td>
+                            <td>#{{child.id}}</td>
                             <td>
                                 <button class="btn btn-outline-purple" [routerLink]="['/child-page',child.id]">
                                     Open

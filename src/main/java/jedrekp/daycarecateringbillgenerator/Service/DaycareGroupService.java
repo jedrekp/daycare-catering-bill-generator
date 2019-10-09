@@ -46,6 +46,7 @@ public class DaycareGroupService {
         daycareGroupRepository.deleteById(daycareGroupId);
     }
 
+    @Transactional(readOnly = true)
     public DaycareGroup findSingleGroupById(Long id) {
         return daycareGroupRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
@@ -55,15 +56,16 @@ public class DaycareGroupService {
         return daycareGroupRepository.findByIdWithChildren(daycareGroupId).orElseThrow(EntityNotFoundException::new);
     }
 
+    @Transactional(readOnly = true)
     public Collection<DaycareGroup> findAll() {
-        return daycareGroupRepository.findAll();
+        return daycareGroupRepository.findAllByOrderByGroupNameAsc();
     }
 
     @Transactional
     public DaycareGroup addChildToDaycareGroup(Long daycareGroupId, Long childId) {
         Child child = childService.findSingleChildByIdAndArchived(childId, false);
         if (child.getDaycareGroup() != null) {
-            throw new IllegalArgumentException("Child#" + child.getId() + " is already assigned to a daycare group");
+            throw new IllegalArgumentException("Child #" + child.getId() + " is already assigned to a daycare group");
         }
         DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
         child.setDaycareGroup(daycareGroup);
@@ -79,7 +81,7 @@ public class DaycareGroupService {
             daycareGroup.getChildren().remove(child);
             child.setDaycareGroup(null);
         } else {
-            throw new IllegalArgumentException("Child#" + child.getId() + " is not in this daycare group");
+            throw new IllegalArgumentException("Child #" + child.getId() + " is not in this daycare group");
         }
         return daycareGroup;
     }

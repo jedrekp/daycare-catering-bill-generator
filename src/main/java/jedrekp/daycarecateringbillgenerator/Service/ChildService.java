@@ -57,10 +57,12 @@ public class ChildService {
         return childToEdit;
     }
 
+    @Transactional(readOnly = true)
     public Child findSingleChildById(Long childId) {
         return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
     }
 
+    @Transactional(readOnly = true)
     public Child findSingleChildByIdAndArchived(Long childId, boolean archived) {
         return childRepository.findByIdAndArchived(childId, archived).orElseThrow(EntityNotFoundException::new);
     }
@@ -78,7 +80,7 @@ public class ChildService {
 
     @Transactional(readOnly = true)
     public Collection<Child> findChildrenByArchived(boolean archived) {
-        return childRepository.findAllByArchived(archived);
+        return childRepository.findAllByArchivedOrderByLastNameAscFirstNameAsc(archived);
     }
 
     @Transactional(readOnly = true)
@@ -86,7 +88,8 @@ public class ChildService {
         if (daycareGroupId == -1L) {
             daycareGroupId = null;
         }
-        return childRepository.findAllByDaycareGroup_IdAndArchived(daycareGroupId, false);
+        return childRepository.findAllByDaycareGroup_IdAndArchivedOrderByLastNameAscFirstNameAsc(
+                daycareGroupId, false);
     }
 
     @Transactional(readOnly = true)
@@ -114,7 +117,7 @@ public class ChildService {
     public Child assignCateringOption(Long childId, AssignedOptionDTO assignedOptionDTO) {
         if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(assignedOptionDTO.getEffectiveDate(), childId)) {
             throw new IllegalArgumentException(
-                    "Child#" + childId + " already has another catering option assigned with this effective date.\n" +
+                    "Child #" + childId + " already has another catering option assigned with this effective date.\n" +
                             "It must be removed first");
         }
         CateringOption cateringOption = cateringOptionService.findById(assignedOptionDTO.getCateringOptionId());

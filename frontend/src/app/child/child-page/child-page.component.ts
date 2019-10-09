@@ -38,14 +38,7 @@ export class ChildPageComponent implements OnInit {
     this.childDataService.retrieveChild(childId).subscribe(
       child => {
         this.child = child
-        this.sortAssignedOptionsbyEffectiveDate(this.child.assignedOptions)
       })
-  }
-
-  sortAssignedOptionsbyEffectiveDate(assignedOptions: AssignedOption[]) {
-    assignedOptions.sort((val1, val2) => {
-      return <any>new Date(val2.effectiveDate) - <any>new Date(val1.effectiveDate)
-    })
   }
 
   openEditChildModal() {

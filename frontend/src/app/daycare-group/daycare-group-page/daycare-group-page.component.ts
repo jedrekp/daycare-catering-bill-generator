@@ -6,7 +6,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DaycareGroupCreateEditComponent } from '../daycare-group-create-edit/daycare-group-create-edit.component';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { Child } from 'src/app/child/child';
-import { CONFIRMATION_HEADER, ERROR_HEADER } from 'src/app/const';
+import { CONFIRMATION_HEADER, ERROR_HEADER, ACTION_COMPLETED_HEADER } from 'src/app/const';
 
 @Component({
   selector: 'app-daycare-group-page',
@@ -37,16 +37,7 @@ export class DaycareGroupPageComponent implements OnInit {
     this.daycareGroupDataService.retrieveSingleDaycareGroup(groupId).subscribe(
       daycarareGroup => {
         this.daycareGroup = daycarareGroup
-        this.sortChildrenById()
       })
-  }
-
-  sortChildrenById() {
-    this.daycareGroup.children.sort(function (a, b) {
-      if (a.id < b.id) { return -1; }
-      if (a.id > b.id) { return 1; }
-      return 0;
-    })
   }
 
   openEditGroupModal() {
@@ -56,8 +47,8 @@ export class DaycareGroupPageComponent implements OnInit {
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
-          this.modalRef = this.dialogModalService.openInformationModal('Group edited',
-            `Daycare group#${this.daycareGroup.id} has been succesfully edited.`)
+          this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+            `Daycare group #${this.daycareGroup.id} has been succesfully edited.`)
           this.modalRef.content.onClose.subscribe(
             onClose => {
               this.retrieveDaycareGroup(this.daycareGroup.id)
@@ -75,7 +66,7 @@ export class DaycareGroupPageComponent implements OnInit {
         if (onClose) {
           this.daycareGroupDataService.deleteDaycareGroup(this.daycareGroup.id).subscribe(
             response => {
-              this.modalRef = this.dialogModalService.openInformationModal('Group deleted',
+              this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
                 `Daycare group #${this.daycareGroup.id} ${this.daycareGroup.groupName} has been succesfully deleted.`)
               this.modalRef.content.onClose.subscribe(
                 onClose => {
@@ -97,7 +88,7 @@ export class DaycareGroupPageComponent implements OnInit {
         if (onclose) {
           this.daycareGroupDataService.removeChildFromDaycareGroup(this.daycareGroup.id, child.id).subscribe(
             response => {
-              this.modalRef = this.dialogModalService.openInformationModal('Child removed',
+              this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
                 `Child #${child.id} (${child.firstName} ${child.lastName}) has been succesfully removed from daycare group #${this.daycareGroup.id}.`)
               this.modalRef.content.onClose.subscribe(
                 onclose => {

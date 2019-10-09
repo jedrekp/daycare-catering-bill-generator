@@ -49,6 +49,7 @@ public class Child {
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JsonIgnoreProperties({"child", "cateringOption.children"})
     @JsonView(JsonViewFilter.WithAssignedOptions.class)
+    @OrderBy(value = "effectiveDate DESC")
     private Set<AssignedOption> assignedOptions = new HashSet<>();
 
 }

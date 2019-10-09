@@ -32,5 +32,6 @@ public class DaycareGroup {
             cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
     @JsonIgnoreProperties({"daycareGroup"})
     @JsonView(JsonViewFilter.WithChildren.class)
+    @OrderBy(value = "lastName ASC, firstName ASC")
     private Set<Child> children = new HashSet<>();
 }

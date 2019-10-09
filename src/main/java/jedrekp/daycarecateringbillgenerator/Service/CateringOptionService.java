@@ -42,6 +42,7 @@ public class CateringOptionService {
         return cateringOptionToEdit;
     }
 
+    @Transactional(readOnly = true)
     public CateringOption findById(Long cateringOptionId) {
         return cateringOptionRepository.findById(cateringOptionId).orElseThrow(EntityNotFoundException::new);
     }
@@ -54,7 +55,7 @@ public class CateringOptionService {
 
     @Transactional(readOnly = true)
     public Collection<CateringOption> findAllByDisabled(boolean disabled) {
-        return cateringOptionRepository.findAllByDisabled(disabled);
+        return cateringOptionRepository.findAllByDisabledOrderByOptionNameAsc(disabled);
     }
 
 

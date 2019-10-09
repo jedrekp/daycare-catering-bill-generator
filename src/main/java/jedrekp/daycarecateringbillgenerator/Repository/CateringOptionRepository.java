@@ -13,8 +13,6 @@ import java.util.Optional;
 @Repository
 public interface CateringOptionRepository extends JpaRepository<CateringOption, Long> {
 
-    List<CateringOption> findAllByDisabled(boolean disabled);
-
     boolean existsByOptionName(String optionName);
 
     boolean existsByOptionNameAndIdNot(String optionName, Long id);
@@ -27,4 +25,6 @@ public interface CateringOptionRepository extends JpaRepository<CateringOption, 
             nativeQuery = true)
     Optional<CateringOption> findOptionInEffectByChildIdAndDate(@Param("childId") Long childId,
                                                                 @Param("date") LocalDate date);
+
+    List<CateringOption> findAllByDisabledOrderByOptionNameAsc(boolean disabled);
 }

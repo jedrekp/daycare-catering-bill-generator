@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DaycareGroupDataService } from '../daycare-group-data.service';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
+import { ERROR_HEADER } from 'src/app/const';
 
 @Component({
   selector: 'app-daycare-group-create-edit',
@@ -53,7 +54,7 @@ export class DaycareGroupCreateEditComponent implements OnInit {
             this.onClose.next(daycareGroup.id)
           },
           err => {
-            this.dialogModalService.openNestedInformationModal('Cannot create group', err.message)
+            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
           })
       } else {
         this.daycareGroupDataService.editDaycareGroup(this.daycareGroup.id, daycareGroupToSubmit).subscribe(
@@ -62,7 +63,7 @@ export class DaycareGroupCreateEditComponent implements OnInit {
             this.onClose.next(daycareGroup.id)
           },
           err => {
-            this.dialogModalService.openNestedInformationModal('Cannot edit group', err.message)
+            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
           })
       }
     }
