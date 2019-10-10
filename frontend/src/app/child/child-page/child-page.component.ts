@@ -18,8 +18,9 @@ import { CONFIRMATION_HEADER, ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/
 export class ChildPageComponent implements OnInit {
 
   private modalRef: BsModalRef
-
   private child: Child
+  private attendanceSelectedMonthDate: Date
+  private minDate: Date
 
   constructor(
     private route: ActivatedRoute,
@@ -30,8 +31,9 @@ export class ChildPageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.child = new Child(-1, '', '', '',false)
+    this.child = new Child(-1, '', '', '', false)
     this.retrieveChild(this.route.snapshot.params['childId'])
+    this.minDate = new Date(2019, 0, 1)
   }
 
   retrieveChild(childId: number) {
@@ -42,8 +44,10 @@ export class ChildPageComponent implements OnInit {
   }
 
   openEditChildModal() {
-    let initialState = { child: new Child(this.child.id, this.child.firstName, this.child.lastName,
-       this.child.parentEmail,this.child.archived) };
+    let initialState = {
+      child: new Child(this.child.id, this.child.firstName, this.child.lastName,
+        this.child.parentEmail, this.child.archived)
+    };
     this.modalRef = this.bsModalService.show(ChildCreateEditComponent,
       { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
@@ -134,6 +138,13 @@ export class ChildPageComponent implements OnInit {
             })
         }
       })
+  }
+
+  onOpenCalendar(container) {
+    container.monthSelectHandler = (event: any): void => {
+      container._store.dispatch(container._actions.select(event.date));
+    };
+    container.setViewMode('month');
   }
 
 }

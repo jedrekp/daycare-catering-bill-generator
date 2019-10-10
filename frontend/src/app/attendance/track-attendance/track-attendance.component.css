@@ -1,11 +1,11 @@
 #date-input {
-    max-width: 115px;
+    width: 115px;
     background-color: white;
     border: 1px solid #B5446E;
 }
 
 #group-input{
-    max-width: 150px;
+    width: 150px;
     border: 1px solid #B5446E;
 }
 

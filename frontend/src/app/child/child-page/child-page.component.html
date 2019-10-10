@@ -5,7 +5,7 @@
 
 <div class="row justify-content-center">
 
-    <div class="col-10 col-md-4 mr-md-4">
+    <div class="col-10 col-md-7 col-lg-4 mr-lg-4">
 
         <div class="card mb-4 px-0 border-darkblue text-center" id="basic-info-card">
 
@@ -39,7 +39,8 @@
             <div class="card-footer">
 
                 <div class="row justify-content-center">
-                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2" (click)="openEditChildModal()">
+                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                        (click)="openEditChildModal()">
                         Edit information
                     </button>
                     <button class="btn btn-outline-darkblue btn-block col-8 col-md-7">Add to archive</button>
@@ -103,7 +104,7 @@
 
     </div>
 
-    <div class="col-10 col-md-6">
+    <div class="col-10 col-md-7 col-lg-6">
 
         <div class="card mb-4 px-0 border-darkblue text-center" id="assigned-options-card">
 
@@ -137,8 +138,46 @@
             <div class="card-footer">
 
                 <div class="row justify-content-center">
-                    <button class="btn btn-outline-darkblue col-8 col-md-4" (click)="openAssignNewOptionModal()">
+                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-6 col-lg-5 col-xl-4"
+                        (click)="openAssignNewOptionModal()">
                         Assign new option
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card mb-4 px-0 border-darkblue text-center" id="assigned-options-card">
+
+            <div class="card-header bg-darkblue">
+                <h5 class="card-title my-0">Attendance</h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="form-group col-10 col-sm-7 col-md-8 col-lg-7 col-xl-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-darkblue">Select month</span>
+                            </div>
+                            <input bsDatepicker class="form-control bg-white" [ngModel]="attendanceSelectedMonthDate"
+                                (ngModelChange)="retrieveAttendance()"
+                                [bsConfig]="{dateInputFormat: 'MM/YYYY', containerClass:'theme-default'}"
+                                (onShown)="onOpenCalendar($event)" [minDate]="minDate" readonly>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+
+                <div class="row justify-content-center">
+                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-6 col-lg-5 col-xl-4"
+                        (click)="openAssignNewOptionModal()">
+                        Submit changes
                     </button>
                 </div>
 
