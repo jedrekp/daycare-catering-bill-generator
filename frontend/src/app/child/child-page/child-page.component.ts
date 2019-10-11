@@ -19,7 +19,8 @@ export class ChildPageComponent implements OnInit {
 
   private modalRef: BsModalRef
   private child: Child
-  private attendanceSelectedMonthDate: Date
+  private firstDayOfSelectedAttendanceMonth: Date
+  private selectedMonthDates: Date[]
   private minDate: Date
 
   constructor(
@@ -34,6 +35,11 @@ export class ChildPageComponent implements OnInit {
     this.child = new Child(-1, '', '', '', false)
     this.retrieveChild(this.route.snapshot.params['childId'])
     this.minDate = new Date(2019, 0, 1)
+    let currentDate = new Date()
+    console.log(currentDate)
+    this.firstDayOfSelectedAttendanceMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+    console.log(this.firstDayOfSelectedAttendanceMonth)
+    this.getAllDaysFromSelectedMonth()
   }
 
   retrieveChild(childId: number) {
@@ -142,9 +148,24 @@ export class ChildPageComponent implements OnInit {
 
   onOpenCalendar(container) {
     container.monthSelectHandler = (event: any): void => {
-      container._store.dispatch(container._actions.select(event.date));
-    };
-    container.setViewMode('month');
+      container._store.dispatch(container._actions.select(event.date))
+    }
+    container.setViewMode('month')
+  }
+
+  getAllDaysFromSelectedMonth() {
+    let date = this.firstDayOfSelectedAttendanceMonth
+    let month = this.firstDayOfSelectedAttendanceMonth.getMonth()
+    let year = this.firstDayOfSelectedAttendanceMonth.getFullYear()
+    this.selectedMonthDates = []
+    while (date.getMonth() === month) {
+      this.selectedMonthDates.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+  }
+
+  retrieveAttendance() {
+    this.getAllDaysFromSelectedMonth()
   }
 
 }
