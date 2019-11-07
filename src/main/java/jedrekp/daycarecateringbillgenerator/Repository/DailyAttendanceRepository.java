@@ -13,8 +13,10 @@ import java.util.Optional;
 @Repository
 public interface DailyAttendanceRepository extends JpaRepository<DailyAttendance, Long> {
 
-    @Query("SELECT da FROM DailyAttendance da LEFT JOIN FETCH da.presentChildren pc WHERE da.date = :date ")
-    Optional<DailyAttendance> findByDateWithPresentChildren(@Param("date") LocalDate date);
+    @Query("SELECT da FROM DailyAttendance da " +
+            "LEFT JOIN FETCH da.presentChildren pc LEFT JOIN FETCH da.absentChildren ac" +
+            " WHERE da.date = :date ")
+    Optional<DailyAttendance> findByDateWithChildren(@Param("date") LocalDate date);
 
     @Query("SELECT da FROM DailyAttendance da INNER JOIN FETCH da.presentChildren pc INNER JOIN pc.daycareGroup dg " +
             "WHERE da.date = :date AND dg.id = :daycareGroupId")
@@ -24,7 +26,12 @@ public interface DailyAttendanceRepository extends JpaRepository<DailyAttendance
     @Query("SELECT da FROM DailyAttendance da LEFT JOIN da.presentChildren pc " +
             "WHERE  pc.id = :childId AND MONTH(da.date) = :month AND YEAR(da.date) = :year " +
             "ORDER BY da.date ASC")
-    List<DailyAttendance> findByChildIdForSpecificMonth(@Param("childId") Long childId,
-                                                        @Param("month") Integer month, @Param("year") Integer year);
+    List<DailyAttendance> findByPresentChildIdForSpecificMonth(@Param("childId") Long childId,
+                                                        @Param("month") int month, @Param("year") int year);
 
+    @Query("SELECT da FROM DailyAttendance da LEFT JOIN da.absentChildren pc " +
+            "WHERE  pc.id = :childId AND MONTH(da.date) = :month AND YEAR(da.date) = :year " +
+            "ORDER BY da.date ASC")
+    List<DailyAttendance> findByAbsentChildIdForSpecificMonth(@Param("childId") Long childId,
+                                                               @Param("month") int month, @Param("year") int year);
 }

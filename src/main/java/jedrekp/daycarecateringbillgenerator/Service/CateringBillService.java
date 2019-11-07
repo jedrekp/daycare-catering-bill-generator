@@ -33,7 +33,7 @@ public class CateringBillService {
 
         MonthlyCateringBillDTO cateringBill = new MonthlyCateringBillDTO(month, year, child.getId(), child.getFirstName());
 
-        List<DailyAttendance> dailyAttendances = dailyAttendanceRepository.findByChildIdForSpecificMonth(childId, month.getValue(), year);
+        List<DailyAttendance> dailyAttendances = dailyAttendanceRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year);
 
         for (DailyAttendance dailyAttendance : dailyAttendances) {
             CateringOption currentlyAssignedCateringOption = cateringOptionService

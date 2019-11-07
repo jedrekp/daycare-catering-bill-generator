@@ -3,7 +3,7 @@ import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-dat
 import { DaycareGroup } from 'src/app/daycare-group/daycare-group';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AttendanceDataService } from '../attendance-data.service';
-import { DailyAttendance } from '../daily-attendance';
+import { DailyGroupAttendance } from '../daily-group-attendance';
 import { DatePipe } from '@angular/common';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
@@ -20,7 +20,7 @@ export class TrackAttendanceComponent implements OnInit {
   private selectDateAndGroupForm: FormGroup
   private daycareGroups: DaycareGroup[] = []
   private selectedDaycareGroup: DaycareGroup
-  private dailyAttendance: DailyAttendance
+  private dailyAttendance: DailyGroupAttendance
   private minDate: Date
 
   constructor(
@@ -91,7 +91,7 @@ export class TrackAttendanceComponent implements OnInit {
   }
 
   submitAttendanceList() {
-    this.attendanceDataService.submitAttendance(this.dailyAttendance).subscribe(
+    this.attendanceDataService.submitDailyGroupAttendance(this.dailyAttendance).subscribe(
       response => {
         this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
           `Attendance list for daycare group #${this.selectedDaycareGroup.id} (${this.selectedDaycareGroup.groupName})

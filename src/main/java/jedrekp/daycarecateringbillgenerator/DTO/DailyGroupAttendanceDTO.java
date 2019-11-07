@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DailyAttendanceDTO {
+public class DailyGroupAttendanceDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
@@ -21,7 +21,7 @@ public class DailyAttendanceDTO {
 
     private Set<Long> absentChildrenIds = new HashSet<>();
 
-    public DailyAttendanceDTO(LocalDate date) {
+    public DailyGroupAttendanceDTO(LocalDate date) {
         this.date = date;
     }
 }

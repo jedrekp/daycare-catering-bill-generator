@@ -9,6 +9,8 @@ import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-dat
 import { AssignToGroupComponent } from 'src/app/daycare-group/assign-to-group/assign-to-group.component';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { CONFIRMATION_HEADER, ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
+import { AttendanceDataService } from 'src/app/attendance/attendance-data.service';
+import { MonthlyChildAttendance } from 'src/app/attendance/monthly-child-attandance';
 
 @Component({
   selector: 'app-child-page',
@@ -22,6 +24,7 @@ export class ChildPageComponent implements OnInit {
   private firstDayOfSelectedAttendanceMonth: Date
   private selectedMonthDates: Date[]
   private minDate: Date
+  private monthlyChildAttendance: MonthlyChildAttendance
 
   constructor(
     private route: ActivatedRoute,
@@ -29,6 +32,7 @@ export class ChildPageComponent implements OnInit {
     private dialogModalService: DialogModalService,
     private childDataService: ChildDataService,
     private daycareGroupDataService: DaycareGroupDataService,
+    private attendanceDataService: AttendanceDataService
   ) { }
 
   ngOnInit() {
@@ -155,8 +159,7 @@ export class ChildPageComponent implements OnInit {
 
   getAllDaysFromSelectedMonth() {
     let date = this.firstDayOfSelectedAttendanceMonth
-    let month = this.firstDayOfSelectedAttendanceMonth.getMonth()
-    let year = this.firstDayOfSelectedAttendanceMonth.getFullYear()
+    let month = date.getMonth()
     this.selectedMonthDates = []
     while (date.getMonth() === month) {
       this.selectedMonthDates.push(new Date(date));
@@ -166,6 +169,16 @@ export class ChildPageComponent implements OnInit {
 
   retrieveAttendance() {
     this.getAllDaysFromSelectedMonth()
+    let monthString = this.firstDayOfSelectedAttendanceMonth.toLocaleDateString(
+      'en-us', { month: 'long' }).toLocaleUpperCase()
+    let year = this.firstDayOfSelectedAttendanceMonth.getFullYear()
+    this.attendanceDataService.retrieveMonthlyAttendanceForChild(this.child.id, monthString, year).subscribe(
+      monthlyChildAttendance => {
+        this.monthlyChildAttendance = monthlyChildAttendance
+      },
+      err => {
+        this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
+      })
   }
 
 }

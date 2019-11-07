@@ -1,7 +1,8 @@
 package jedrekp.daycarecateringbillgenerator.Controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.daycarecateringbillgenerator.DTO.DailyAttendanceDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.DailyGroupAttendanceDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.SingleChildMonthlyAttendanceDTO;
 import jedrekp.daycarecateringbillgenerator.Entity.DailyAttendance;
 import jedrekp.daycarecateringbillgenerator.Repository.DailyAttendanceRepository;
 import jedrekp.daycarecateringbillgenerator.Service.DailyAttendanceService;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -29,12 +29,14 @@ public class DailyAttendanceController {
 
     @PostMapping("/dailyAttendances")
     @JsonView(JsonViewFilter.WithChildren.class)
-    public ResponseEntity<DailyAttendance> markAttendance(@RequestBody @Valid DailyAttendanceDTO dailyAttendanceDTO) {
-        return new ResponseEntity<>(dailyAttendanceService.markAttendance(dailyAttendanceDTO), HttpStatus.OK);
+    public ResponseEntity<DailyAttendance> markAttendanceForGroup(
+            @RequestBody @Valid DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
+        return new ResponseEntity<>(dailyAttendanceService
+                .markAttendanceForGroup(dailyGroupAttendanceDTO), HttpStatus.OK);
     }
 
     @GetMapping(value = "/dailyAttendances", params = {"daycareGroupId", "date"})
-    public ResponseEntity<DailyAttendanceDTO> getDailyAttendanceForDaycareGroup(
+    public ResponseEntity<DailyGroupAttendanceDTO> getDailyAttendanceForDaycareGroup(
             @RequestParam Long daycareGroupId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return new ResponseEntity<>(
@@ -42,11 +44,9 @@ public class DailyAttendanceController {
     }
 
     @GetMapping(value = "/dailyAttendances/children/{childId}", params = {"month", "year"})
-    @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<List<DailyAttendance>> getMonthlyAttendanceForChild(
+    public ResponseEntity<SingleChildMonthlyAttendanceDTO> getMonthlyAttendanceForChild(
             @PathVariable Long childId, @RequestParam Month month, @RequestParam Integer year) {
-        return new ResponseEntity<>(dailyAttendanceRepository
-                .findByChildIdForSpecificMonth(childId, month.getValue(), year),
-                HttpStatus.OK);
+        return new ResponseEntity<>(dailyAttendanceService
+                .getMonthlyAttendanceForChild(childId, month, year), HttpStatus.OK);
     }
 }

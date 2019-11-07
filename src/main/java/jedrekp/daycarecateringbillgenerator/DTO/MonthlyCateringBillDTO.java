@@ -16,7 +16,7 @@ public class MonthlyCateringBillDTO {
 
     private Month month;
 
-    private Integer year;
+    private int year;
 
     private Long childId;
 
@@ -26,7 +26,7 @@ public class MonthlyCateringBillDTO {
 
     private List<DailyOrderDTO> dailyOrders = new ArrayList<>();
 
-    public MonthlyCateringBillDTO(Month month, Integer year, Long childId, String childName) {
+    public MonthlyCateringBillDTO(Month month, int year, Long childId, String childName) {
         this.month = month;
         this.year = year;
         this.childId = childId;

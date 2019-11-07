@@ -1,4 +1,4 @@
-export class DailyAttendance {
+export class DailyGroupAttendance {
 
     constructor(
         public date: Date,
