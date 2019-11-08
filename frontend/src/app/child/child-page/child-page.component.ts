@@ -11,6 +11,7 @@ import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { CONFIRMATION_HEADER, ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
 import { AttendanceDataService } from 'src/app/attendance/attendance-data.service';
 import { MonthlyChildAttendance } from 'src/app/attendance/monthly-child-attandance';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-child-page',
@@ -22,12 +23,13 @@ export class ChildPageComponent implements OnInit {
   private modalRef: BsModalRef
   private child: Child
   private firstDayOfSelectedAttendanceMonth: Date
-  private selectedMonthDates: Date[]
+  private weekdaysFromSelectedMonth: Date[]
   private minDate: Date
   private monthlyChildAttendance: MonthlyChildAttendance
 
   constructor(
     private route: ActivatedRoute,
+    private datePipe: DatePipe,
     private bsModalService: BsModalService,
     private dialogModalService: DialogModalService,
     private childDataService: ChildDataService,
@@ -43,7 +45,7 @@ export class ChildPageComponent implements OnInit {
     console.log(currentDate)
     this.firstDayOfSelectedAttendanceMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
     console.log(this.firstDayOfSelectedAttendanceMonth)
-    this.getAllDaysFromSelectedMonth()
+    this.getAllWeekdaysFromSelectedMonth()
   }
 
   retrieveChild(childId: number) {
@@ -157,20 +159,21 @@ export class ChildPageComponent implements OnInit {
     container.setViewMode('month')
   }
 
-  getAllDaysFromSelectedMonth() {
+  getAllWeekdaysFromSelectedMonth() {
     let date = this.firstDayOfSelectedAttendanceMonth
     let month = date.getMonth()
-    this.selectedMonthDates = []
+    this.weekdaysFromSelectedMonth = []
     while (date.getMonth() === month) {
-      this.selectedMonthDates.push(new Date(date));
+      if (!(date.getDay() == 0 || date.getDay() == 6)) {
+        this.weekdaysFromSelectedMonth.push(new Date(date));
+      }
       date.setDate(date.getDate() + 1);
     }
   }
 
   retrieveAttendance() {
-    this.getAllDaysFromSelectedMonth()
-    let monthString = this.firstDayOfSelectedAttendanceMonth.toLocaleDateString(
-      'en-us', { month: 'long' }).toLocaleUpperCase()
+    this.getAllWeekdaysFromSelectedMonth()
+    let monthString = this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'LLLL').toUpperCase()
     let year = this.firstDayOfSelectedAttendanceMonth.getFullYear()
     this.attendanceDataService.retrieveMonthlyAttendanceForChild(this.child.id, monthString, year).subscribe(
       monthlyChildAttendance => {
