@@ -148,7 +148,7 @@
 
         </div>
 
-        <div class="card mb-4 px-0 border-darkblue text-center" id="assigned-options-card">
+        <div class="card mb-4 px-0 border-darkblue text-center" id="attendance-card">
 
             <div class="card-header bg-darkblue">
                 <h5 class="card-title my-0">Attendance</h5>
@@ -156,41 +156,54 @@
 
             <div class="card-body">
 
-                <div class="row justify-content-left px-5">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-darkblue">Selected month</span>
-                            </div>
-                            <input bsDatepicker class="form-control bg-white"
-                                [(ngModel)]="firstDayOfSelectedAttendanceMonth" (ngModelChange)="retrieveAttendance()"
-                                [bsConfig]="{dateInputFormat: 'MMMM YYYY', containerClass:'theme-default'}"
-                                (onShown)="onOpenCalendar($event)" [minDate]="minDate" readonly>
-                        </div>
+                <div class="row justify-content-center px-3" id="attendance-month-picker">
+                    <div class="mb-3 col-10 col-sm-8 col-lg-6 col-xl-5">
+                        <input bsDatepicker class="form-control bg-white text-center"
+                            [(ngModel)]="firstDayOfSelectedAttendanceMonth" (ngModelChange)="retrieveAttendance()"
+                            [bsConfig]="{dateInputFormat: 'MMMM YYYY', containerClass:'theme-default'}"
+                            (onShown)="onOpenCalendar($event)" [minDate]="minDate" readonly>
+                    </div>
+                    <div class="col-12">
+                        <div class="month-picker-underline mb-2"></div>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
 
-                    <div class="table-responsive">
+                    <div class="table-responsive col-12 col-md-10 col-lg-8 col-xl-6">
                         <table class="table table-borderless mb-0 table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Attendance status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
                             <tbody>
-                                <tr *ngFor="let date of weekdaysFromSelectedMonth">
+                                <tr *ngFor="let date of weekdaysFromSelectedMonth | slice:0:calendarSlicePoint">
+                                    <td style="width:30%">
+                                        {{date | date:'EE'}}<br>
+                                        {{date | date:'d/MM'}}
+                                    </td>
+                                    <td style="width: 70%">
+                                        <select class="form-control">
+                                            <option>Untracked</option>
+                                            <option>Present</option>
+                                            <option>Not Present</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-responsive col-12 col-md-10 col-lg-8 col-xl-6">
+                        <table class="table table-borderless mb-0 table-hover">
+                            <tbody>
+                                <tr *ngFor="let date of weekdaysFromSelectedMonth | slice:calendarSlicePoint">
                                     <td>
-                                    {{date | date:'EEEE'}} {{date | date:'d'}}
+                                        {{date | date:'EE'}} <br>
+                                        {{date | date:'d/MM'}}
                                     </td>
                                     <td>
-                                        kk
-                                    </td>
-                                    <td>
-                                        kk
+                                        <select class="form-control">
+                                            <option style="display:none;">Untracked</option>
+                                            <option>Present</option>
+                                            <option>Not Present</option>
+                                        </select>
                                     </td>
                                 </tr>
                             </tbody>

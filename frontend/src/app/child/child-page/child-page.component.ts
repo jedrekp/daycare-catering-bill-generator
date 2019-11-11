@@ -26,6 +26,7 @@ export class ChildPageComponent implements OnInit {
   private weekdaysFromSelectedMonth: Date[]
   private minDate: Date
   private monthlyChildAttendance: MonthlyChildAttendance
+  private calendarSlicePoint: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,9 +43,7 @@ export class ChildPageComponent implements OnInit {
     this.retrieveChild(this.route.snapshot.params['childId'])
     this.minDate = new Date(2019, 0, 1)
     let currentDate = new Date()
-    console.log(currentDate)
     this.firstDayOfSelectedAttendanceMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
-    console.log(this.firstDayOfSelectedAttendanceMonth)
     this.getAllWeekdaysFromSelectedMonth()
   }
 
@@ -134,8 +133,8 @@ export class ChildPageComponent implements OnInit {
   removeAssignedOption(assignedOption: AssignedOption) {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
       `You are about to remove catering option #${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
-      This change may affect future catering bills covering months, for which this option is in effect.\n
-      It will not affect catering bills that have already been generated`)
+      This change may affect catering bills generated in future, for months when this option is in effect.\n
+      It will not affect catering bills that have already been generated.`)
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
@@ -160,7 +159,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   getAllWeekdaysFromSelectedMonth() {
-    let date = this.firstDayOfSelectedAttendanceMonth
+    let date = new Date(this.firstDayOfSelectedAttendanceMonth)
     let month = date.getMonth()
     this.weekdaysFromSelectedMonth = []
     while (date.getMonth() === month) {
@@ -169,6 +168,7 @@ export class ChildPageComponent implements OnInit {
       }
       date.setDate(date.getDate() + 1);
     }
+    this.calendarSlicePoint = Math.ceil(this.weekdaysFromSelectedMonth.length/2)
   }
 
   retrieveAttendance() {
