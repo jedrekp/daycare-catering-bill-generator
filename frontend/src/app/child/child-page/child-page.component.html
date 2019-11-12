@@ -178,11 +178,16 @@
                                         {{date | date:'EE'}}<br>
                                         {{date | date:'d/MM'}}
                                     </td>
-                                    <td style="width: 70%">
-                                        <select class="form-control">
-                                            <option>Untracked</option>
-                                            <option>Present</option>
-                                            <option>Not Present</option>
+                                    <td>
+                                        <select class="form-control"
+                                            (change)="adjustDailyAttendance(date,$event.target.value)">
+                                            <option [value]=1 [selected]="checkAttendanceStatus(date)==1">Present
+                                            </option>
+                                            <option [value]=0 [selected]="checkAttendanceStatus(date)==0">Not Present
+                                            </option>
+                                            <option [value]=-1 [selected]="checkAttendanceStatus(date)==-1"
+                                                style="display:none;">
+                                                Untracked</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -199,10 +204,15 @@
                                         {{date | date:'d/MM'}}
                                     </td>
                                     <td>
-                                        <select class="form-control">
-                                            <option style="display:none;">Untracked</option>
-                                            <option>Present</option>
-                                            <option>Not Present</option>
+                                        <select class="form-control"
+                                            (change)="adjustDailyAttendance(date,$event.target.value)">
+                                            <option [value]=1 [selected]="checkAttendanceStatus(date)==1">Present
+                                            </option>
+                                            <option [value]=0 [selected]="checkAttendanceStatus(date)==0">Not Present
+                                            </option>
+                                            <option [value]=-1 [selected]="checkAttendanceStatus(date)==-1"
+                                                style="display:none;">
+                                                Untracked</option>
                                         </select>
                                     </td>
                                 </tr>

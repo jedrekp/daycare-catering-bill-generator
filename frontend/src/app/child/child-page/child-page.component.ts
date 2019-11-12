@@ -40,17 +40,18 @@ export class ChildPageComponent implements OnInit {
 
   ngOnInit() {
     this.child = new Child(-1, '', '', '', false)
-    this.retrieveChild(this.route.snapshot.params['childId'])
+    this.monthlyChildAttendance = new MonthlyChildAttendance("JANUARY", 2019, -1)
     this.minDate = new Date(2019, 0, 1)
     let currentDate = new Date()
     this.firstDayOfSelectedAttendanceMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
-    this.getAllWeekdaysFromSelectedMonth()
+    this.retrieveChild(this.route.snapshot.params['childId'])
   }
 
   retrieveChild(childId: number) {
     this.childDataService.retrieveChild(childId).subscribe(
       child => {
         this.child = child
+        this.retrieveAttendance()
       })
   }
 
@@ -168,7 +169,7 @@ export class ChildPageComponent implements OnInit {
       }
       date.setDate(date.getDate() + 1);
     }
-    this.calendarSlicePoint = Math.ceil(this.weekdaysFromSelectedMonth.length/2)
+    this.calendarSlicePoint = Math.ceil(this.weekdaysFromSelectedMonth.length / 2)
   }
 
   retrieveAttendance() {
@@ -182,6 +183,35 @@ export class ChildPageComponent implements OnInit {
       err => {
         this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
       })
+
+  }
+
+  checkAttendanceStatus(date: Date) {
+    let dateAsString = this.datePipe.transform(date, 'yyyy-MM-dd')
+    if (this.monthlyChildAttendance.daysWhenPresent.indexOf(dateAsString) > -1) {
+      return 1
+    } else if (this.monthlyChildAttendance.daysWhenAbsent.indexOf(dateAsString) > -1) {
+      return 0
+    } else {
+      return -1
+    }
+  }
+
+  adjustDailyAttendance(date: Date, optionValue: number) {
+    let dateAsString = this.datePipe.transform(date, 'yyyy-MM-dd')
+    if (optionValue == 1) {
+      let absentIndex = this.monthlyChildAttendance.daysWhenAbsent.indexOf(dateAsString)
+      if (absentIndex > -1) {
+        this.monthlyChildAttendance.daysWhenAbsent.splice(absentIndex, 1)
+      }
+      this.monthlyChildAttendance.daysWhenPresent.push(dateAsString)
+    } else if (optionValue == 0) {
+      let presentIndex = this.monthlyChildAttendance.daysWhenPresent.indexOf(dateAsString)
+      if (presentIndex > -1) {
+        this.monthlyChildAttendance.daysWhenPresent.splice(presentIndex, 1)
+      }
+      this.monthlyChildAttendance.daysWhenAbsent.push(dateAsString)
+    }
   }
 
 }

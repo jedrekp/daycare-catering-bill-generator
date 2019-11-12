@@ -4,7 +4,7 @@ export class MonthlyChildAttendance {
         public month: string,
         public year: number,
         public childId: number,
-        public daysWhenPresent: Date[],
-        public daysWhenAbsent: Date[]
+        public daysWhenPresent: string[] = [],
+        public daysWhenAbsent: string[] = []
     ) { }
 }
