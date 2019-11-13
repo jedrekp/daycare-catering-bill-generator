@@ -15,18 +15,10 @@ import java.util.Set;
 @NoArgsConstructor
 public class SingleChildMonthlyAttendanceDTO {
 
-    private Month month;
-
-    private int year;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Set<LocalDate> daysWhenPresent = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Set<LocalDate> daysWhenAbsent = new HashSet<>();
 
-    public SingleChildMonthlyAttendanceDTO(Month month, int year) {
-        this.month = month;
-        this.year = year;
-    }
 }

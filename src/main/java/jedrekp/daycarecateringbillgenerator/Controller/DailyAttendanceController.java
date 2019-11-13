@@ -45,6 +45,7 @@ public class DailyAttendanceController {
     }
 
     @PostMapping(value = "/dailyAttendances/children/{childId}")
+    @JsonView(JsonViewFilter.WithChildren.class)
     public ResponseEntity<Collection<DailyAttendance>> submitMonthlyAttendanceForSingleChild(
             @PathVariable Long childId, @RequestBody @Valid SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
         return new ResponseEntity<>(

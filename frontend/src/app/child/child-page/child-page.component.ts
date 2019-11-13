@@ -40,7 +40,7 @@ export class ChildPageComponent implements OnInit {
 
   ngOnInit() {
     this.child = new Child(-1, '', '', '', false)
-    this.monthlyChildAttendance = new MonthlyChildAttendance("JANUARY", 2019, -1)
+    this.monthlyChildAttendance = new MonthlyChildAttendance()
     this.minDate = new Date(2019, 0, 1)
     let currentDate = new Date()
     this.firstDayOfSelectedAttendanceMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
@@ -217,7 +217,15 @@ export class ChildPageComponent implements OnInit {
   submitAttendanceChanges() {
     this.attendanceDataService.submitMonthlyAttendanceForChild(this.child.id, this.monthlyChildAttendance).subscribe(
       response => {
-        this.retrieveAttendance
+        this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER, `Attendance for 
+        ${this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'MMMM yyyy')} has been modified for child #${this.child.id}.`)
+        this.modalRef.content.onClose.subscribe(
+          onClose => {
+            this.retrieveAttendance()
+          })
+      },
+      err => {
+        this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
       })
   }
 

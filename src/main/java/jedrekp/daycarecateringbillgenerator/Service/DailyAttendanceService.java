@@ -104,7 +104,7 @@ public class DailyAttendanceService {
                         dailyAttendances.add(dailyAttendance);
                     },
                     () -> {
-                        DailyAttendance dailyAttendance = new DailyAttendance();
+                        DailyAttendance dailyAttendance = new DailyAttendance(date);
                         dailyAttendance.getPresentChildren().add(child);
                         dailyAttendances.add(dailyAttendanceRepository.save(dailyAttendance));
                     });
@@ -118,21 +118,20 @@ public class DailyAttendanceService {
                         dailyAttendances.add(dailyAttendance);
                     },
                     () -> {
-                        DailyAttendance dailyAttendance = new DailyAttendance();
+                        DailyAttendance dailyAttendance = new DailyAttendance(date);
                         dailyAttendance.getAbsentChildren().add(child);
                         dailyAttendances.add(dailyAttendanceRepository.save(dailyAttendance));
                     });
         }
 
         dailyAttendances.sort(Comparator.comparing(DailyAttendance::getDate));
-
         return dailyAttendances;
     }
 
     @Transactional(readOnly = true)
     public SingleChildMonthlyAttendanceDTO getMonthlyAttendanceForChild(Long childId, Month month, int year) {
 
-        SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO(month, year);
+        SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO();
 
         dailyAttendanceRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year)
                 .stream()
