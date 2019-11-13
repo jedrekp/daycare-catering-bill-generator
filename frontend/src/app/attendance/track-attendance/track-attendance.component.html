@@ -33,15 +33,19 @@
 
 <div class="row">
 
-    <div class="card col-10 col-md-8 mx-auto mt-4 p-0 text-center border-darkblue">
+    <div class="card col-10 col-md-8 mx-auto my-4 p-0 text-center border-darkblue">
 
         <div class="card-header bg-darkblue">
             <h5 class="card-title my-0">Track attendance</h5>
         </div>
 
-        <div *ngIf="selectedDaycareGroup && dailyAttendance" class="card-body pt-4">
+        <div *ngIf="selectedDaycareGroup && dailyAttendance" class="card-body pt-3">
 
-            <div style="overflow-x: auto;">
+            <h5>Daycare group: {{selectedDaycareGroup.groupName}}</h5>
+            <h5>{{dailyAttendance.date | date:'fullDate'}}</h5>
+            <div class="subheader-underline mb-3"></div>
+
+            <div class="table-responsive">
                 <table class="table table-hover table-borderless text-center">
 
                     <thead>

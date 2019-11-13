@@ -19,17 +19,14 @@ public class SingleChildMonthlyAttendanceDTO {
 
     private int year;
 
-    private Long childId;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Set<LocalDate> daysWhenPresent = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Set<LocalDate> daysWhenAbsent = new HashSet<>();
 
-    public SingleChildMonthlyAttendanceDTO(Month month, int year, Long childId) {
+    public SingleChildMonthlyAttendanceDTO(Month month, int year) {
         this.month = month;
         this.year = year;
-        this.childId = childId;
     }
 }

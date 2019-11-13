@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +28,7 @@ public class DailyAttendanceService {
     DaycareGroupService daycareGroupService;
 
     @Transactional
-    public DailyAttendance markAttendanceForGroup(DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
+    public DailyAttendance submitAttendanceForGroup(DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
 
         if (!Collections.disjoint(dailyGroupAttendanceDTO.getPresentChildrenIds(), dailyGroupAttendanceDTO.getAbsentChildrenIds())) {
             throw new IllegalArgumentException("One or more children have been marked as both present or absent");
@@ -89,10 +88,51 @@ public class DailyAttendanceService {
         return dailyGroupAttendanceDTO;
     }
 
+    @Transactional
+    public List<DailyAttendance> submitMonthlyAttendanceForChild(
+            Long childId, SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
+
+        Child child = childService.findSingleChildByIdAndArchived(childId, false);
+
+        List<DailyAttendance> dailyAttendances = new ArrayList<>();
+
+        for (LocalDate date : monthlyAttendanceDTO.getDaysWhenPresent()) {
+            dailyAttendanceRepository.findByDateWithChildren(date).ifPresentOrElse(dailyAttendance ->
+                    {
+                        dailyAttendance.getPresentChildren().add(child);
+                        dailyAttendance.getAbsentChildren().remove(child);
+                        dailyAttendances.add(dailyAttendance);
+                    },
+                    () -> {
+                        DailyAttendance dailyAttendance = new DailyAttendance();
+                        dailyAttendance.getPresentChildren().add(child);
+                        dailyAttendances.add(dailyAttendanceRepository.save(dailyAttendance));
+                    });
+        }
+
+        for (LocalDate date : monthlyAttendanceDTO.getDaysWhenAbsent()) {
+            dailyAttendanceRepository.findByDateWithChildren(date).ifPresentOrElse(dailyAttendance ->
+                    {
+                        dailyAttendance.getAbsentChildren().add(child);
+                        dailyAttendance.getPresentChildren().remove(child);
+                        dailyAttendances.add(dailyAttendance);
+                    },
+                    () -> {
+                        DailyAttendance dailyAttendance = new DailyAttendance();
+                        dailyAttendance.getAbsentChildren().add(child);
+                        dailyAttendances.add(dailyAttendanceRepository.save(dailyAttendance));
+                    });
+        }
+
+        dailyAttendances.sort(Comparator.comparing(DailyAttendance::getDate));
+
+        return dailyAttendances;
+    }
+
     @Transactional(readOnly = true)
     public SingleChildMonthlyAttendanceDTO getMonthlyAttendanceForChild(Long childId, Month month, int year) {
 
-        SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO(month, year, childId);
+        SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO(month, year);
 
         dailyAttendanceRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year)
                 .stream()

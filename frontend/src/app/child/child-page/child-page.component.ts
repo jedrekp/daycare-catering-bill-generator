@@ -214,4 +214,11 @@ export class ChildPageComponent implements OnInit {
     }
   }
 
+  submitAttendanceChanges() {
+    this.attendanceDataService.submitMonthlyAttendanceForChild(this.child.id, this.monthlyChildAttendance).subscribe(
+      response => {
+        this.retrieveAttendance
+      })
+  }
+
 }

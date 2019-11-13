@@ -30,12 +30,16 @@
     text-align: left;
 }
 
-.month-picker-underline {
-    border-bottom: 2px solid #484D6D;
-}
-
 #attendance-month-picker .form-control {
     border: 2px solid #484D6D;
+}
+
+#attendance-month-picker .form-control:hover{
+    cursor: pointer;
+}
+
+#attendance-month-picker .form-control:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 15px #484D6D;
 }
 
 #attendance-card table .form-control {

@@ -19,8 +19,8 @@ export class AttendanceDataService {
     return this.httpClient.get<DailyGroupAttendance>('http://localhost:8081/dailyAttendances', { params: params })
   }
 
-  submitDailyGroupAttendance(dailyGroupAttendance: DailyGroupAttendance) {
-    return this.httpClient.post<DailyGroupAttendance>('http://localhost:8081/dailyAttendances', dailyGroupAttendance)
+  submitDailyGroupAttendance(attendance: DailyGroupAttendance) {
+    return this.httpClient.post<any>('http://localhost:8081/dailyAttendances', attendance)
   }
 
   retrieveMonthlyAttendanceForChild(childId: number, month: string, year: number) {
@@ -28,6 +28,10 @@ export class AttendanceDataService {
       .set('month', month)
       .set('year', year.toString())
     return this.httpClient.get<MonthlyChildAttendance>(`http://localhost:8081/dailyAttendances/children/${childId}`, { params: params })
+  }
+
+  submitMonthlyAttendanceForChild(childId: number, attendance: MonthlyChildAttendance) {
+    return this.httpClient.post<any>(`http://localhost:8081/dailyAttendances/children/${childId}`, attendance)
   }
 
 }

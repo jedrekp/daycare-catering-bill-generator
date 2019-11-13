@@ -121,3 +121,7 @@ border: 2px solid #B5446E;
 .modal-header {
     border-radius: 0px;
 }
+
+.subheader-underline {
+    border-bottom: 2px solid #B5446E;
+}

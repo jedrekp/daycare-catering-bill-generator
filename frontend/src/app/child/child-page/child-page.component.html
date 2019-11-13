@@ -156,7 +156,7 @@
 
             <div class="card-body">
 
-                <div class="row justify-content-center px-3" id="attendance-month-picker">
+                <div class="row justify-content-center" id="attendance-month-picker">
                     <div class="mb-3 col-10 col-sm-8 col-lg-6 col-xl-5">
                         <input bsDatepicker class="form-control bg-white text-center"
                             [(ngModel)]="firstDayOfSelectedAttendanceMonth" (ngModelChange)="retrieveAttendance()"
@@ -164,7 +164,7 @@
                             (onShown)="onOpenCalendar($event)" [minDate]="minDate" readonly>
                     </div>
                     <div class="col-12">
-                        <div class="month-picker-underline mb-2"></div>
+                        <div class="subheader-underline mb-2"></div>
                     </div>
                 </div>
 
@@ -221,15 +221,15 @@
                     </div>
                 </div>
 
-                <div class="card-footer">
+            </div>
 
-                    <div class="row justify-content-center">
-                        <button class="btn btn-outline-darkblue btn-block col-8 col-md-6 col-lg-5 col-xl-4"
-                            (click)="openAssignNewOptionModal()">
-                            Submit changes
-                        </button>
-                    </div>
+            <div class="card-footer">
 
+                <div class="row justify-content-center">
+                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-6 col-lg-5 col-xl-4"
+                        (click)="submitAttendanceChanges()">
+                        Submit changes
+                    </button>
                 </div>
 
             </div>
@@ -237,3 +237,5 @@
         </div>
 
     </div>
+
+</div>

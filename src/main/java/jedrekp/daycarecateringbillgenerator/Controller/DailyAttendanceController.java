@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Collection;
 
 @RestController
 @CrossOrigin
@@ -29,10 +30,10 @@ public class DailyAttendanceController {
 
     @PostMapping("/dailyAttendances")
     @JsonView(JsonViewFilter.WithChildren.class)
-    public ResponseEntity<DailyAttendance> markAttendanceForGroup(
+    public ResponseEntity<DailyAttendance> submitAttendanceForGroup(
             @RequestBody @Valid DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
         return new ResponseEntity<>(dailyAttendanceService
-                .markAttendanceForGroup(dailyGroupAttendanceDTO), HttpStatus.OK);
+                .submitAttendanceForGroup(dailyGroupAttendanceDTO), HttpStatus.OK);
     }
 
     @GetMapping(value = "/dailyAttendances", params = {"daycareGroupId", "date"})
@@ -41,6 +42,13 @@ public class DailyAttendanceController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return new ResponseEntity<>(
                 dailyAttendanceService.getDailyAttendanceForDaycareGroup(daycareGroupId, date), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/dailyAttendances/children/{childId}")
+    public ResponseEntity<Collection<DailyAttendance>> submitMonthlyAttendanceForSingleChild(
+            @PathVariable Long childId, @RequestBody @Valid SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
+        return new ResponseEntity<>(
+                dailyAttendanceService.submitMonthlyAttendanceForChild(childId, monthlyAttendanceDTO), HttpStatus.OK);
     }
 
     @GetMapping(value = "/dailyAttendances/children/{childId}", params = {"month", "year"})
