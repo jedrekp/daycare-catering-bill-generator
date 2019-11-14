@@ -3,10 +3,7 @@
     <div class="card col-10 col-md-8 mx-auto my-4 p-0 text-center border-darkblue">
 
         <div class="card-header bg-darkblue">
-            <h5 class="card-title my-0">{{children.length}} matching
-                <span *ngIf="children.length==1">result</span>
-                <span *ngIf="children.length!=1">results</span>
-            </h5>
+            <h5 class="card-title my-0">Children archive</h5>
         </div>
 
         <div class="card-body pt-4">
@@ -19,21 +16,24 @@
                             <th>First name</th>
                             <th>Last name</th>
                             <th>Child Id</th>
-                            <th>Status</th>
                             <th>Child page</th>
+                            <th>Restore from archive</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <tr *ngFor="let child of children">
+                        <tr *ngFor="let child of archivedChildren">
                             <td>{{child.firstName}}</td>
                             <td>{{child.lastName}}</td>
                             <td>#{{child.id}}</td>
-                            <td *ngIf="child.archived" class="text-secondary">Archived</td>
-                            <td *ngIf="!child.archived" class="text-success">Active</td>
                             <td>
                                 <button class="btn btn-outline-purple" [routerLink]="['/child-page',child.id]">
                                     Open
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-purple" (click)="restoreFromArchive(child)">
+                                    Restore
                                 </button>
                             </td>
                         </tr>

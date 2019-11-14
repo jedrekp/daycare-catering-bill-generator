@@ -26,6 +26,7 @@ import { ConfirmationModalComponent } from './dialog/confirmation-modal/confirma
 import { UnassignedChildrenListComponent } from './child/unassigned-children-list/unassigned-children-list.component';
 import { ChildrenSearchResultsComponent } from './child/children-search-results/children-search-results.component';
 import { TrackAttendanceComponent } from './attendance/track-attendance/track-attendance.component';
+import { ArchivedChildrenListComponent } from './child/archived-children-list/archived-children-list.component';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { TrackAttendanceComponent } from './attendance/track-attendance/track-at
     UnassignedChildrenListComponent,
     ChildrenSearchResultsComponent,
     TrackAttendanceComponent,
+    ArchivedChildrenListComponent,
   ],
   imports: [
     BrowserModule,

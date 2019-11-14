@@ -43,7 +43,12 @@
                         (click)="openEditChildModal()">
                         Edit information
                     </button>
-                    <button class="btn btn-outline-darkblue btn-block col-8 col-md-7">Add to archive</button>
+                    <button *ngIf="!child.archived" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
+                        (click)="moveToArchive()">
+                        Move to archive</button>
+                    <button *ngIf="child.archived" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
+                        (click)="restoreFromArchive()">
+                        Restore from archive</button>
                 </div>
 
             </div>
@@ -89,7 +94,7 @@
                     </button>
 
                     <button *ngIf="!child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
-                        (click)="openAssignChildToGroupModal()">
+                        (click)="openAssignChildToGroupModal()" [disabled]="child.archived">
                         Assign to group
                     </button>
                     <button *ngIf="child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
@@ -128,7 +133,8 @@
                                 <td>{{assignedOption.cateringOption.optionName}}</td>
                                 <td>
                                     <button class="btn btn-outline-purple"
-                                        (click)="removeAssignedOption(assignedOption)">Delete</button>
+                                        (click)="removeAssignedOption(assignedOption)" [disabled]="child.archived">
+                                        Delete</button>
                                 </td>
                         </tbody>
                     </table>
@@ -139,7 +145,7 @@
 
                 <div class="row justify-content-center">
                     <button class="btn btn-outline-darkblue btn-block col-8 col-md-6 col-lg-5 col-xl-4"
-                        (click)="openAssignNewOptionModal()">
+                        (click)="openAssignNewOptionModal()" [disabled]="child.archived">
                         Assign new option
                     </button>
                 </div>
@@ -179,7 +185,7 @@
                                         {{date | date:'d/MM'}}
                                     </td>
                                     <td>
-                                        <select class="form-control"
+                                        <select class="form-control" [disabled]="child.archived"
                                             (change)="adjustDailyAttendance(date,$event.target.value)">
                                             <option [value]=1 [selected]="checkAttendanceStatus(date)==1">Present
                                             </option>
@@ -204,7 +210,7 @@
                                         {{date | date:'d/MM'}}
                                     </td>
                                     <td>
-                                        <select class="form-control"
+                                        <select class="form-control" [disabled]="child.archived"
                                             (change)="adjustDailyAttendance(date,$event.target.value)">
                                             <option [value]=1 [selected]="checkAttendanceStatus(date)==1">Present
                                             </option>
@@ -227,7 +233,7 @@
 
                 <div class="row justify-content-center">
                     <button class="btn btn-outline-darkblue btn-block col-8 col-md-6 col-lg-5 col-xl-4"
-                        (click)="submitAttendanceChanges()">
+                        (click)="submitAttendanceChanges()" [disabled]="child.archived">
                         Submit changes
                     </button>
                 </div>

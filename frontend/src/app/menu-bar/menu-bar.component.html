@@ -1,8 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-custom mb-4">
-    <span class="navbar-brand text-left py-0">
-        Daycare Catering<br>
-        Bill Generator
-    </span>
+
+    <a (click)="navigateFromMenu('/child-page/1')">
+        <span class="navbar-brand text-left py-0">
+            Daycare Catering<br>
+            Bill Generator
+        </span>
+    </a>
 
     <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
         <i class="fa fa-bars fa-lg text-white"></i>
@@ -20,14 +23,14 @@
                     <a class="dropdown-item" (click)="openCreateChildModal()">Add new child</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/unassigned-children-list')">
                         View unassigned children</a>
-                    <a class="dropdown-item" (click)="navigateFromMenu('/child-page/1')">View children in archive</a>
+                    <a class="dropdown-item" (click)="navigateFromMenu('/children-archive')">View children archive</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/track-attendance')">Track attendance</a>
                 </div>
             </li>
 
             <li class="btn-group mr-1" dropdown container="body">
                 <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
-                    Daycare groups
+                    Daycare
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
                     <a class="dropdown-item" (click)="openCreateDaycareGroupModal()">Add new group</a>

@@ -26,6 +26,11 @@ export class ChildDataService {
     return this.httpClient.get<Child[]>('http://localhost:8081/children', { params: params })
   }
 
+  retrieveArchivedChildren() {
+    let params = new HttpParams().set('archived', 'true')
+    return this.httpClient.get<Child[]>('http://localhost:8081/children', { params: params })
+  }
+
   findChildrenBySearchPhrase(searchPhrase: string) {
     let params = new HttpParams().set('searchPhrase', searchPhrase)
     return this.httpClient.get<Child[]>('http://localhost:8081/children', { params: params })

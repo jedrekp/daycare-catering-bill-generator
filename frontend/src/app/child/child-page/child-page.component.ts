@@ -75,6 +75,43 @@ export class ChildPageComponent implements OnInit {
       })
   }
 
+  moveToArchive() {
+    this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `You are about to move child #${this.child.id} records to archive.\n
+  Some actions might be unavailalbe while children records are in archive.\n
+  This will also result in child being removed from daycare group that it's currently assigned to.`)
+    this.modalRef.content.onClose.subscribe(
+      onClose => {
+        if (onClose) {
+          this.childDataService.editChild(this.child.id,
+            new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, true)).subscribe(
+              child => {
+                this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+                  `Child #${this.child.id} records have been moved to archive.`)
+                this.modalRef.content.onClose.subscribe(
+                  onClose => {
+                    this.retrieveChild(child.id)
+                  })
+              },
+              err => {
+                this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
+              })
+        }
+      })
+  }
+
+  restoreFromArchive() {
+    this.childDataService.editChild(this.child.id,
+      new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, false)).subscribe(
+        child => {
+          this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+            `Child #${this.child.id} records have been restored from archive.`)
+          this.modalRef.content.onClose.subscribe(
+            onclose => {
+              this.retrieveChild(child.id)
+            })
+        })
+  }
+
   openAssignChildToGroupModal() {
     let initialState = { childId: this.child.id }
     this.modalRef = this.bsModalService.show(AssignToGroupComponent,
@@ -83,7 +120,7 @@ export class ChildPageComponent implements OnInit {
       daycareGroup => {
         if (daycareGroup) {
           this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Child #${this.child.id} is now assigned to daycare group #${daycareGroup.id} (${daycareGroup.groupName}).`)
+            `Child #${this.child.id} is now assigned to daycare group #${daycareGroup.id}(${daycareGroup.groupName}).`)
           this.modalRef.content.onClose.subscribe(
             onClose => {
               this.retrieveChild(this.child.id)
@@ -94,14 +131,14 @@ export class ChildPageComponent implements OnInit {
 
   removeFromGroup() {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to remove child #${this.child.id} from daycare group #${this.child.daycareGroup.id} (${this.child.daycareGroup.groupName}).`)
+      `You are about to remove child #${this.child.id} from daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
           this.daycareGroupDataService.removeChildFromDaycareGroup(this.child.daycareGroup.id, this.child.id).subscribe(
             response => {
               this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                `Child# ${this.child.id} is no longer assigned to daycare group #${this.child.daycareGroup.id} (${this.child.daycareGroup.groupName}).`)
+                `Child# ${this.child.id} is no longer assigned to daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
               this.modalRef.content.onClose.subscribe(
                 onclose => {
                   this.retrieveChild(this.child.id)
@@ -122,7 +159,7 @@ export class ChildPageComponent implements OnInit {
       cateringOption => {
         if (cateringOption) {
           this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Catering option #${cateringOption.id} (${cateringOption.optionName}) has been succesfully assigned to child #${this.child.id}.`)
+            `Catering option #${cateringOption.id}(${cateringOption.optionName}) has been succesfully assigned to child #${this.child.id}.`)
           this.modalRef.content.onClose.subscribe(
             onClose => {
               this.retrieveChild(this.child.id)
@@ -133,9 +170,9 @@ export class ChildPageComponent implements OnInit {
 
   removeAssignedOption(assignedOption: AssignedOption) {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to remove catering option #${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
+      `You are about to remove catering option #${assignedOption.cateringOption.id}(${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
       This change may affect catering bills generated in future, for months when this option is in effect.\n
-      It will not affect catering bills that have already been generated.`)
+                It will not affect catering bills that have already been generated.`)
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
@@ -217,8 +254,8 @@ export class ChildPageComponent implements OnInit {
   submitAttendanceChanges() {
     this.attendanceDataService.submitMonthlyAttendanceForChild(this.child.id, this.monthlyChildAttendance).subscribe(
       response => {
-        this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER, `Attendance for 
-        ${this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'MMMM yyyy')} has been modified for child #${this.child.id}.`)
+        this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+          `${this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'MMMM yyyy')} attendance for child #${this.child.id} has been modified.`)
         this.modalRef.content.onClose.subscribe(
           onClose => {
             this.retrieveAttendance()

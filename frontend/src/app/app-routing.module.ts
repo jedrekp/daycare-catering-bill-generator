@@ -7,12 +7,14 @@ import { DaycareGroupListComponent } from './daycare-group/daycare-group-list/da
 import { UnassignedChildrenListComponent } from './child/unassigned-children-list/unassigned-children-list.component';
 import { ChildrenSearchResultsComponent } from './child/children-search-results/children-search-results.component';
 import { TrackAttendanceComponent } from './attendance/track-attendance/track-attendance.component';
+import { ArchivedChildrenListComponent } from './child/archived-children-list/archived-children-list.component';
 
 
 const routes: Routes = [
   { path: 'child-page/:childId', component: ChildPageComponent },
   { path: 'unassigned-children-list', component: UnassignedChildrenListComponent },
   { path: 'children-search-results/:searchPhrase', component: ChildrenSearchResultsComponent },
+  { path: 'children-archive', component: ArchivedChildrenListComponent },
   { path: 'catering-options-list', component: CateringOptionsListComponent },
   { path: 'daycare-group-page/:groupId', component: DaycareGroupPageComponent },
   { path: 'daycare-group-list', component: DaycareGroupListComponent },
@@ -23,4 +25,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

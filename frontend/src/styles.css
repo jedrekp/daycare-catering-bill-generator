@@ -78,7 +78,7 @@ border: 2px solid #B5446E;
     box-shadow: none;
 }
 
-.btn-outline-purple:disabled, .btn-outline-purple:disabled {
+.btn-outline-purple:disabled, .btn-outline-darkblue:disabled {
     color: gray;
     border-color: gray;
 }

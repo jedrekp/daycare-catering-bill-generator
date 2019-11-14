@@ -24,7 +24,6 @@ export class TrackAttendanceComponent implements OnInit {
   private minDate: Date
 
   constructor(
-    private bsModalService: BsModalService,
     private datePipe: DatePipe,
     private daycareGroupDataService: DaycareGroupDataService,
     private attendanceDataService: AttendanceDataService,
