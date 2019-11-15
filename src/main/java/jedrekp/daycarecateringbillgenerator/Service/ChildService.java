@@ -128,7 +128,6 @@ public class ChildService {
         Child child = findByIdWithAssignedOptions(childId);
         AssignedOption assignedOption = new AssignedOption(assignedOptionDTO.getEffectiveDate(), child, cateringOption);
         child.getAssignedOptions().add(assignedOption);
-        assignedOptionRepository.save(assignedOption);
         return child;
     }
 
@@ -138,7 +137,6 @@ public class ChildService {
         AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
                 .orElseThrow(EntityNotFoundException::new);
         child.getAssignedOptions().remove(assignedOption);
-        assignedOptionRepository.delete(assignedOption);
         return child;
     }
 

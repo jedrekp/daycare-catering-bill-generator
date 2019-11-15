@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,12 +40,12 @@ public class Child {
     @JsonView(JsonViewFilter.BasicInfo.class)
     private boolean archived;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "daycare_group_id")
     @JsonIgnoreProperties({"children"})
     private DaycareGroup daycareGroup;
 
-    @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JsonIgnoreProperties({"child", "cateringOption.children"})
     @JsonView(JsonViewFilter.WithAssignedOptions.class)
     @OrderBy(value = "effectiveDate DESC")

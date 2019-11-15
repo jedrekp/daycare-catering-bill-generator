@@ -1,6 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.Controller;
 
-import jedrekp.daycarecateringbillgenerator.DTO.MonthlyCateringBillDTO;
+import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
 import jedrekp.daycarecateringbillgenerator.Service.CateringBillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,8 @@ public class CateringBillController {
     @Autowired
     CateringBillService cateringBillService;
 
-    @PostMapping(value = "/cateringBill/child/{childId}", params = {"month", "year"})
-    public ResponseEntity<MonthlyCateringBillDTO> generateMonthlyCateringBillForChild(
+    @GetMapping(value = "/cateringBills/children/{childId}", params = {"month", "year"})
+    public ResponseEntity<CateringBill> generateMonthlyCateringBillForChild(
             @PathVariable Long childId, @RequestParam Month month, @RequestParam Integer year) {
         return new ResponseEntity<>(
                 cateringBillService.generateCateringBill(childId, month, year), HttpStatus.OK);

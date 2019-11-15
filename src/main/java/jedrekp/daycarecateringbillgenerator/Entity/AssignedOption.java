@@ -27,13 +27,11 @@ public class AssignedOption {
     @JsonView(JsonViewFilter.WithAssignedOptions.class)
     private LocalDate effectiveDate;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
     private Child child;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "catering_option_id")
     @JsonView(JsonViewFilter.WithAssignedOptions.class)
     private CateringOption cateringOption;

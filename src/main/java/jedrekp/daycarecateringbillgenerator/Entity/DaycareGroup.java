@@ -28,8 +28,7 @@ public class DaycareGroup {
     @JsonView(JsonViewFilter.BasicInfo.class)
     private String groupName;
 
-    @OneToMany(mappedBy = "daycareGroup", fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
+    @OneToMany(mappedBy = "daycareGroup", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"daycareGroup"})
     @JsonView(JsonViewFilter.WithChildren.class)
     @OrderBy(value = "lastName ASC, firstName ASC")

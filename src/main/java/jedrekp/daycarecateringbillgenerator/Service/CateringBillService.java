@@ -1,10 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.Service;
 
-import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
-import jedrekp.daycarecateringbillgenerator.DTO.DailyOrderDTO;
-import jedrekp.daycarecateringbillgenerator.DTO.MonthlyCateringBillDTO;
-import jedrekp.daycarecateringbillgenerator.Entity.Child;
-import jedrekp.daycarecateringbillgenerator.Entity.DailyAttendance;
+import jedrekp.daycarecateringbillgenerator.Entity.*;
 import jedrekp.daycarecateringbillgenerator.Repository.DailyAttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,28 +23,29 @@ public class CateringBillService {
     CateringOptionService cateringOptionService;
 
     @Transactional(readOnly = true)
-    public MonthlyCateringBillDTO generateCateringBill(Long childId, Month month, Integer year) {
+    public CateringBill generateCateringBill(Long childId, Month month, Integer year) {
 
-        Child child = childService.findSingleChildByIdAndArchived(childId,false);
+        Child child = childService.findSingleChildByIdAndArchived(childId, false);
 
-        MonthlyCateringBillDTO cateringBill = new MonthlyCateringBillDTO(month, year, child.getId(), child.getFirstName());
+        CateringBill cateringBill = new CateringBill(month, year, child);
 
-        List<DailyAttendance> dailyAttendances = dailyAttendanceRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year);
+        List<DailyAttendance> dailyAttendances = dailyAttendanceRepository
+                .findByPresentChildIdForSpecificMonth(childId, month.getValue(), year);
 
         for (DailyAttendance dailyAttendance : dailyAttendances) {
-            CateringOption currentlyAssignedCateringOption = cateringOptionService
+            CateringOption optionInEffect = cateringOptionService
                     .findOptionInEffectForChild(childId, dailyAttendance.getDate());
-            cateringBill.getDailyOrders()
-                    .add(new DailyOrderDTO(dailyAttendance.getDate(),
-                            currentlyAssignedCateringOption.getOptionName(), currentlyAssignedCateringOption.getDailyCost()));
+            cateringBill.getDailyCateringOrders()
+                    .add(new DailyCateringOrder(dailyAttendance.getDate(), optionInEffect.getOptionName(),
+                            optionInEffect.getDailyCost(), cateringBill));
         }
 
-        BigDecimal totalMonthlyCost = cateringBill.getDailyOrders()
+        BigDecimal totalMonthlyCost = cateringBill.getDailyCateringOrders()
                 .stream()
-                .map(DailyOrderDTO::getCateringOptionPrice)
+                .map(DailyCateringOrder::getCateringOptionPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        cateringBill.setTotalCost(totalMonthlyCost);
+        cateringBill.setTotalDue(totalMonthlyCost);
 
         return cateringBill;
 
