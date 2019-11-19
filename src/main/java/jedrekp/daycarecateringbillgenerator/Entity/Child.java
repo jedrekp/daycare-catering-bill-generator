@@ -51,4 +51,9 @@ public class Child {
     @OrderBy(value = "effectiveDate DESC")
     private Set<AssignedOption> assignedOptions = new HashSet<>();
 
+    @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @JsonIgnoreProperties({"child", "dailyCateringOrders"})
+    @OrderBy(value = "year DESC, month DESC")
+    private Set<CateringBill> cateringBills = new HashSet<>();
+
 }
