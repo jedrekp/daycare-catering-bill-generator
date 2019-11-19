@@ -1,11 +1,14 @@
 package jedrekp.daycarecateringbillgenerator.Service;
 
+import freemarker.template.TemplateException;
 import jedrekp.daycarecateringbillgenerator.Entity.*;
 import jedrekp.daycarecateringbillgenerator.Repository.DailyAttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Month;
 import java.util.List;
@@ -21,6 +24,9 @@ public class CateringBillService {
 
     @Autowired
     CateringOptionService cateringOptionService;
+
+    @Autowired
+    EmailService emailService;
 
     @Transactional(readOnly = true)
     public CateringBill generateCateringBill(Long childId, Month month, Integer year) {
@@ -48,6 +54,15 @@ public class CateringBillService {
         cateringBill.setTotalDue(totalMonthlyCost);
 
         return cateringBill;
+    }
 
+    @Transactional
+    public void sendCateringBillViaEmailAndSaveIt(Long childId, Month month, Integer year) {
+        CateringBill cateringBill = generateCateringBill(childId, month, year);
+        try {
+            emailService.sendEmailWithCateringBill(cateringBill);
+        } catch (IOException | TemplateException | MessagingException ex) {
+            ex.printStackTrace();
+        }
     }
 }

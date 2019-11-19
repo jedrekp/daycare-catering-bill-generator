@@ -8,8 +8,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Month;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "monthly_catering_bill",
@@ -40,7 +40,7 @@ public class CateringBill {
     @OneToMany(mappedBy = "cateringBill", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JsonIgnoreProperties("cateringBill")
     @OrderBy(value = "orderDate ASC")
-    private Set<DailyCateringOrder> dailyCateringOrders = new HashSet<>();
+    private List<DailyCateringOrder> dailyCateringOrders = new ArrayList<>();
 
     public CateringBill(Month month, int year, Child child) {
         this.month = month;

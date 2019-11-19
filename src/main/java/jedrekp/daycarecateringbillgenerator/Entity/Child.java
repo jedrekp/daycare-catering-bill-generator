@@ -1,5 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
@@ -52,6 +53,7 @@ public class Child {
     private Set<AssignedOption> assignedOptions = new HashSet<>();
 
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @JsonIgnore
     @JsonIgnoreProperties({"child", "dailyCateringOrders"})
     @OrderBy(value = "year DESC, month DESC")
     private Set<CateringBill> cateringBills = new HashSet<>();
