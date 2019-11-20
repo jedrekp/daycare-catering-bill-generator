@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 
@@ -76,7 +75,7 @@ public class DaycareGroupService {
 
     @Transactional
     public DaycareGroup removeChildFromDaycareGroup(Long daycareGroupId, Long childId) {
-        Child child = childService.findSingleChildById(childId);
+        Child child = childService.findSingleChildByIdWithAllDetails(childId);
         DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
         if (daycareGroup.getChildren().contains(child)) {
             daycareGroup.getChildren().remove(child);

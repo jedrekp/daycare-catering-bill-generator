@@ -29,8 +29,7 @@ public class DaycareGroup {
     private String groupName;
 
     @OneToMany(mappedBy = "daycareGroup", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"daycareGroup"})
-    @JsonView(JsonViewFilter.WithChildren.class)
+    @JsonIgnoreProperties({"daycareGroup", "assignedOptions"})
     @OrderBy(value = "lastName ASC, firstName ASC")
     private Set<Child> children = new HashSet<>();
 }

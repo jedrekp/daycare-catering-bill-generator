@@ -38,7 +38,6 @@ public class DaycareGroupController {
     }
 
     @GetMapping("/daycareGroups/{daycareGroupId}")
-    @JsonView(JsonViewFilter.WithChildren.class)
     public ResponseEntity<DaycareGroup> getDaycareGroup(@PathVariable Long daycareGroupId) {
         return new ResponseEntity<>(daycareGroupService.findSingleGroupByIdWithChildren(daycareGroupId), HttpStatus.OK);
     }
@@ -50,14 +49,12 @@ public class DaycareGroupController {
     }
 
     @PutMapping("/daycareGroups/{daycareGroupId}/children/{childId}")
-    @JsonView(JsonViewFilter.WithChildren.class)
     public ResponseEntity<DaycareGroup> addChildToDayCareGroup(@PathVariable Long daycareGroupId, @PathVariable Long childId) {
         return new ResponseEntity<>(
                 daycareGroupService.addChildToDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
     }
 
     @DeleteMapping("/daycareGroups/{daycareGroupId}/children/{childId}")
-    @JsonView(JsonViewFilter.WithChildren.class)
     public ResponseEntity<DaycareGroup> removeChildFromGroup(@PathVariable Long daycareGroupId, @PathVariable Long childId) {
         return new ResponseEntity<>(daycareGroupService.removeChildFromDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
     }

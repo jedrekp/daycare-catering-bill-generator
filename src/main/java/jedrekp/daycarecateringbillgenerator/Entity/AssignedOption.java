@@ -1,7 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.Entity;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,20 +19,18 @@ public class AssignedOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(JsonViewFilter.WithAssignedOptions.class)
     private Long id;
 
     @Column(name = "effective_date")
-    @JsonView(JsonViewFilter.WithAssignedOptions.class)
     private LocalDate effectiveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
+    @JsonIgnore
     private Child child;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "catering_option_id")
-    @JsonView(JsonViewFilter.WithAssignedOptions.class)
     private CateringOption cateringOption;
 
     public AssignedOption(LocalDate effectiveDate, Child child, CateringOption cateringOption) {

@@ -68,14 +68,14 @@ public class ChildService {
     }
 
     @Transactional(readOnly = true)
-    public Child findByIdWithAssignedOptions(Long childId) {
-        return childRepository.findByIdWithAssignedOptions(childId)
-                .orElseThrow(EntityNotFoundException::new);
+    public Child findSingleChildByIdWithAllDetails(Long childId) {
+        return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
-    public Child findSingleChildByIdWithAllDetails(Long childId) {
-        return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
+    public Child findSingleChildByIdAndArchivedWithAllDetails(Long childId, boolean archived) {
+        return childRepository.findByIdAndArchivedWithAllDetails(childId, archived)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
@@ -125,7 +125,7 @@ public class ChildService {
             throw new IllegalArgumentException("Catering option#" + cateringOption.getId() + " is disabled.\n" +
                     "It can no longer be assigned");
         }
-        Child child = findByIdWithAssignedOptions(childId);
+        Child child = findSingleChildByIdAndArchivedWithAllDetails(childId, false);
         AssignedOption assignedOption = new AssignedOption(assignedOptionDTO.getEffectiveDate(), child, cateringOption);
         child.getAssignedOptions().add(assignedOption);
         return child;
@@ -133,7 +133,7 @@ public class ChildService {
 
     @Transactional
     public Child removeAssignedOption(Long childId, Long assignedOptionId) {
-        Child child = findByIdWithAssignedOptions(childId);
+        Child child = findSingleChildByIdAndArchivedWithAllDetails(childId, false);
         AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
                 .orElseThrow(EntityNotFoundException::new);
         child.getAssignedOptions().remove(assignedOption);
@@ -151,8 +151,10 @@ public class ChildService {
     private void getAllAdjacentCombinationsViaRecursion(Set<String> searchSubPhrases, String searchPhrase) {
         while (!searchSubPhrases.contains(searchPhrase) && searchPhrase.contains(" ")) {
             searchSubPhrases.add(searchPhrase);
-            getAllAdjacentCombinationsViaRecursion(searchSubPhrases, searchPhrase.substring(0, searchPhrase.lastIndexOf(" ")));
-            getAllAdjacentCombinationsViaRecursion(searchSubPhrases, searchPhrase.substring(searchPhrase.indexOf(" ") + 1));
+            getAllAdjacentCombinationsViaRecursion(
+                    searchSubPhrases, searchPhrase.substring(0, searchPhrase.lastIndexOf(" ")));
+            getAllAdjacentCombinationsViaRecursion(
+                    searchSubPhrases, searchPhrase.substring(searchPhrase.indexOf(" ") + 1));
         }
     }
 

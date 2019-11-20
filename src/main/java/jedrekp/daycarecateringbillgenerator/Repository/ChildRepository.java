@@ -19,15 +19,16 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 
     Optional<Child> findByIdAndArchived(Long childId, boolean archived);
 
-    @Query("SELECT c FROM Child c " +
-            "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
-            "WHERE c.id = :childId AND c.archived = false")
-    Optional<Child> findByIdWithAssignedOptions(@Param("childId") Long childId);
-
     @Query("SELECT c FROM Child c LEFT JOIN FETCH c.daycareGroup " +
             "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
             "WHERE c.id = :childId")
     Optional<Child> findByIdWithAllDetails(@Param("childId") Long childId);
+
+    @Query("SELECT c FROM Child c LEFT JOIN FETCH c.daycareGroup " +
+            "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
+            "WHERE c.id = :childId AND c.archived = :archived")
+    Optional<Child> findByIdAndArchivedWithAllDetails(
+            @Param("childId") Long childId, @Param("archived") boolean archived);
 
     List<Child> findAllByArchivedOrderByLastNameAscFirstNameAsc(boolean archived);
 

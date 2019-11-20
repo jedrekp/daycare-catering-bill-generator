@@ -55,14 +55,12 @@ public class ChildController {
     }
 
     @PostMapping("/children/{childId}/assignedOptions")
-    @JsonView(JsonViewFilter.WithAssignedOptions.class)
     public ResponseEntity<Child> assignNewCateringOptionToChild(@PathVariable Long childId,
                                                                 @RequestBody AssignedOptionDTO assignedOptionDTO) {
         return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/children/{childId}/assignedOptions/{assignedOptionId}")
-    @JsonView(JsonViewFilter.WithAssignedOptions.class)
     public ResponseEntity<Child> removeAssignedOptionFromChild(@PathVariable Long childId, @PathVariable
             Long assignedOptionId) {
         return new ResponseEntity<>(childService.removeAssignedOption(childId, assignedOptionId), HttpStatus.OK);

@@ -29,7 +29,6 @@ public class DailyAttendanceController {
     DailyAttendanceRepository dailyAttendanceRepository;
 
     @PostMapping("/dailyAttendances")
-    @JsonView(JsonViewFilter.WithChildren.class)
     public ResponseEntity<DailyAttendance> submitAttendanceForGroup(
             @RequestBody @Valid DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
         return new ResponseEntity<>(dailyAttendanceService
@@ -45,7 +44,6 @@ public class DailyAttendanceController {
     }
 
     @PostMapping(value = "/dailyAttendances/children/{childId}")
-    @JsonView(JsonViewFilter.WithChildren.class)
     public ResponseEntity<Collection<DailyAttendance>> submitMonthlyAttendanceForSingleChild(
             @PathVariable Long childId, @RequestBody @Valid SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
         return new ResponseEntity<>(
