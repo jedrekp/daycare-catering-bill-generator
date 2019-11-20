@@ -18,7 +18,6 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
-import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.HashMap;
 import java.util.Locale;
@@ -40,12 +39,12 @@ public class EmailService {
 
     public void sendEmailWithCateringBill(CateringBill cateringBill) throws MessagingException, IOException, TemplateException {
 
-        String subject = MessageFormat.format("{0} {1} daycare catering bill for {2} {3}",
-                cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH), String.valueOf(cateringBill.getYear()),
-                cateringBill.getChild().getFirstName(), cateringBill.getChild().getLastName());
-
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("subject", subject);
+        templateModel.put("month", MessageFormat.format("{0} {1}",
+                cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+                String.valueOf(cateringBill.getYear())));
+        templateModel.put("childName", MessageFormat.format("{0} {1}",
+                cateringBill.getChild().getFirstName(), cateringBill.getChild().getLastName()));
         templateModel.put("dailyOrders", cateringBill.getDailyCateringOrders());
         templateModel.put("totalDue", cateringBill.getTotalDue());
 
@@ -58,6 +57,10 @@ public class EmailService {
 
         Template template = emailConfig.getTemplate("catering-bill-email.ftl");
         String htmlEmailTemplate = FreeMarkerTemplateUtils.processTemplateIntoString(template, templateModel);
+
+        String subject = MessageFormat.format("{0} {1} daycare catering bill for {2} {3}",
+                cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH), String.valueOf(cateringBill.getYear()),
+                cateringBill.getChild().getFirstName(), cateringBill.getChild().getLastName());
 
         mimeMessageHelper.setTo(cateringBill.getChild().getParentEmail());
         mimeMessageHelper.setText(htmlEmailTemplate, true);
