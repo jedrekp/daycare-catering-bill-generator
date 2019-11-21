@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "daily_catering_order",
+@Table(name = "catering_order",
         uniqueConstraints = @UniqueConstraint(columnNames = {"order_date", "catering_bill_id"}))
 @Getter
 @Setter

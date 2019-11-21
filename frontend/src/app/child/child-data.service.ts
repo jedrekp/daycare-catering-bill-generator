@@ -44,12 +44,9 @@ export class ChildDataService {
     return this.httpClient.put<Child>(`http://localhost:8081/children/${childId}`, child)
   }
 
-  assignNewOptionToChild(childId: number, cateringOptionId: number, effectiveDate: string) {
-    let params = new HttpParams()
-      .set('childId', childId.toString())
-      .set('cateringOptionId', cateringOptionId.toString())
-      .set('effectiveDate', effectiveDate)
-    return this.httpClient.post<any>('http://localhost:8081/assignedOptions', { params: params })
+  assignNewOptionToChild(childId: number, assignedOptionId: number, effectiveDate: string) {
+    return this.httpClient.post<Child>(`http://localhost:8081/children/${childId}/assignedOptions`,
+      new AssignedOptionDTO(effectiveDate, assignedOptionId))
   }
 
   removeAssignedOptionFromChild(childId: number, assignedOptionId: number) {

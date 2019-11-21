@@ -57,7 +57,7 @@ public class CateringBillService {
     }
 
     @Transactional
-    public void saveCateringBillAndSendItViaEmail(Long childId, Month month, Integer year) {
+    public void sendCateringBillViaEmailAndSaveIt(Long childId, Month month, Integer year) {
         CateringBill cateringBill = generateCateringBill(childId, month, year);
         try {
             emailService.sendEmailWithCateringBill(cateringBill);

@@ -47,7 +47,7 @@ public class Child {
     private DaycareGroup daycareGroup;
 
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @JsonIgnoreProperties({"child"})
+    @JsonIgnoreProperties({"child", "cateringOption.children"})
     @OrderBy(value = "effectiveDate DESC")
     private Set<AssignedOption> assignedOptions = new HashSet<>();
 

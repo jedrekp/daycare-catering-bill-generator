@@ -16,17 +16,16 @@ public class CateringBillController {
     @Autowired
     CateringBillService cateringBillService;
 
-    @GetMapping(value = "/cateringBills/preview", params = {"childId", "month", "year"})
-    public ResponseEntity<CateringBill> generateCateringBillPreview(
+    @GetMapping(value = "/cateringBills/children/{childId}", params = {"month", "year"})
+    public ResponseEntity<CateringBill> generateMonthlyCateringBillForChild(
             @PathVariable Long childId, @RequestParam Month month, @RequestParam Integer year) {
         return new ResponseEntity<>(
                 cateringBillService.generateCateringBill(childId, month, year), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/cateringBills/children", params = {"childId", "month", "year"})
-    public ResponseEntity saveCateringBillAndSendItViaEmail
-            (@RequestParam Long childId, @RequestParam Month month, @RequestParam Integer year) {
-        cateringBillService.saveCateringBillAndSendItViaEmail(childId, month, year);
+    @PostMapping(value = "/cateringBills/children/{childId}", params = {"month", "year"})
+    public ResponseEntity sendEmail(@PathVariable Long childId, @RequestParam Month month, @RequestParam Integer year) {
+        cateringBillService.sendCateringBillViaEmailAndSaveIt(childId, month, year);
         return ResponseEntity.noContent().build();
     }
 }

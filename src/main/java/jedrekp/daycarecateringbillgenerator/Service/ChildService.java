@@ -1,5 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.Service;
 
+import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
 import jedrekp.daycarecateringbillgenerator.Entity.AssignedOption;
 import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
 import jedrekp.daycarecateringbillgenerator.Entity.Child;
@@ -11,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -115,21 +114,21 @@ public class ChildService {
     }
 
     @Transactional
-    public AssignedOption assignCateringOption(Long childId, Long cateringOptionId, LocalDate effectiveDate) {
-        if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(effectiveDate, childId)) {
+    public Child assignCateringOption(Long childId, AssignedOptionDTO assignedOptionDTO) {
+        if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(assignedOptionDTO.getEffectiveDate(), childId)) {
             throw new IllegalArgumentException(
-                    MessageFormat.format("Child #{0} already has another catering option assigned " +
-                            "with this effective date.\n It must be removed first", childId));
+                    "Child #" + childId + " already has another catering option assigned with this effective date.\n" +
+                            "It must be removed first");
         }
-        CateringOption cateringOption = cateringOptionService.findById(cateringOptionId);
+        CateringOption cateringOption = cateringOptionService.findById(assignedOptionDTO.getCateringOptionId());
         if (cateringOption.isDisabled()) {
-            throw new IllegalArgumentException(MessageFormat.format("Catering option #{0} is disabled.\n" +
-                    "It can no longer be assigned", cateringOptionId));
+            throw new IllegalArgumentException("Catering option#" + cateringOption.getId() + " is disabled.\n" +
+                    "It can no longer be assigned");
         }
-        Child child = findSingleChildByIdAndArchived(childId, false);
-        AssignedOption assignedOption = new AssignedOption(effectiveDate, child, cateringOption);
+        Child child = findSingleChildByIdAndArchivedWithAllDetails(childId, false);
+        AssignedOption assignedOption = new AssignedOption(assignedOptionDTO.getEffectiveDate(), child, cateringOption);
         child.getAssignedOptions().add(assignedOption);
-        return assignedOption;
+        return child;
     }
 
     @Transactional

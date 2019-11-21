@@ -1,6 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class AssignedOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
-    @JsonIgnoreProperties({"daycareGroup", "assignedOptions", "cateringBills"})
+    @JsonIgnore
     private Child child;
 
     @ManyToOne(fetch = FetchType.LAZY)
