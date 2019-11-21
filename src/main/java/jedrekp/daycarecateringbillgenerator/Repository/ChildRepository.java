@@ -47,4 +47,10 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
             "ORDER BY c.lastName ASC, c.firstName ASC")
     List<Child> findAllByFirstName(@Param("searchSubPhrases") Collection<String> searchSubPhrases);
 
+    @Query(value = "SELECT c.* FROM child c WHERE c.daycare_group_id = :groupId " +
+            "AND NOT EXISTS (SELECT 1 FROM catering_bill cb WHERE cb.child_id = c.id " +
+            "AND cb.month = :month AND cb.year = :year)", nativeQuery = true)
+    List<Child> findAllWithoutCateringBillByDaycareGroup_Id(
+            @Param("groupId") Long groupId, @Param("month") int month, @Param("year") int year);
+
 }

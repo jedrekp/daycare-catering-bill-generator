@@ -53,16 +53,4 @@ public class ChildController {
     public ResponseEntity<Collection<Child>> getChildrenBySearchPhrase(@RequestParam String searchPhrase) {
         return new ResponseEntity<>(childService.findChildrenBySearchPhrase(searchPhrase), HttpStatus.OK);
     }
-
-    @PostMapping("/children/{childId}/assignedOptions")
-    public ResponseEntity<Child> assignNewCateringOptionToChild(@PathVariable Long childId,
-                                                                @RequestBody AssignedOptionDTO assignedOptionDTO) {
-        return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/children/{childId}/assignedOptions/{assignedOptionId}")
-    public ResponseEntity<Child> removeAssignedOptionFromChild(@PathVariable Long childId, @PathVariable
-            Long assignedOptionId) {
-        return new ResponseEntity<>(childService.removeAssignedOption(childId, assignedOptionId), HttpStatus.OK);
-    }
 }

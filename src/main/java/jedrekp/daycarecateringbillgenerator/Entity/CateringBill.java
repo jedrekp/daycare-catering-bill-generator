@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "monthly_catering_bill",
+@Table(name = "catering_bill",
         uniqueConstraints = @UniqueConstraint(columnNames = {"month", "year", "child_id"}))
 @Getter
 @Setter
