@@ -90,7 +90,7 @@ export class TrackAttendanceComponent implements OnInit {
   }
 
   submitAttendanceList() {
-    this.attendanceDataService.submitDailyGroupAttendance(this.dailyAttendance).subscribe(
+    this.attendanceDataService.submitDailyGroupAttendance(this.selectedDaycareGroup.id, this.dailyAttendance).subscribe(
       response => {
         this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
           `Attendance list for daycare group #${this.selectedDaycareGroup.id} (${this.selectedDaycareGroup.groupName})
