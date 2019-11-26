@@ -23,7 +23,7 @@ public class DailyAttendance {
     @JsonIgnore
     private Long id;
 
-    @Column(name = "date")
+    @Column(name = "attendance_date")
     private LocalDate date;
 
     @ManyToMany(fetch = FetchType.LAZY)
