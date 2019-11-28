@@ -1,7 +1,10 @@
 package jedrekp.daycarecateringbillgenerator.Service;
 
 import freemarker.template.TemplateException;
-import jedrekp.daycarecateringbillgenerator.Entity.*;
+import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
+import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
+import jedrekp.daycarecateringbillgenerator.Entity.DailyAttendance;
+import jedrekp.daycarecateringbillgenerator.Entity.DailyCateringOrder;
 import jedrekp.daycarecateringbillgenerator.Repository.CateringBillRepository;
 import jedrekp.daycarecateringbillgenerator.Repository.DailyAttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.Month;
 import java.util.List;
 
@@ -39,11 +44,14 @@ public class CateringBillService {
     }
 
     @Transactional(readOnly = true)
-    public CateringBill generateCateringBill(Long childId, Month month, Integer year) {
+    public CateringBill generateCateringBillPreview(Long childId, Month month, Integer year) {
 
-        Child child = childService.findSingleChildByIdAndArchived(childId, false);
+        if (cateringBillRepository.existsByMonthAndYearAndChild_Id(month, year, childId)) {
+            throw new EntityExistsException(MessageFormat
+                    .format("Catering bill for child #{0} for this month already exists.", childId));
+        }
 
-        CateringBill cateringBill = new CateringBill(month, year, child);
+        CateringBill cateringBill = new CateringBill(month, year);
 
         List<DailyAttendance> dailyAttendances = dailyAttendanceRepository
                 .findByPresentChildIdForSpecificMonth(childId, month.getValue(), year);
@@ -52,7 +60,7 @@ public class CateringBillService {
             CateringOption optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, dailyAttendance.getDate());
             cateringBill.getDailyCateringOrders()
                     .add(new DailyCateringOrder(dailyAttendance.getDate(), optionInEffect.getOptionName(),
-                            optionInEffect.getDailyCost(), cateringBill));
+                            optionInEffect.getDailyCost()));
         }
 
         BigDecimal totalMonthlyCost = cateringBill.getDailyCateringOrders()

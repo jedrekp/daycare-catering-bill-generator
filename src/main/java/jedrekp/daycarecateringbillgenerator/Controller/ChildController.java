@@ -2,7 +2,6 @@ package jedrekp.daycarecateringbillgenerator.Controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
-import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
 import jedrekp.daycarecateringbillgenerator.Entity.AssignedOption;
 import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
 import jedrekp.daycarecateringbillgenerator.Entity.Child;
@@ -79,9 +78,9 @@ public class ChildController {
         return null;
     }
 
-    @PostMapping("/{childId}}/cateringBills")
-    public ResponseEntity addNewCateringBillToChild(
-            @PathVariable Long childId, @RequestBody CateringBillDTO cateringBillDTO) {
-        return null;
+    @PostMapping("/{childId}/cateringBills")
+    public ResponseEntity<CateringBill> addNewCateringBillToChild(
+            @PathVariable Long childId, @RequestBody CateringBill cateringBill) {
+        return new ResponseEntity<>(childService.addNewCateringBillToChild(childId, cateringBill), HttpStatus.CREATED);
     }
 }

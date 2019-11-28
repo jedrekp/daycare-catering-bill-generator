@@ -38,11 +38,9 @@ public class DailyCateringOrder {
     @JsonIgnoreProperties({"child", "dailyCateringOrders"})
     private CateringBill cateringBill;
 
-    public DailyCateringOrder(LocalDate orderDate, String cateringOptionName, BigDecimal cateringOptionPrice,
-                              CateringBill cateringBill) {
+    public DailyCateringOrder(LocalDate orderDate, String cateringOptionName, BigDecimal cateringOptionPrice){
         this.orderDate = orderDate;
         this.cateringOptionName = cateringOptionName;
         this.cateringOptionPrice = cateringOptionPrice;
-        this.cateringBill = cateringBill;
     }
 }

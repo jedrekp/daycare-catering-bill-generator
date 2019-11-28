@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Month;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/cateringBills")
+@CrossOrigin
 public class CateringBillOperationsController {
 
     @Autowired
@@ -21,7 +21,7 @@ public class CateringBillOperationsController {
     public ResponseEntity<CateringBill> showCateringBillPreview(
             @RequestParam Long childId, @RequestParam Month month, @RequestParam Integer year) {
         return new ResponseEntity<>(
-                cateringBillService.generateCateringBill(childId, month, year), HttpStatus.OK);
+                cateringBillService.generateCateringBillPreview(childId, month, year), HttpStatus.OK);
     }
 
     @GetMapping(value = "/send-to-parent", params = "cateringBillId")

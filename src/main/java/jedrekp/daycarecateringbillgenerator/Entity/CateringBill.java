@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Month;
 import java.util.HashSet;
@@ -22,31 +23,32 @@ public class CateringBill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @Column(name = "month")
+    @NotNull
     private Month month;
 
     @Column(name = "year")
+    @NotNull
     private int year;
 
     @Column(name = "total_due")
+    @NotNull
     private BigDecimal totalDue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
-    @JsonIgnoreProperties({"daycareGroup", "assignedOptions"})
+    @JsonIgnore
     private Child child;
 
-    @OneToMany(mappedBy = "cateringBill", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "cateringBill", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JsonIgnoreProperties("cateringBill")
     @OrderBy(value = "orderDate ASC")
     private Set<DailyCateringOrder> dailyCateringOrders = new HashSet<>();
 
-    public CateringBill(Month month, int year, Child child) {
+    public CateringBill(Month month, int year) {
         this.month = month;
         this.year = year;
-        this.child = child;
     }
 }
