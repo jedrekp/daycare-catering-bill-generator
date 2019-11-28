@@ -17,6 +17,27 @@ public class CateringOptionService {
     @Autowired
     CateringOptionRepository cateringOptionRepository;
 
+    @Transactional(readOnly = true)
+    public CateringOption findById(Long cateringOptionId) {
+        return cateringOptionRepository.findById(cateringOptionId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<CateringOption> findAll() {
+        return cateringOptionRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<CateringOption> findAllByDisabled(boolean disabled) {
+        return cateringOptionRepository.findAllByDisabledOrderByOptionNameAsc(disabled);
+    }
+
+    @Transactional(readOnly = true)
+    public CateringOption findOptionInEffectForChild(Long childId, LocalDate date) {
+        return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
     @Transactional
     public CateringOption saveNewCateringOption(CateringOption cateringOption) {
         if (cateringOptionRepository.existsByOptionName(cateringOption.getOptionName())) {
@@ -41,22 +62,4 @@ public class CateringOptionService {
         cateringOptionToEdit.setDisabled(cateringOption.isDisabled());
         return cateringOptionToEdit;
     }
-
-    @Transactional(readOnly = true)
-    public CateringOption findById(Long cateringOptionId) {
-        return cateringOptionRepository.findById(cateringOptionId).orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public CateringOption findOptionInEffectForChild(Long childId, LocalDate date) {
-        return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
-                .orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Collection<CateringOption> findAllByDisabled(boolean disabled) {
-        return cateringOptionRepository.findAllByDisabledOrderByOptionNameAsc(disabled);
-    }
-
-
 }

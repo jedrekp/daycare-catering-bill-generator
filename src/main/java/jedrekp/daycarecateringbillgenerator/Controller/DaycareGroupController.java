@@ -12,50 +12,52 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
+@RequestMapping("/daycareGroups")
 @CrossOrigin
 public class DaycareGroupController {
 
     @Autowired
     DaycareGroupService daycareGroupService;
 
-    @PostMapping("/daycareGroups")
-    @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<DaycareGroup> addNewDaycareGroup(@RequestBody DaycareGroup daycareGroup) {
-        return new ResponseEntity<>(daycareGroupService.saveNewDaycareGroup(daycareGroup), HttpStatus.OK);
-    }
-
-    @PutMapping("/daycareGroups/{daycareGroupId}")
-    @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<DaycareGroup> editDaycareGroup(@PathVariable Long daycareGroupId,
-                                                         @RequestBody DaycareGroup daycareGroup) {
-        return new ResponseEntity<>(daycareGroupService.editDaycareGroup(daycareGroupId, daycareGroup), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/daycareGroups/{daycareGroupId}")
-    public ResponseEntity deleteDaycareGroup(@PathVariable Long daycareGroupId) {
-        daycareGroupService.deleteDaycareGroup(daycareGroupId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/daycareGroups/{daycareGroupId}")
-    public ResponseEntity<DaycareGroup> getDaycareGroup(@PathVariable Long daycareGroupId) {
+    @GetMapping("/{daycareGroupId}")
+    public ResponseEntity<DaycareGroup> getSingleDaycareGroup(@PathVariable Long daycareGroupId) {
         return new ResponseEntity<>(daycareGroupService.findSingleGroupByIdWithChildren(daycareGroupId), HttpStatus.OK);
     }
 
-    @GetMapping("/daycareGroups")
+    @GetMapping
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Collection<DaycareGroup>> getAllDaycareGroups() {
         return new ResponseEntity<>(daycareGroupService.findAll(), HttpStatus.OK);
     }
 
-    @PutMapping("/daycareGroups/{daycareGroupId}/children/{childId}")
-    public ResponseEntity<DaycareGroup> addChildToDayCareGroup(@PathVariable Long daycareGroupId, @PathVariable Long childId) {
-        return new ResponseEntity<>(
-                daycareGroupService.addChildToDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
+    @PostMapping
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    public ResponseEntity<DaycareGroup> addNewDaycareGroup(@RequestBody DaycareGroup daycareGroup) {
+        return new ResponseEntity<>(daycareGroupService.saveNewDaycareGroup(daycareGroup), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/daycareGroups/{daycareGroupId}/children/{childId}")
-    public ResponseEntity<DaycareGroup> removeChildFromGroup(@PathVariable Long daycareGroupId, @PathVariable Long childId) {
-        return new ResponseEntity<>(daycareGroupService.removeChildFromDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
+    @PutMapping("/{daycareGroupId}")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    public ResponseEntity<DaycareGroup> editDaycareGroup(
+            @PathVariable Long daycareGroupId, @RequestBody DaycareGroup daycareGroup) {
+        return new ResponseEntity<>(daycareGroupService.editDaycareGroup(daycareGroupId, daycareGroup), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{daycareGroupId}")
+    public ResponseEntity deleteDaycareGroup(@PathVariable Long daycareGroupId) {
+        daycareGroupService.deleteDaycareGroup(daycareGroupId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{daycareGroupId}/children/{childId}")
+    public ResponseEntity<DaycareGroup> addChildToDayCareGroup(
+            @PathVariable Long daycareGroupId, @PathVariable Long childId) {
+        return new ResponseEntity<>(daycareGroupService.addChildToDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{daycareGroupId}/children/{childId}")
+    public ResponseEntity removeChildFromGroup(@PathVariable Long daycareGroupId, @PathVariable Long childId) {
+        daycareGroupService.removeChildFromDaycareGroup(daycareGroupId, childId);
+        return ResponseEntity.noContent().build();
     }
 }

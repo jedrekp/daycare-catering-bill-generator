@@ -20,6 +20,21 @@ public class DaycareGroupService {
     @Autowired
     ChildService childService;
 
+    @Transactional(readOnly = true)
+    public DaycareGroup findSingleGroupById(Long id) {
+        return daycareGroupRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public DaycareGroup findSingleGroupByIdWithChildren(Long daycareGroupId) {
+        return daycareGroupRepository.findByIdWithChildren(daycareGroupId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<DaycareGroup> findAll() {
+        return daycareGroupRepository.findAllByOrderByGroupNameAsc();
+    }
+
     @Transactional
     public DaycareGroup saveNewDaycareGroup(DaycareGroup daycareGroup) {
         if (daycareGroupRepository.existsByGroupName(daycareGroup.getGroupName())) {
@@ -46,21 +61,6 @@ public class DaycareGroupService {
         daycareGroupRepository.deleteById(daycareGroupId);
     }
 
-    @Transactional(readOnly = true)
-    public DaycareGroup findSingleGroupById(Long id) {
-        return daycareGroupRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public DaycareGroup findSingleGroupByIdWithChildren(Long daycareGroupId) {
-        return daycareGroupRepository.findByIdWithChildren(daycareGroupId).orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Collection<DaycareGroup> findAll() {
-        return daycareGroupRepository.findAllByOrderByGroupNameAsc();
-    }
-
     @Transactional
     public DaycareGroup addChildToDaycareGroup(Long daycareGroupId, Long childId) {
         Child child = childService.findSingleChildByIdAndArchived(childId, false);
@@ -74,7 +74,7 @@ public class DaycareGroupService {
     }
 
     @Transactional
-    public DaycareGroup removeChildFromDaycareGroup(Long daycareGroupId, Long childId) {
+    public void removeChildFromDaycareGroup(Long daycareGroupId, Long childId) {
         Child child = childService.findSingleChildByIdWithAllDetails(childId);
         DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
         if (daycareGroup.getChildren().contains(child)) {
@@ -83,6 +83,5 @@ public class DaycareGroupService {
         } else {
             throw new IllegalArgumentException("Child #" + child.getId() + " is not in this daycare group");
         }
-        return daycareGroup;
     }
 }

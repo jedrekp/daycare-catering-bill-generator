@@ -26,37 +26,6 @@ public class ChildService {
     @Autowired
     CateringOptionService cateringOptionService;
 
-    @Transactional
-    public Child saveNewChild(Child child) {
-        if (child.isArchived()) {
-            throw new IllegalArgumentException("New child cannot be saved directly to archive");
-        }
-        if (childRepository.existsByFirstNameAndLastName(child.getFirstName(), child.getLastName())) {
-            throw new EntityExistsException("Another child with the same first name and last name already exists");
-        }
-        return childRepository.save(child);
-    }
-
-    @Transactional
-    public Child editChild(Long childId, Child childFromRequest) {
-        if (childRepository.existsByFirstNameAndLastNameAndIdNot(childFromRequest.getFirstName(),
-                childFromRequest.getLastName(), childId)) {
-            throw new EntityExistsException("Another child with the same first name and last name already exists");
-        }
-        Child childToEdit = findSingleChildById(childId);
-        childToEdit.setFirstName(childFromRequest.getFirstName());
-        childToEdit.setLastName(childFromRequest.getLastName());
-        childToEdit.setParentEmail(childFromRequest.getParentEmail());
-
-        // Remove child from daycare group before moving it to archive
-        if (childFromRequest.isArchived() && childToEdit.getDaycareGroup() != null) {
-            childToEdit.getDaycareGroup().getChildren().remove(childToEdit);
-            childToEdit.setDaycareGroup(null);
-        }
-        childToEdit.setArchived(childFromRequest.isArchived());
-        return childToEdit;
-    }
-
     @Transactional(readOnly = true)
     public Child findSingleChildById(Long childId) {
         return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
@@ -76,6 +45,11 @@ public class ChildService {
     public Child findSingleChildByIdAndArchivedWithAllDetails(Long childId, boolean archived) {
         return childRepository.findByIdAndArchivedWithAllDetails(childId, archived)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Child> findAll() {
+        return childRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -114,7 +88,38 @@ public class ChildService {
     }
 
     @Transactional
-    public Child assignCateringOption(Long childId, AssignedOptionDTO assignedOptionDTO) {
+    public Child saveNewChild(Child child) {
+        if (child.isArchived()) {
+            throw new IllegalArgumentException("New child cannot be saved directly to archive");
+        }
+        if (childRepository.existsByFirstNameAndLastName(child.getFirstName(), child.getLastName())) {
+            throw new EntityExistsException("Another child with the same first name and last name already exists");
+        }
+        return childRepository.save(child);
+    }
+
+    @Transactional
+    public Child editChild(Long childId, Child childFromRequest) {
+        if (childRepository.existsByFirstNameAndLastNameAndIdNot(childFromRequest.getFirstName(),
+                childFromRequest.getLastName(), childId)) {
+            throw new EntityExistsException("Another child with the same first name and last name already exists");
+        }
+        Child childToEdit = findSingleChildById(childId);
+        childToEdit.setFirstName(childFromRequest.getFirstName());
+        childToEdit.setLastName(childFromRequest.getLastName());
+        childToEdit.setParentEmail(childFromRequest.getParentEmail());
+
+        // Remove child from daycare group before moving it to archive
+        if (childFromRequest.isArchived() && childToEdit.getDaycareGroup() != null) {
+            childToEdit.getDaycareGroup().getChildren().remove(childToEdit);
+            childToEdit.setDaycareGroup(null);
+        }
+        childToEdit.setArchived(childFromRequest.isArchived());
+        return childToEdit;
+    }
+
+    @Transactional
+    public AssignedOption assignCateringOption(Long childId, AssignedOptionDTO assignedOptionDTO) {
         if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(assignedOptionDTO.getEffectiveDate(), childId)) {
             throw new IllegalArgumentException(
                     "Child #" + childId + " already has another catering option assigned with this effective date.\n" +
@@ -128,32 +133,31 @@ public class ChildService {
         Child child = findSingleChildByIdAndArchivedWithAllDetails(childId, false);
         AssignedOption assignedOption = new AssignedOption(assignedOptionDTO.getEffectiveDate(), child, cateringOption);
         child.getAssignedOptions().add(assignedOption);
-        return child;
+        return assignedOption;
     }
 
     @Transactional
-    public Child removeAssignedOption(Long childId, Long assignedOptionId) {
+    public void removeAssignedOption(Long childId, Long assignedOptionId) {
         Child child = findSingleChildByIdAndArchivedWithAllDetails(childId, false);
         AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
                 .orElseThrow(EntityNotFoundException::new);
         child.getAssignedOptions().remove(assignedOption);
-        return child;
     }
 
     private Set<String> splitSearchPhrase(String searchPhrase) {
         Set<String> searchSubPhrases = new HashSet<>();
         searchPhrase = searchPhrase.toLowerCase().trim().replaceAll(" +", " ");
         Collections.addAll(searchSubPhrases, searchPhrase.split(" "));
-        getAllAdjacentCombinationsViaRecursion(searchSubPhrases, searchPhrase);
+        getAllAdjacentCombinations(searchSubPhrases, searchPhrase);
         return searchSubPhrases;
     }
 
-    private void getAllAdjacentCombinationsViaRecursion(Set<String> searchSubPhrases, String searchPhrase) {
+    private void getAllAdjacentCombinations(Set<String> searchSubPhrases, String searchPhrase) {
         while (!searchSubPhrases.contains(searchPhrase) && searchPhrase.contains(" ")) {
             searchSubPhrases.add(searchPhrase);
-            getAllAdjacentCombinationsViaRecursion(
+            getAllAdjacentCombinations(
                     searchSubPhrases, searchPhrase.substring(0, searchPhrase.lastIndexOf(" ")));
-            getAllAdjacentCombinationsViaRecursion(
+            getAllAdjacentCombinations(
                     searchSubPhrases, searchPhrase.substring(searchPhrase.indexOf(" ") + 1));
         }
     }

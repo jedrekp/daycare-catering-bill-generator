@@ -17,6 +17,7 @@ import java.time.Month;
 import java.util.Collection;
 
 @RestController
+@RequestMapping
 @CrossOrigin
 public class DailyAttendanceController {
 
@@ -26,7 +27,7 @@ public class DailyAttendanceController {
     @Autowired
     DailyAttendanceRepository dailyAttendanceRepository;
 
-    @PostMapping(value = "/dailyAttendances", params = "daycareGroupId")
+    @PostMapping()
     public ResponseEntity<DailyAttendance> submitAttendanceForGroup(
             @RequestParam Long daycareGroupId, @RequestBody @Valid DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
         return new ResponseEntity<>(dailyAttendanceService.submitAttendanceForGroup(dailyGroupAttendanceDTO), HttpStatus.OK);

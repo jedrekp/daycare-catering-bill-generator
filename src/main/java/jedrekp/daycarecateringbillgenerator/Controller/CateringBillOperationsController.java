@@ -11,21 +11,22 @@ import java.time.Month;
 
 @RestController
 @CrossOrigin
-public class CateringBillController {
+@RequestMapping("/cateringBills")
+public class CateringBillOperationsController {
 
     @Autowired
     CateringBillService cateringBillService;
 
-    @GetMapping(value = "/cateringBills", params = {"childId", "month", "year"})
-    public ResponseEntity<CateringBill> generateMonthlyCateringBillForChild(
+    @GetMapping(value = "/show-preview", params = {"childId", "month", "year"})
+    public ResponseEntity<CateringBill> showCateringBillPreview(
             @RequestParam Long childId, @RequestParam Month month, @RequestParam Integer year) {
         return new ResponseEntity<>(
                 cateringBillService.generateCateringBill(childId, month, year), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/cateringBills/children/{childId}", params = {"month", "year"})
-    public ResponseEntity sendEmail(@PathVariable Long childId, @RequestParam Month month, @RequestParam Integer year) {
-        cateringBillService.sendCateringBillViaEmailAndSaveIt(childId, month, year);
+    @GetMapping(value = "/send-to-parent", params = "cateringBillId")
+    public ResponseEntity sendBillTOParentViaEmail(@RequestParam Long cateringBillId) {
+        cateringBillService.sendBillToParentViaEmail(cateringBillId);
         return ResponseEntity.noContent().build();
     }
 }

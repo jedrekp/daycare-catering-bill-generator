@@ -26,7 +26,6 @@ public class AssignedOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
-    @JsonIgnore
     private Child child;
 
     @ManyToOne(fetch = FetchType.LAZY)
