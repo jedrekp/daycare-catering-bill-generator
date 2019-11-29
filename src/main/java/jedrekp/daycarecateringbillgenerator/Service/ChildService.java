@@ -1,12 +1,12 @@
 package jedrekp.daycarecateringbillgenerator.Service;
 
 import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
 import jedrekp.daycarecateringbillgenerator.Entity.AssignedOption;
 import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
 import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
 import jedrekp.daycarecateringbillgenerator.Entity.Child;
 import jedrekp.daycarecateringbillgenerator.Repository.AssignedOptionRepository;
-import jedrekp.daycarecateringbillgenerator.Repository.CateringBillRepository;
 import jedrekp.daycarecateringbillgenerator.Repository.ChildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.text.MessageFormat;
 import java.util.*;
 
 @Service
@@ -27,10 +26,10 @@ public class ChildService {
     AssignedOptionRepository assignedOptionRepository;
 
     @Autowired
-    CateringBillRepository cateringBillRepository;
+    CateringOptionService cateringOptionService;
 
     @Autowired
-    CateringOptionService cateringOptionService;
+    CateringBillService cateringBillService;
 
     @Transactional(readOnly = true)
     public Child findSingleChildById(Long childId) {
@@ -65,7 +64,7 @@ public class ChildService {
 
     @Transactional(readOnly = true)
     public Collection<Child> findChildrenByDaycareGroup(Long daycareGroupId) {
-        if (daycareGroupId == -1L) {
+        if (daycareGroupId == 0L) {
             daycareGroupId = null;
         }
         return childRepository.findAllByDaycareGroup_IdAndArchivedOrderByLastNameAscFirstNameAsc(
@@ -148,22 +147,6 @@ public class ChildService {
         AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
                 .orElseThrow(EntityNotFoundException::new);
         child.getAssignedOptions().remove(assignedOption);
-    }
-
-    @Transactional
-    public CateringBill addNewCateringBillToChild(Long childId, CateringBill cateringBill) {
-        if (cateringBill.getDailyCateringOrders().isEmpty()) {
-            throw new IllegalArgumentException("Catering bill must have at least one daily order in order to be saved.");
-        }
-        if (cateringBillRepository.existsByMonthAndYearAndChild_Id(cateringBill.getMonth(), cateringBill.getYear(), childId)) {
-            throw new EntityExistsException(MessageFormat
-                    .format("Catering bill for child #{0} for this month already exists.", childId));
-        }
-        Child child = findSingleChildByIdAndArchived(childId, false);
-        cateringBill.setChild(child);
-        cateringBill.getDailyCateringOrders().forEach(dailyCateringOrder -> dailyCateringOrder.setCateringBill(cateringBill));
-        child.getCateringBills().add(cateringBill);
-        return cateringBill;
     }
 
     private Set<String> splitSearchPhrase(String searchPhrase) {

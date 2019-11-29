@@ -21,11 +21,6 @@ export class ChildDataService {
     return this.httpClient.get<Child>(`http://localhost:8081/children/${childId}`)
   }
 
-  retrieveChildrenByGroupID(daycareGroupId: number) {
-    let params = new HttpParams().set('daycareGroupId', daycareGroupId.toString())
-    return this.httpClient.get<Child[]>('http://localhost:8081/children', { params: params })
-  }
-
   retrieveArchivedChildren() {
     let params = new HttpParams().set('archived', 'true')
     return this.httpClient.get<Child[]>('http://localhost:8081/children', { params: params })
@@ -45,7 +40,7 @@ export class ChildDataService {
   }
 
   assignNewOptionToChild(childId: number, assignedOptionId: number, effectiveDate: string) {
-    return this.httpClient.post<Child>(`http://localhost:8081/children/${childId}/assignedOptions`,
+    return this.httpClient.post<any>(`http://localhost:8081/children/${childId}/assignedOptions`,
       new AssignedOptionDTO(effectiveDate, assignedOptionId))
   }
 

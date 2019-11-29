@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Year;
 import java.util.Collection;
 
 @RestController
@@ -49,7 +50,7 @@ public class DailyAttendanceController {
 
     @GetMapping(value = "/dailyAttendances", params = {"childId", "month", "year"})
     public ResponseEntity<SingleChildMonthlyAttendanceDTO> getMonthlyAttendanceForChild(
-            @RequestParam Long childId, @RequestParam Month month, @RequestParam Integer year) {
+            @RequestParam Long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(dailyAttendanceService
                 .getMonthlyAttendanceForChild(childId, month, year), HttpStatus.OK);
     }

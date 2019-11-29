@@ -16,6 +16,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.format.TextStyle;
@@ -37,7 +38,8 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String mailSenderAddress;
 
-    public void sendEmailWithCateringBill(CateringBill cateringBill) throws MessagingException, IOException, TemplateException {
+    public void sendEmailWithCateringBill(CateringBill cateringBill, BigDecimal totalDue)
+            throws MessagingException, IOException, TemplateException {
 
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("month", MessageFormat.format("{0} {1}",
@@ -46,7 +48,7 @@ public class EmailService {
         templateModel.put("childName", MessageFormat.format("{0} {1}",
                 cateringBill.getChild().getFirstName(), cateringBill.getChild().getLastName()));
         templateModel.put("dailyOrders", cateringBill.getDailyCateringOrders());
-        templateModel.put("totalDue", cateringBill.getTotalDue());
+        templateModel.put("totalDue", totalDue);
 
 
         log.info("Sending Email to: {}", cateringBill.getChild().getParentEmail());

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -129,16 +130,16 @@ public class DailyAttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public SingleChildMonthlyAttendanceDTO getMonthlyAttendanceForChild(Long childId, Month month, int year) {
+    public SingleChildMonthlyAttendanceDTO getMonthlyAttendanceForChild(Long childId, Month month, Year year) {
 
         SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO();
 
-        dailyAttendanceRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year)
+        dailyAttendanceRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
                 .stream()
                 .map(DailyAttendance::getDate)
                 .forEach(attendanceDTO.getDaysWhenPresent()::add);
 
-        dailyAttendanceRepository.findByAbsentChildIdForSpecificMonth(childId, month.getValue(), year)
+        dailyAttendanceRepository.findByAbsentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
                 .stream()
                 .map(DailyAttendance::getDate)
                 .forEach(attendanceDTO.getDaysWhenAbsent()::add);

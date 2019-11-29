@@ -2,16 +2,18 @@ package jedrekp.daycarecateringbillgenerator.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jedrekp.daycarecateringbillgenerator.Utility.YearAttributeConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.Month;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "monthly_catering_bill",
@@ -27,15 +29,13 @@ public class CateringBill {
 
     @Column(name = "month")
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Month month;
 
-    @Column(name = "year")
+    @Column(name = "year", columnDefinition = "int")
     @NotNull
-    private int year;
-
-    @Column(name = "total_due")
-    @NotNull
-    private BigDecimal totalDue;
+    @Convert(converter = YearAttributeConverter.class)
+    private Year year;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
@@ -45,9 +45,9 @@ public class CateringBill {
     @OneToMany(mappedBy = "cateringBill", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JsonIgnoreProperties("cateringBill")
     @OrderBy(value = "orderDate ASC")
-    private Set<DailyCateringOrder> dailyCateringOrders = new HashSet<>();
+    private List<DailyCateringOrder> dailyCateringOrders = new ArrayList<>();
 
-    public CateringBill(Month month, int year) {
+    public CateringBill(Month month, Year year) {
         this.month = month;
         this.year = year;
     }

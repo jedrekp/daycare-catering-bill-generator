@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Child } from '../child';
-import { ChildDataService } from '../child-data.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { AssignToGroupComponent } from 'src/app/daycare-group/assign-to-group/assign-to-group.component';
 import { ACTION_COMPLETED_HEADER } from 'src/app/const';
+import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-data.service';
 
 @Component({
   selector: 'app-unassigned-children-list',
@@ -19,7 +19,7 @@ export class UnassignedChildrenListComponent implements OnInit {
   constructor(
     private dialogModalService: DialogModalService,
     private bsModalService: BsModalService,
-    private childDataService: ChildDataService
+    private daycareGroupDataService: DaycareGroupDataService
   ) { }
 
   ngOnInit() {
@@ -27,7 +27,7 @@ export class UnassignedChildrenListComponent implements OnInit {
   }
 
   retrieveChildren() {
-    this.childDataService.retrieveChildrenByGroupID(-1).subscribe(
+    this.daycareGroupDataService.getChildrenFromGroup(0).subscribe(
       children => {
         this.children = children
       })

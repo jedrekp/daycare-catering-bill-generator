@@ -1,7 +1,9 @@
 package jedrekp.daycarecateringbillgenerator.Controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import jedrekp.daycarecateringbillgenerator.Entity.Child;
 import jedrekp.daycarecateringbillgenerator.Entity.DaycareGroup;
+import jedrekp.daycarecateringbillgenerator.Service.ChildService;
 import jedrekp.daycarecateringbillgenerator.Service.DaycareGroupService;
 import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class DaycareGroupController {
 
     @Autowired
     DaycareGroupService daycareGroupService;
+
+    @Autowired
+    ChildService childService;
 
     @GetMapping("/{daycareGroupId}")
     public ResponseEntity<DaycareGroup> getSingleDaycareGroup(@PathVariable Long daycareGroupId) {
@@ -47,6 +52,12 @@ public class DaycareGroupController {
     public ResponseEntity deleteDaycareGroup(@PathVariable Long daycareGroupId) {
         daycareGroupService.deleteDaycareGroup(daycareGroupId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{daycareGroupId}/children")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    public ResponseEntity<Collection<Child>> getChildrenFromDaycareGroup(@PathVariable Long daycareGroupId) {
+        return new ResponseEntity<>(childService.findChildrenByDaycareGroup(daycareGroupId), HttpStatus.OK);
     }
 
     @PutMapping("/{daycareGroupId}/children/{childId}")

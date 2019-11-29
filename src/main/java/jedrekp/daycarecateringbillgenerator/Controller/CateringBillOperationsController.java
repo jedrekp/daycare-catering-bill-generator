@@ -1,5 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.Controller;
 
+import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
 import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
 import jedrekp.daycarecateringbillgenerator.Service.CateringBillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Month;
+import java.time.Year;
 
 @RestController
 @RequestMapping("/cateringBills")
@@ -17,9 +19,9 @@ public class CateringBillOperationsController {
     @Autowired
     CateringBillService cateringBillService;
 
-    @GetMapping(value = "/show-preview", params = {"childId", "month", "year"})
-    public ResponseEntity<CateringBill> showCateringBillPreview(
-            @RequestParam Long childId, @RequestParam Month month, @RequestParam Integer year) {
+    @GetMapping(value = "/display-preview", params = {"childId", "month", "year"})
+    public ResponseEntity<CateringBillDTO> getCateringBillPreview(
+            @RequestParam Long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(
                 cateringBillService.generateCateringBillPreview(childId, month, year), HttpStatus.OK);
     }

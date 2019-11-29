@@ -2,9 +2,11 @@ package jedrekp.daycarecateringbillgenerator.Controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
 import jedrekp.daycarecateringbillgenerator.Entity.AssignedOption;
 import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
 import jedrekp.daycarecateringbillgenerator.Entity.Child;
+import jedrekp.daycarecateringbillgenerator.Service.CateringBillService;
 import jedrekp.daycarecateringbillgenerator.Service.ChildService;
 import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.Month;
+import java.time.Year;
 import java.util.Collection;
 
 @RestController
@@ -23,6 +26,9 @@ public class ChildController {
 
     @Autowired
     ChildService childService;
+
+    @Autowired
+    CateringBillService cateringBillService;
 
     @GetMapping("/{childId}")
     public ResponseEntity<Child> getSingleChild(@PathVariable Long childId) {
@@ -59,13 +65,13 @@ public class ChildController {
         return new ResponseEntity<>(childService.editChild(childId, child), HttpStatus.OK);
     }
 
-    @PostMapping("/children/{childId}/assignedOptions")
+    @PostMapping("/{childId}/assignedOptions")
     public ResponseEntity<AssignedOption> assignNewCateringOptionToChild(
             @PathVariable Long childId, @RequestBody @Valid AssignedOptionDTO assignedOptionDTO) {
         return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
     }
 
-    @DeleteMapping("/children/{childId}/assignedOptions/{assignedOptionId}")
+    @DeleteMapping("/{childId}/assignedOptions/{assignedOptionId}")
     public ResponseEntity removeAssignedOptionFromChild(
             @PathVariable Long childId, @PathVariable Long assignedOptionId) {
         childService.removeAssignedOption(childId, assignedOptionId);
@@ -74,13 +80,13 @@ public class ChildController {
 
     @GetMapping(value = "/{childId}/cateringBills", params = {"month", "year"})
     public ResponseEntity<CateringBill> getCateringBillForSpecificMonth(
-            @PathVariable Long childId, @RequestParam Month month, @RequestParam int year) {
+            @PathVariable Long childId, @RequestParam Month month, @RequestParam Year year) {
         return null;
     }
 
     @PostMapping("/{childId}/cateringBills")
     public ResponseEntity<CateringBill> addNewCateringBillToChild(
-            @PathVariable Long childId, @RequestBody CateringBill cateringBill) {
-        return new ResponseEntity<>(childService.addNewCateringBillToChild(childId, cateringBill), HttpStatus.CREATED);
+            @PathVariable Long childId, @RequestBody @Valid CateringBillDTO cateringBillDTO) {
+        return new ResponseEntity<>(cateringBillService.saveNewCateringBill(childId, cateringBillDTO), HttpStatus.CREATED);
     }
 }

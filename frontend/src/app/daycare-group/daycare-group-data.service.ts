@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DaycareGroup } from './daycare-group';
+import { Child } from '../child/child';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,10 @@ export class DaycareGroupDataService {
 
   deleteDaycareGroup(daycareGroupId: number) {
     return this.httpClient.delete(`http://localhost:8081/daycareGroups/${daycareGroupId}`)
+  }
+
+  getChildrenFromGroup(daycareGroupId: number) {
+    return this.httpClient.get<Child[]>(`http://localhost:8081/daycareGroups/${daycareGroupId}/children`)
   }
 
   addChildToDaycareGroup(daycareGroupId: number, childId: number) {
