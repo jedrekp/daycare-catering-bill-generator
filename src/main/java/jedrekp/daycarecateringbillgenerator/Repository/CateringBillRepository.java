@@ -1,15 +1,17 @@
-package jedrekp.daycarecateringbillgenerator.Repository;
+package jedrekp.daycarecateringbillgenerator.repository;
 
 
-import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
+import jedrekp.daycarecateringbillgenerator.entity.CateringBill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.Month;
 import java.time.Year;
 import java.util.Optional;
 
+@Repository
 public interface CateringBillRepository extends JpaRepository<CateringBill, Long> {
 
 

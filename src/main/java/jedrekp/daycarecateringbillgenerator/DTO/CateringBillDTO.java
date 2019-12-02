@@ -1,7 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jedrekp.daycarecateringbillgenerator.Entity.DailyCateringOrder;
+import jedrekp.daycarecateringbillgenerator.entity.DailyCateringOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +27,7 @@ public class CateringBillDTO {
     @JsonIgnoreProperties("cateringBill")
     private List<DailyCateringOrder> dailyCateringOrders = new ArrayList<>();
 
-    public CateringBillDTO(Month month,Year year) {
+    public CateringBillDTO(Month month, Year year) {
         this.month = month;
         this.year = year;
     }

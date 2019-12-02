@@ -1,12 +1,11 @@
-package jedrekp.daycarecateringbillgenerator.Entity;
+package jedrekp.daycarecateringbillgenerator.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jedrekp.daycarecateringbillgenerator.Utility.YearAttributeConverter;
+import jedrekp.daycarecateringbillgenerator.utility.YearAttributeConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "monthly_catering_bill",
+@Table(name = "catering_bill",
         uniqueConstraints = @UniqueConstraint(columnNames = {"month", "year", "child_id"}))
 @Getter
 @Setter
@@ -25,14 +24,13 @@ public class CateringBill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @Column(name = "month")
     @NotNull
     @Enumerated(EnumType.STRING)
     private Month month;
 
-    @Column(name = "year", columnDefinition = "int")
+    @Column(columnDefinition = "int")
     @NotNull
     @Convert(converter = YearAttributeConverter.class)
     private Year year;

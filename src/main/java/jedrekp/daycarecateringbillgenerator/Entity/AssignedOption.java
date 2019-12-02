@@ -1,6 +1,6 @@
-package jedrekp.daycarecateringbillgenerator.Entity;
+package jedrekp.daycarecateringbillgenerator.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,9 +19,10 @@ public class AssignedOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "effective_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate effectiveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

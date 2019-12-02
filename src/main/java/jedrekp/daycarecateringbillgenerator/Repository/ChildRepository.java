@@ -1,6 +1,6 @@
-package jedrekp.daycarecateringbillgenerator.Repository;
+package jedrekp.daycarecateringbillgenerator.repository;
 
-import jedrekp.daycarecateringbillgenerator.Entity.Child;
+import jedrekp.daycarecateringbillgenerator.entity.Child;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface ChildRepository extends JpaRepository<Child, Long> {
 
-    boolean existsByFirstNameAndLastName(String firstName, String lastName);
+    boolean existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(String firstName, String lastName);
 
-    boolean existsByFirstNameAndLastNameAndIdNot(String firstName, String lastName, Long id);
+    boolean existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(String firstName, String lastName, Long id);
 
     Optional<Child> findByIdAndArchived(Long childId, boolean archived);
 

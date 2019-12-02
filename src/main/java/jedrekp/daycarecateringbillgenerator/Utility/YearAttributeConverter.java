@@ -1,4 +1,4 @@
-package jedrekp.daycarecateringbillgenerator.Utility;
+package jedrekp.daycarecateringbillgenerator.utility;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

@@ -1,9 +1,9 @@
-package jedrekp.daycarecateringbillgenerator.Service;
+package jedrekp.daycarecateringbillgenerator.service;
 
-import jedrekp.daycarecateringbillgenerator.Entity.Child;
-import jedrekp.daycarecateringbillgenerator.Entity.DaycareGroup;
-import jedrekp.daycarecateringbillgenerator.Repository.DaycareGroupRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.Child;
+import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
+import jedrekp.daycarecateringbillgenerator.repository.DaycareGroupRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,21 +12,20 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class DaycareGroupService {
 
-    @Autowired
-    DaycareGroupRepository daycareGroupRepository;
+    private final DaycareGroupRepository daycareGroupRepository;
 
-    @Autowired
-    ChildService childService;
+    private final ChildService childService;
 
     @Transactional(readOnly = true)
-    public DaycareGroup findSingleGroupById(Long id) {
+    public DaycareGroup findSingleGroupById(long id) {
         return daycareGroupRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
-    public DaycareGroup findSingleGroupByIdWithChildren(Long daycareGroupId) {
+    public DaycareGroup findSingleGroupByIdWithChildren(long daycareGroupId) {
         return daycareGroupRepository.findByIdWithChildren(daycareGroupId).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -44,7 +43,7 @@ public class DaycareGroupService {
     }
 
     @Transactional
-    public DaycareGroup editDaycareGroup(Long daycareGroupId, DaycareGroup daycareGroup) {
+    public DaycareGroup editDaycareGroup(long daycareGroupId, DaycareGroup daycareGroup) {
         if (daycareGroupRepository.existsByGroupNameAndIdNot(daycareGroup.getGroupName(), daycareGroupId)) {
             throw new EntityExistsException("Another daycare group with the same group name already exists");
         }
@@ -54,7 +53,7 @@ public class DaycareGroupService {
     }
 
     @Transactional
-    public void deleteDaycareGroup(Long daycareGroupId) {
+    public void deleteDaycareGroup(long daycareGroupId) {
         DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
         Collection<Child> children = daycareGroup.getChildren();
         children.forEach(child -> child.setDaycareGroup(null));
@@ -62,7 +61,7 @@ public class DaycareGroupService {
     }
 
     @Transactional
-    public DaycareGroup addChildToDaycareGroup(Long daycareGroupId, Long childId) {
+    public DaycareGroup addChildToDaycareGroup(long daycareGroupId, long childId) {
         Child child = childService.findSingleChildByIdAndArchived(childId, false);
         if (child.getDaycareGroup() != null) {
             throw new IllegalArgumentException("Child #" + child.getId() + " is already assigned to a daycare group");
@@ -74,7 +73,7 @@ public class DaycareGroupService {
     }
 
     @Transactional
-    public void removeChildFromDaycareGroup(Long daycareGroupId, Long childId) {
+    public void removeChildFromDaycareGroup(long daycareGroupId, long childId) {
         Child child = childService.findSingleChildByIdWithAllDetails(childId);
         DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
         if (daycareGroup.getChildren().contains(child)) {

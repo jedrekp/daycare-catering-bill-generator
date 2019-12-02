@@ -1,4 +1,4 @@
-package jedrekp.daycarecateringbillgenerator.Entity;
+package jedrekp.daycarecateringbillgenerator.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,7 +22,7 @@ public class DailyCateringOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private Long id;
+    private long id;
 
     @Column(name = "order_date")
     private LocalDate orderDate;

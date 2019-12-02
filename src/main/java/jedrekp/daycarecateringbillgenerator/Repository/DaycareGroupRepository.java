@@ -1,6 +1,6 @@
-package jedrekp.daycarecateringbillgenerator.Repository;
+package jedrekp.daycarecateringbillgenerator.repository;
 
-import jedrekp.daycarecateringbillgenerator.Entity.DaycareGroup;
+import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

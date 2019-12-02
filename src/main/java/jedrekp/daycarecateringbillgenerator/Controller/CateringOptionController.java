@@ -1,9 +1,9 @@
-package jedrekp.daycarecateringbillgenerator.Controller;
+package jedrekp.daycarecateringbillgenerator.controller;
 
 
-import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
-import jedrekp.daycarecateringbillgenerator.Service.CateringOptionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.CateringOption;
+import jedrekp.daycarecateringbillgenerator.service.CateringOptionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +13,13 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/cateringOptions")
 @CrossOrigin
+@RequiredArgsConstructor
 public class CateringOptionController {
 
-    @Autowired
-    CateringOptionService cateringOptionService;
+    private final CateringOptionService cateringOptionService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CateringOption> getSingleCateringOption(@PathVariable Long id) {
+    public ResponseEntity<CateringOption> getSingleCateringOption(@PathVariable long id) {
         return new ResponseEntity<>(cateringOptionService.findById(id), HttpStatus.OK);
     }
 
@@ -39,7 +39,7 @@ public class CateringOptionController {
     }
 
     @PutMapping("/{cateringOptionId}")
-    public ResponseEntity<CateringOption> editCateringOption(@PathVariable Long cateringOptionId,
+    public ResponseEntity<CateringOption> editCateringOption(@PathVariable long cateringOptionId,
                                                              @RequestBody CateringOption cateringOption) {
         return new ResponseEntity<>(
                 cateringOptionService.editCateringOption(cateringOption, cateringOptionId), HttpStatus.OK);

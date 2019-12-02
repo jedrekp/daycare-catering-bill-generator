@@ -1,6 +1,6 @@
-package jedrekp.daycarecateringbillgenerator.Repository;
+package jedrekp.daycarecateringbillgenerator.repository;
 
-import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
+import jedrekp.daycarecateringbillgenerator.entity.CateringOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface CateringOptionRepository extends JpaRepository<CateringOption, Long> {
 
-    boolean existsByOptionName(String optionName);
+    boolean existsByOptionNameIgnoreCase(String optionName);
 
-    boolean existsByOptionNameAndIdNot(String optionName, Long id);
+    boolean existsByOptionNameIgnoreCaseAndIdNot(String optionName, Long id);
 
     @Query(value = "SELECT co.* FROM assigned_option ao " +
             "INNER JOIN catering_option co ON co.id = ao.catering_option_id " +

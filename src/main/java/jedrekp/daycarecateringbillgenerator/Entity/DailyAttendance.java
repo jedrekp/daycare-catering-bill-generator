@@ -1,5 +1,6 @@
-package jedrekp.daycarecateringbillgenerator.Entity;
+package jedrekp.daycarecateringbillgenerator.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -21,9 +22,10 @@ public class DailyAttendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private Long id;
+    private long id;
 
     @Column(name = "attendance_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     @ManyToMany(fetch = FetchType.LAZY)

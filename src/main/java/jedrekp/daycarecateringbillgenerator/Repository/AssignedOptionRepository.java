@@ -1,6 +1,6 @@
-package jedrekp.daycarecateringbillgenerator.Repository;
+package jedrekp.daycarecateringbillgenerator.repository;
 
-import jedrekp.daycarecateringbillgenerator.Entity.AssignedOption;
+import jedrekp.daycarecateringbillgenerator.entity.AssignedOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

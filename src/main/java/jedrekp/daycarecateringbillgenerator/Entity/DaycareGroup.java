@@ -1,9 +1,9 @@
-package jedrekp.daycarecateringbillgenerator.Entity;
+package jedrekp.daycarecateringbillgenerator.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
+import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class DaycareGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(JsonViewFilter.BasicInfo.class)
-    private Long id;
+    private long id;
 
     @Column(name = "group_name", unique = true)
     @JsonView(JsonViewFilter.BasicInfo.class)

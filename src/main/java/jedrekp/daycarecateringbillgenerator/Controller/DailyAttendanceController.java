@@ -1,11 +1,10 @@
-package jedrekp.daycarecateringbillgenerator.Controller;
+package jedrekp.daycarecateringbillgenerator.controller;
 
 import jedrekp.daycarecateringbillgenerator.DTO.DailyGroupAttendanceDTO;
 import jedrekp.daycarecateringbillgenerator.DTO.SingleChildMonthlyAttendanceDTO;
-import jedrekp.daycarecateringbillgenerator.Entity.DailyAttendance;
-import jedrekp.daycarecateringbillgenerator.Repository.DailyAttendanceRepository;
-import jedrekp.daycarecateringbillgenerator.Service.DailyAttendanceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.DailyAttendance;
+import jedrekp.daycarecateringbillgenerator.service.DailyAttendanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,39 +17,36 @@ import java.time.Year;
 import java.util.Collection;
 
 @RestController
-@RequestMapping
+@RequestMapping("/dailyAttendances")
 @CrossOrigin
+@RequiredArgsConstructor
 public class DailyAttendanceController {
 
-    @Autowired
-    DailyAttendanceService dailyAttendanceService;
+    private final DailyAttendanceService dailyAttendanceService;
 
-    @Autowired
-    DailyAttendanceRepository dailyAttendanceRepository;
-
-    @PostMapping()
+    @PostMapping(params = "daycareGroupId")
     public ResponseEntity<DailyAttendance> submitAttendanceForGroup(
-            @RequestParam Long daycareGroupId, @RequestBody @Valid DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
+            @RequestParam long daycareGroupId, @RequestBody @Valid DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
         return new ResponseEntity<>(dailyAttendanceService.submitAttendanceForGroup(dailyGroupAttendanceDTO), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/dailyAttendances", params = {"daycareGroupId", "date"})
+    @GetMapping(params = {"daycareGroupId", "date"})
     public ResponseEntity<DailyGroupAttendanceDTO> getDailyAttendanceForDaycareGroup(
-            @RequestParam Long daycareGroupId,
+            @RequestParam long daycareGroupId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return new ResponseEntity<>(dailyAttendanceService.getDailyAttendanceForDaycareGroup(daycareGroupId, date), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/dailyAttendances", params = "childId")
+    @PostMapping(params = "childId")
     public ResponseEntity<Collection<DailyAttendance>> submitMonthlyAttendanceForSingleChild(
-            @RequestParam Long childId, @RequestBody @Valid SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
+            @RequestParam long childId, @RequestBody @Valid SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
         return new ResponseEntity<>(
                 dailyAttendanceService.submitMonthlyAttendanceForChild(childId, monthlyAttendanceDTO), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/dailyAttendances", params = {"childId", "month", "year"})
+    @GetMapping(params = {"childId", "month", "year"})
     public ResponseEntity<SingleChildMonthlyAttendanceDTO> getMonthlyAttendanceForChild(
-            @RequestParam Long childId, @RequestParam Month month, @RequestParam Year year) {
+            @RequestParam long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(dailyAttendanceService
                 .getMonthlyAttendanceForChild(childId, month, year), HttpStatus.OK);
     }

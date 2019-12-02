@@ -1,14 +1,12 @@
-package jedrekp.daycarecateringbillgenerator.Service;
+package jedrekp.daycarecateringbillgenerator.service;
 
 import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
-import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
-import jedrekp.daycarecateringbillgenerator.Entity.AssignedOption;
-import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
-import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
-import jedrekp.daycarecateringbillgenerator.Entity.Child;
-import jedrekp.daycarecateringbillgenerator.Repository.AssignedOptionRepository;
-import jedrekp.daycarecateringbillgenerator.Repository.ChildRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.AssignedOption;
+import jedrekp.daycarecateringbillgenerator.entity.CateringOption;
+import jedrekp.daycarecateringbillgenerator.entity.Child;
+import jedrekp.daycarecateringbillgenerator.repository.AssignedOptionRepository;
+import jedrekp.daycarecateringbillgenerator.repository.ChildRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,37 +15,27 @@ import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ChildService {
 
-    @Autowired
-    ChildRepository childRepository;
+    private final ChildRepository childRepository;
 
-    @Autowired
-    AssignedOptionRepository assignedOptionRepository;
+    private final AssignedOptionRepository assignedOptionRepository;
 
-    @Autowired
-    CateringOptionService cateringOptionService;
-
-    @Autowired
-    CateringBillService cateringBillService;
+    private final CateringOptionService cateringOptionService;
 
     @Transactional(readOnly = true)
-    public Child findSingleChildById(Long childId) {
-        return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Child findSingleChildByIdAndArchived(Long childId, boolean archived) {
+    public Child findSingleChildByIdAndArchived(long childId, boolean archived) {
         return childRepository.findByIdAndArchived(childId, archived).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
-    public Child findSingleChildByIdWithAllDetails(Long childId) {
+    public Child findSingleChildByIdWithAllDetails(long childId) {
         return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
-    public Child findSingleChildByIdAndArchivedWithAllDetails(Long childId, boolean archived) {
+    public Child findSingleChildByIdAndArchivedWithAllDetails(long childId, boolean archived) {
         return childRepository.findByIdAndArchivedWithAllDetails(childId, archived)
                 .orElseThrow(EntityNotFoundException::new);
     }
@@ -63,9 +51,10 @@ public class ChildService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Child> findChildrenByDaycareGroup(Long daycareGroupId) {
+    public Collection<Child> findChildrenByDaycareGroup(long daycareGroupId) {
         if (daycareGroupId == 0L) {
-            daycareGroupId = null;
+            return childRepository.findAllByDaycareGroup_IdAndArchivedOrderByLastNameAscFirstNameAsc(
+                    null, false);
         }
         return childRepository.findAllByDaycareGroup_IdAndArchivedOrderByLastNameAscFirstNameAsc(
                 daycareGroupId, false);
@@ -97,15 +86,15 @@ public class ChildService {
         if (child.isArchived()) {
             throw new IllegalArgumentException("New child cannot be saved directly to archive");
         }
-        if (childRepository.existsByFirstNameAndLastName(child.getFirstName(), child.getLastName())) {
+        if (childRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(child.getFirstName(), child.getLastName())) {
             throw new EntityExistsException("Another child with the same first name and last name already exists");
         }
         return childRepository.save(child);
     }
 
     @Transactional
-    public Child editChild(Long childId, Child childFromRequest) {
-        if (childRepository.existsByFirstNameAndLastNameAndIdNot(childFromRequest.getFirstName(),
+    public Child editChild(long childId, Child childFromRequest) {
+        if (childRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(childFromRequest.getFirstName(),
                 childFromRequest.getLastName(), childId)) {
             throw new EntityExistsException("Another child with the same first name and last name already exists");
         }
@@ -124,7 +113,7 @@ public class ChildService {
     }
 
     @Transactional
-    public AssignedOption assignCateringOption(Long childId, AssignedOptionDTO assignedOptionDTO) {
+    public AssignedOption assignCateringOption(long childId, AssignedOptionDTO assignedOptionDTO) {
         if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(assignedOptionDTO.getEffectiveDate(), childId)) {
             throw new IllegalArgumentException(
                     "Child #" + childId + " already has another catering option assigned with this effective date.\n" +
@@ -142,11 +131,15 @@ public class ChildService {
     }
 
     @Transactional
-    public void removeAssignedOption(Long childId, Long assignedOptionId) {
+    public void removeAssignedOption(long childId, long assignedOptionId) {
         Child child = findSingleChildByIdAndArchivedWithAllDetails(childId, false);
         AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
                 .orElseThrow(EntityNotFoundException::new);
         child.getAssignedOptions().remove(assignedOption);
+    }
+
+    private Child findSingleChildById(long childId) {
+        return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
     }
 
     private Set<String> splitSearchPhrase(String searchPhrase) {

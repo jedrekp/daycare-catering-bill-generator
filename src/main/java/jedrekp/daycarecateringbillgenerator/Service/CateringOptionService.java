@@ -1,8 +1,8 @@
-package jedrekp.daycarecateringbillgenerator.Service;
+package jedrekp.daycarecateringbillgenerator.service;
 
-import jedrekp.daycarecateringbillgenerator.Entity.CateringOption;
-import jedrekp.daycarecateringbillgenerator.Repository.CateringOptionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.CateringOption;
+import jedrekp.daycarecateringbillgenerator.repository.CateringOptionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +12,14 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
+
 public class CateringOptionService {
 
-    @Autowired
-    CateringOptionRepository cateringOptionRepository;
+    private final CateringOptionRepository cateringOptionRepository;
 
     @Transactional(readOnly = true)
-    public CateringOption findById(Long cateringOptionId) {
+    public CateringOption findById(long cateringOptionId) {
         return cateringOptionRepository.findById(cateringOptionId).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -32,18 +33,9 @@ public class CateringOptionService {
         return cateringOptionRepository.findAllByDisabledOrderByOptionNameAsc(disabled);
     }
 
-    @Transactional(readOnly = true)
-    public CateringOption findOptionInEffectForChild(Long childId, LocalDate date) {
-        return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
-                .orElseThrow(EntityNotFoundException::new);
-    }
-
     @Transactional
     public CateringOption saveNewCateringOption(CateringOption cateringOption) {
-        if (cateringOptionRepository.existsByOptionName(cateringOption.getOptionName())) {
-            throw new EntityExistsException(
-                    "Another catering option with the same name already exists. Please choose a different name");
-        }
+        checkOptionNameAvailability(cateringOption.getOptionName(), null);
         if (cateringOption.isDisabled()) {
             throw new IllegalArgumentException("New catering option cannot be disabled");
         }
@@ -51,15 +43,30 @@ public class CateringOptionService {
     }
 
     @Transactional
-    public CateringOption editCateringOption(CateringOption cateringOption, Long cateringOptionId) {
-        if (cateringOptionRepository.existsByOptionNameAndIdNot(cateringOption.getOptionName(), cateringOptionId)) {
-            throw new EntityExistsException(
-                    "Another catering option with the name already exists. Please choose a different name");
-        }
+    public CateringOption editCateringOption(CateringOption cateringOption, long cateringOptionId) {
+        checkOptionNameAvailability(cateringOption.getOptionName(), cateringOptionId);
         CateringOption cateringOptionToEdit = findById(cateringOptionId);
         cateringOptionToEdit.setOptionName(cateringOption.getOptionName());
         cateringOptionToEdit.setDailyCost(cateringOption.getDailyCost());
         cateringOptionToEdit.setDisabled(cateringOption.isDisabled());
         return cateringOptionToEdit;
+    }
+
+    CateringOption findOptionInEffectForChild(long childId, LocalDate date) {
+        return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void checkOptionNameAvailability(String cateringOptionName, Long cateringOptionId) {
+        boolean nameTaken;
+        if (cateringOptionId == null) {
+            nameTaken = cateringOptionRepository.existsByOptionNameIgnoreCase(cateringOptionName);
+        } else {
+            nameTaken = cateringOptionRepository.existsByOptionNameIgnoreCaseAndIdNot(cateringOptionName, cateringOptionId);
+        }
+        if (nameTaken) {
+            throw new EntityExistsException(
+                    "Another catering option with the name already exists. Please choose a different name");
+        }
     }
 }

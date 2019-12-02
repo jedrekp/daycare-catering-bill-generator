@@ -1,12 +1,12 @@
-package jedrekp.daycarecateringbillgenerator.Controller;
+package jedrekp.daycarecateringbillgenerator.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.daycarecateringbillgenerator.Entity.Child;
-import jedrekp.daycarecateringbillgenerator.Entity.DaycareGroup;
-import jedrekp.daycarecateringbillgenerator.Service.ChildService;
-import jedrekp.daycarecateringbillgenerator.Service.DaycareGroupService;
-import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.Child;
+import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
+import jedrekp.daycarecateringbillgenerator.service.ChildService;
+import jedrekp.daycarecateringbillgenerator.service.DaycareGroupService;
+import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,16 +16,15 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/daycareGroups")
 @CrossOrigin
+@RequiredArgsConstructor
 public class DaycareGroupController {
 
-    @Autowired
-    DaycareGroupService daycareGroupService;
+    private final DaycareGroupService daycareGroupService;
 
-    @Autowired
-    ChildService childService;
+    private final ChildService childService;
 
     @GetMapping("/{daycareGroupId}")
-    public ResponseEntity<DaycareGroup> getSingleDaycareGroup(@PathVariable Long daycareGroupId) {
+    public ResponseEntity<DaycareGroup> getSingleDaycareGroup(@PathVariable long daycareGroupId) {
         return new ResponseEntity<>(daycareGroupService.findSingleGroupByIdWithChildren(daycareGroupId), HttpStatus.OK);
     }
 
@@ -44,12 +43,12 @@ public class DaycareGroupController {
     @PutMapping("/{daycareGroupId}")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<DaycareGroup> editDaycareGroup(
-            @PathVariable Long daycareGroupId, @RequestBody DaycareGroup daycareGroup) {
+            @PathVariable long daycareGroupId, @RequestBody DaycareGroup daycareGroup) {
         return new ResponseEntity<>(daycareGroupService.editDaycareGroup(daycareGroupId, daycareGroup), HttpStatus.OK);
     }
 
     @DeleteMapping("/{daycareGroupId}")
-    public ResponseEntity deleteDaycareGroup(@PathVariable Long daycareGroupId) {
+    public ResponseEntity deleteDaycareGroup(@PathVariable long daycareGroupId) {
         daycareGroupService.deleteDaycareGroup(daycareGroupId);
         return ResponseEntity.noContent().build();
     }
@@ -62,12 +61,12 @@ public class DaycareGroupController {
 
     @PutMapping("/{daycareGroupId}/children/{childId}")
     public ResponseEntity<DaycareGroup> addChildToDayCareGroup(
-            @PathVariable Long daycareGroupId, @PathVariable Long childId) {
+            @PathVariable long daycareGroupId, @PathVariable long childId) {
         return new ResponseEntity<>(daycareGroupService.addChildToDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{daycareGroupId}/children/{childId}")
-    public ResponseEntity removeChildFromGroup(@PathVariable Long daycareGroupId, @PathVariable Long childId) {
+    public ResponseEntity removeChildFromGroup(@PathVariable long daycareGroupId, @PathVariable long childId) {
         daycareGroupService.removeChildFromDaycareGroup(daycareGroupId, childId);
         return ResponseEntity.noContent().build();
     }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,9 +18,6 @@ public class DailyGroupAttendanceDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
-
-    @NotNull
-    private Long daycareGroupId;
 
     private Set<Long> presentChildrenIds = new HashSet<>();
 

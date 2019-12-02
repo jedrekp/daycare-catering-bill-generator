@@ -1,11 +1,11 @@
-package jedrekp.daycarecateringbillgenerator.Service;
+package jedrekp.daycarecateringbillgenerator.service;
 
 import freemarker.template.TemplateException;
 import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
-import jedrekp.daycarecateringbillgenerator.Entity.*;
-import jedrekp.daycarecateringbillgenerator.Repository.CateringBillRepository;
-import jedrekp.daycarecateringbillgenerator.Repository.DailyAttendanceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.*;
+import jedrekp.daycarecateringbillgenerator.repository.CateringBillRepository;
+import jedrekp.daycarecateringbillgenerator.repository.DailyAttendanceRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,61 +20,45 @@ import java.time.Year;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CateringBillService {
 
-    @Autowired
-    DailyAttendanceRepository dailyAttendanceRepository;
+    private final DailyAttendanceRepository dailyAttendanceRepository;
 
-    @Autowired
-    CateringBillRepository cateringBillRepository;
+    private final CateringBillRepository cateringBillRepository;
 
-    @Autowired
-    ChildService childService;
+    private final ChildService childService;
 
-    @Autowired
-    CateringOptionService cateringOptionService;
+    private final CateringOptionService cateringOptionService;
 
-    @Autowired
-    EmailService emailService;
+    private final EmailService emailService;
 
     @Transactional(readOnly = true)
-    public CateringBill findByIdWithAllDetails(Long cateringBillId) {
+    public CateringBill findByIdWithAllDetails(long cateringBillId) {
         return cateringBillRepository.findByIdWithAllDetails(cateringBillId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
-    public CateringBillDTO generateCateringBillPreview(Long childId, Month month, Year year) {
+    public CateringBillDTO generateCateringBillPreview(long childId, Month month, Year year) {
 
-        if (cateringBillRepository.existsByMonthAndYearAndChild_Id(month, year, childId)) {
-            throw new EntityExistsException(MessageFormat
-                    .format("Catering bill for child #{0} for this month already exists.", childId));
-        }
+        checkAvailabilityToGenerateCateringBill(month, year, childId);
 
         CateringBillDTO cateringBillDTO = new CateringBillDTO(month, year);
 
         List<DailyAttendance> dailyAttendances = dailyAttendanceRepository
                 .findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue());
 
-        for (DailyAttendance dailyAttendance : dailyAttendances) {
-            CateringOption optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, dailyAttendance.getDate());
-            cateringBillDTO.getDailyCateringOrders()
-                    .add(new DailyCateringOrder(dailyAttendance.getDate(), optionInEffect.getOptionName(),
-                            optionInEffect.getDailyCost()));
-        }
+        insertDailyOrdersIntoCateringBill(dailyAttendances, cateringBillDTO, childId);
 
         return cateringBillDTO;
     }
 
     @Transactional
-    public CateringBill saveNewCateringBill(Long childId, CateringBillDTO cateringBillDTO) {
+    public CateringBill saveNewCateringBill(long childId, CateringBillDTO cateringBillDTO) {
 
-        if (cateringBillDTO.getDailyCateringOrders().isEmpty()) {
-            throw new IllegalArgumentException("Cannot save catering bill with no daily orders");
-        }
-        if (cateringBillRepository.existsByMonthAndYearAndChild_Id(cateringBillDTO.getMonth(), cateringBillDTO.getYear(), childId)) {
-            throw new EntityExistsException(MessageFormat
-                    .format("Catering bill for child #{0} for this month already exists.", childId));
-        }
+        checkIfCateringBillContainsAnyOrders(cateringBillDTO);
+
+        checkAvailabilityToGenerateCateringBill(cateringBillDTO.getMonth(), cateringBillDTO.getYear(), childId);
 
         Child child = childService.findSingleChildByIdAndArchived(childId, false);
         CateringBill cateringBill = new CateringBill(cateringBillDTO.getMonth(), cateringBillDTO.getYear());
@@ -90,13 +74,11 @@ public class CateringBillService {
 
 
     @Transactional(readOnly = true)
-    public void sendBillToParentViaEmail(Long cateringBillId) {
+    public void sendBillToParentViaEmail(long cateringBillId) {
+
         CateringBill cateringBill = findByIdWithAllDetails(cateringBillId);
 
-        BigDecimal totalDue = cateringBill.getDailyCateringOrders()
-                .stream()
-                .map(DailyCateringOrder::getCateringOptionPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalDue = calculateTotalDueForCateringBill(cateringBill);
 
         try {
             emailService.sendEmailWithCateringBill(cateringBill, totalDue);
@@ -104,4 +86,33 @@ public class CateringBillService {
             ex.printStackTrace();
         }
     }
+
+    private void checkAvailabilityToGenerateCateringBill(Month month, Year year, long childId) {
+        if (cateringBillRepository.existsByMonthAndYearAndChild_Id(month, year, childId)) {
+            throw new EntityExistsException(MessageFormat
+                    .format("Catering bill for child #{0} for this month already exists.", childId));
+        }
+    }
+
+    private void checkIfCateringBillContainsAnyOrders(CateringBillDTO cateringBillDTO) {
+        if (cateringBillDTO.getDailyCateringOrders().isEmpty()) {
+            throw new IllegalArgumentException("Cannot save catering bill with no daily orders");
+        }
+    }
+
+    private void insertDailyOrdersIntoCateringBill(List<DailyAttendance> dailyAttendances, CateringBillDTO cateringBillDTO, long childId) {
+        for (DailyAttendance dailyAttendance : dailyAttendances) {
+            CateringOption optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, dailyAttendance.getDate());
+            cateringBillDTO.getDailyCateringOrders()
+                    .add(new DailyCateringOrder(dailyAttendance.getDate(), optionInEffect.getOptionName(), optionInEffect.getDailyCost()));
+        }
+    }
+
+    private BigDecimal calculateTotalDueForCateringBill(CateringBill cateringBill) {
+        return cateringBill.getDailyCateringOrders()
+                .stream()
+                .map(DailyCateringOrder::getCateringOptionPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
 }

@@ -1,12 +1,12 @@
-package jedrekp.daycarecateringbillgenerator.Service;
+package jedrekp.daycarecateringbillgenerator.service;
 
 import jedrekp.daycarecateringbillgenerator.DTO.DailyGroupAttendanceDTO;
 import jedrekp.daycarecateringbillgenerator.DTO.SingleChildMonthlyAttendanceDTO;
-import jedrekp.daycarecateringbillgenerator.Entity.Child;
-import jedrekp.daycarecateringbillgenerator.Entity.DailyAttendance;
-import jedrekp.daycarecateringbillgenerator.Entity.DaycareGroup;
-import jedrekp.daycarecateringbillgenerator.Repository.DailyAttendanceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.Child;
+import jedrekp.daycarecateringbillgenerator.entity.DailyAttendance;
+import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
+import jedrekp.daycarecateringbillgenerator.repository.DailyAttendanceRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,16 +17,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class DailyAttendanceService {
 
-    @Autowired
-    DailyAttendanceRepository dailyAttendanceRepository;
+    private final DailyAttendanceRepository dailyAttendanceRepository;
 
-    @Autowired
-    ChildService childService;
+    private final ChildService childService;
 
-    @Autowired
-    DaycareGroupService daycareGroupService;
+    private final DaycareGroupService daycareGroupService;
 
     @Transactional
     public DailyAttendance submitAttendanceForGroup(DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
@@ -71,7 +69,7 @@ public class DailyAttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public DailyGroupAttendanceDTO getDailyAttendanceForDaycareGroup(Long daycareGroupId, LocalDate date) {
+    public DailyGroupAttendanceDTO getDailyAttendanceForDaycareGroup(long daycareGroupId, LocalDate date) {
 
         DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdWithChildren(daycareGroupId);
         DailyGroupAttendanceDTO dailyGroupAttendanceDTO = new DailyGroupAttendanceDTO(date);
@@ -91,7 +89,7 @@ public class DailyAttendanceService {
 
     @Transactional
     public List<DailyAttendance> submitMonthlyAttendanceForChild(
-            Long childId, SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
+            long childId, SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
 
         Child child = childService.findSingleChildByIdAndArchived(childId, false);
 
@@ -130,7 +128,7 @@ public class DailyAttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public SingleChildMonthlyAttendanceDTO getMonthlyAttendanceForChild(Long childId, Month month, Year year) {
+    public SingleChildMonthlyAttendanceDTO getMonthlyAttendanceForChild(long childId, Month month, Year year) {
 
         SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO();
 

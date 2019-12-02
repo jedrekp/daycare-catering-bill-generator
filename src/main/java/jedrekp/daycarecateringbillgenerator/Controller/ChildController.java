@@ -1,15 +1,15 @@
-package jedrekp.daycarecateringbillgenerator.Controller;
+package jedrekp.daycarecateringbillgenerator.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
 import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
-import jedrekp.daycarecateringbillgenerator.Entity.AssignedOption;
-import jedrekp.daycarecateringbillgenerator.Entity.CateringBill;
-import jedrekp.daycarecateringbillgenerator.Entity.Child;
-import jedrekp.daycarecateringbillgenerator.Service.CateringBillService;
-import jedrekp.daycarecateringbillgenerator.Service.ChildService;
-import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import jedrekp.daycarecateringbillgenerator.entity.AssignedOption;
+import jedrekp.daycarecateringbillgenerator.entity.CateringBill;
+import jedrekp.daycarecateringbillgenerator.entity.Child;
+import jedrekp.daycarecateringbillgenerator.service.CateringBillService;
+import jedrekp.daycarecateringbillgenerator.service.ChildService;
+import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +22,15 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/children")
 @CrossOrigin
+@RequiredArgsConstructor
 public class ChildController {
 
-    @Autowired
-    ChildService childService;
+    private final ChildService childService;
 
-    @Autowired
-    CateringBillService cateringBillService;
+    private final CateringBillService cateringBillService;
 
     @GetMapping("/{childId}")
-    public ResponseEntity<Child> getSingleChild(@PathVariable Long childId) {
+    public ResponseEntity<Child> getSingleChild(@PathVariable long childId) {
         return new ResponseEntity<>(childService.findSingleChildByIdWithAllDetails(childId), HttpStatus.OK);
     }
 
@@ -61,32 +60,32 @@ public class ChildController {
 
     @PutMapping("/{childId}")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Child> EditChild(@PathVariable Long childId, @RequestBody Child child) {
+    public ResponseEntity<Child> EditChild(@PathVariable long childId, @RequestBody Child child) {
         return new ResponseEntity<>(childService.editChild(childId, child), HttpStatus.OK);
     }
 
     @PostMapping("/{childId}/assignedOptions")
     public ResponseEntity<AssignedOption> assignNewCateringOptionToChild(
-            @PathVariable Long childId, @RequestBody @Valid AssignedOptionDTO assignedOptionDTO) {
+            @PathVariable long childId, @RequestBody @Valid AssignedOptionDTO assignedOptionDTO) {
         return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{childId}/assignedOptions/{assignedOptionId}")
     public ResponseEntity removeAssignedOptionFromChild(
-            @PathVariable Long childId, @PathVariable Long assignedOptionId) {
+            @PathVariable long childId, @PathVariable long assignedOptionId) {
         childService.removeAssignedOption(childId, assignedOptionId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{childId}/cateringBills", params = {"month", "year"})
     public ResponseEntity<CateringBill> getCateringBillForSpecificMonth(
-            @PathVariable Long childId, @RequestParam Month month, @RequestParam Year year) {
+            @PathVariable long childId, @RequestParam Month month, @RequestParam Year year) {
         return null;
     }
 
     @PostMapping("/{childId}/cateringBills")
     public ResponseEntity<CateringBill> addNewCateringBillToChild(
-            @PathVariable Long childId, @RequestBody @Valid CateringBillDTO cateringBillDTO) {
+            @PathVariable long childId, @RequestBody @Valid CateringBillDTO cateringBillDTO) {
         return new ResponseEntity<>(cateringBillService.saveNewCateringBill(childId, cateringBillDTO), HttpStatus.CREATED);
     }
 }

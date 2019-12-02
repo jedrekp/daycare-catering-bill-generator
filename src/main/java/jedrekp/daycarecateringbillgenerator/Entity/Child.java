@@ -1,9 +1,9 @@
-package jedrekp.daycarecateringbillgenerator.Entity;
+package jedrekp.daycarecateringbillgenerator.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.daycarecateringbillgenerator.Utility.JsonViewFilter;
+import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class Child {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(JsonViewFilter.BasicInfo.class)
-    private Long id;
+    private long id;
 
     @Column(name = "first_name")
     @JsonView(JsonViewFilter.BasicInfo.class)
@@ -37,7 +37,6 @@ public class Child {
     @JsonView(JsonViewFilter.BasicInfo.class)
     private String parentEmail;
 
-    @Column(name = "archived")
     @JsonView(JsonViewFilter.BasicInfo.class)
     private boolean archived;
 
