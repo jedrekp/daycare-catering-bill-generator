@@ -4,8 +4,8 @@ package jedrekp.daycarecateringbillgenerator.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -16,10 +16,10 @@ import java.util.Set;
 @Table(name = "daycare_group")
 @Getter
 @Setter
-@NoArgsConstructor
 public class DaycareGroup {
 
     @Id
+    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(JsonViewFilter.BasicInfo.class)
     private long id;

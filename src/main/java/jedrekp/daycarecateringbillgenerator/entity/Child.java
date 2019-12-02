@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -17,11 +17,11 @@ import java.util.Set;
         uniqueConstraints = @UniqueConstraint(columnNames = {"first_name", "last_name"}))
 @Getter
 @Setter
-@NoArgsConstructor
 public class Child {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     @JsonView(JsonViewFilter.BasicInfo.class)
     private long id;
 

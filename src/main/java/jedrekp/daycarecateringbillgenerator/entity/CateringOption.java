@@ -1,7 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 @Table(name = "catering_option")
 @Getter
 @Setter
-@NoArgsConstructor
 public class CateringOption {
 
     @Id
+    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 

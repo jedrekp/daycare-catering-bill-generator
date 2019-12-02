@@ -3,6 +3,7 @@ package jedrekp.daycarecateringbillgenerator.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jedrekp.daycarecateringbillgenerator.utility.YearAttributeConverter;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import java.util.List;
 public class CateringBill {
 
     @Id
+    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 

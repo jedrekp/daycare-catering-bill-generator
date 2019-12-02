@@ -3,6 +3,7 @@ package jedrekp.daycarecateringbillgenerator.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 public class DailyCateringOrder {
 
     @Id
+    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private long id;
@@ -38,7 +40,7 @@ public class DailyCateringOrder {
     @JsonIgnoreProperties({"child", "dailyCateringOrders"})
     private CateringBill cateringBill;
 
-    public DailyCateringOrder(LocalDate orderDate, String cateringOptionName, BigDecimal cateringOptionPrice){
+    public DailyCateringOrder(LocalDate orderDate, String cateringOptionName, BigDecimal cateringOptionPrice) {
         this.orderDate = orderDate;
         this.cateringOptionName = cateringOptionName;
         this.cateringOptionPrice = cateringOptionPrice;
