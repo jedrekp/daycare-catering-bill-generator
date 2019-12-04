@@ -252,7 +252,9 @@ export class ChildPageComponent implements OnInit {
   }
 
   submitAttendanceChanges() {
-    this.attendanceDataService.submitMonthlyAttendanceForChild(this.child.id, this.monthlyChildAttendance).subscribe(
+    let monthString = this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'LLLL').toUpperCase()
+    let year = this.firstDayOfSelectedAttendanceMonth.getFullYear()
+    this.attendanceDataService.submitMonthlyAttendanceForChild(this.child.id,monthString,year, this.monthlyChildAttendance).subscribe(
       response => {
         this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
           `${this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'MMMM yyyy')} attendance for child #${this.child.id} has been modified.`)

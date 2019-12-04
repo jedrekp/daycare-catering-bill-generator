@@ -37,11 +37,12 @@ public class DailyAttendanceController {
         return new ResponseEntity<>(dailyAttendanceService.getDailyAttendanceForDaycareGroup(daycareGroupId, date), HttpStatus.OK);
     }
 
-    @PostMapping(params = "childId")
-    public ResponseEntity<Collection<DailyAttendance>> submitMonthlyAttendanceForSingleChild(
-            @RequestParam long childId, @RequestBody @Valid SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
+    @PutMapping(params = {"childId", "month", "year"})
+    public ResponseEntity<Collection<DailyAttendance>> submitMonthlyAttendanceChangesForSingleChild(
+            @RequestParam long childId, @RequestParam Month month, @RequestParam Year year,
+            @RequestBody @Valid SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
         return new ResponseEntity<>(
-                dailyAttendanceService.submitMonthlyAttendanceForChild(childId, monthlyAttendanceDTO), HttpStatus.OK);
+                dailyAttendanceService.submitMonthlyAttendanceChangesForChild(childId, month, year, monthlyAttendanceDTO), HttpStatus.OK);
     }
 
     @GetMapping(params = {"childId", "month", "year"})

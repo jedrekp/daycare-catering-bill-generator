@@ -15,6 +15,7 @@ import java.time.Month;
 import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +29,11 @@ public class DailyAttendanceService {
 
     @Transactional
     public DailyAttendance submitAttendanceForGroup(DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
+
         if (!Collections.disjoint(dailyGroupAttendanceDTO.getPresentChildrenIds(), dailyGroupAttendanceDTO.getAbsentChildrenIds())) {
-            throw new IllegalArgumentException("One or more children are marked as both present or absent");
+            throw new IllegalArgumentException("One or more children are marked as both present and absent.");
         }
+
         DailyAttendance dailyAttendance = findByDateOrElseCreateNew(dailyGroupAttendanceDTO.getDate());
         addPresentChildrenToDailyAttendance(dailyAttendance, dailyGroupAttendanceDTO.getPresentChildrenIds());
         addAbsentChildrenToDailyAttendance(dailyAttendance, dailyGroupAttendanceDTO.getAbsentChildrenIds());
@@ -57,8 +60,14 @@ public class DailyAttendanceService {
     }
 
     @Transactional
-    public List<DailyAttendance> submitMonthlyAttendanceForChild(
-            long childId, SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
+    public List<DailyAttendance> submitMonthlyAttendanceChangesForChild(
+            long childId, Month month, Year year, SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
+
+        if (!Collections.disjoint(monthlyAttendanceDTO.getDaysWhenPresent(), monthlyAttendanceDTO.getDaysWhenAbsent())) {
+            throw new IllegalArgumentException("Attendance update consists of dates for which child is marked as both present and absent");
+        }
+
+        verifyIfAllDatesAreInTheSameMonth(monthlyAttendanceDTO, month, year);
 
         Child child = childService.findSingleNotArchivedChildById(childId);
 
@@ -144,6 +153,15 @@ public class DailyAttendanceService {
 
         absentChildrenIds.forEach(childId -> dailyAttendance.getAbsentChildren()
                 .add(childService.findSingleNotArchivedChildById(childId)));
+    }
+
+    private void verifyIfAllDatesAreInTheSameMonth(SingleChildMonthlyAttendanceDTO attendanceDTO, Month month, Year year) {
+        if (Stream.of(attendanceDTO.getDaysWhenPresent(), attendanceDTO.getDaysWhenAbsent())
+                .flatMap(Collection::stream)
+                .anyMatch(date -> date.getMonth() != month || date.getYear() != year.getValue())) {
+            throw new IllegalArgumentException("At least one date is not from the selected month");
+        }
+
     }
 
 }

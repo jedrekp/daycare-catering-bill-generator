@@ -33,10 +33,12 @@ export class AttendanceDataService {
     return this.httpClient.get<MonthlyChildAttendance>(`http://localhost:8081/dailyAttendances`, { params: params })
   }
 
-  submitMonthlyAttendanceForChild(childId: number, attendance: MonthlyChildAttendance) {
+  submitMonthlyAttendanceForChild(childId: number, month: string, year: number, attendance: MonthlyChildAttendance) {
     let params = new HttpParams()
       .set('childId', childId.toString())
-    return this.httpClient.post<any>(`http://localhost:8081/dailyAttendances`, attendance, { params: params })
+      .set('month', month)
+      .set('year', year.toString())
+    return this.httpClient.put<any>(`http://localhost:8081/dailyAttendances`, attendance, { params: params })
   }
 
 }
