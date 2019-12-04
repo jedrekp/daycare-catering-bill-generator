@@ -41,7 +41,7 @@ public class CateringBillService {
     @Transactional(readOnly = true)
     public CateringBillDTO generateCateringBillPreview(long childId, Month month, Year year) {
 
-        checkAvailabilityToGenerateCateringBill(month, year, childId);
+        checkIfCateringBillCanBeGenerated(month, year, childId);
 
         CateringBillDTO cateringBillDTO = new CateringBillDTO(month, year);
 
@@ -58,9 +58,9 @@ public class CateringBillService {
 
         checkIfCateringBillContainsAnyOrders(cateringBillDTO);
 
-        checkAvailabilityToGenerateCateringBill(cateringBillDTO.getMonth(), cateringBillDTO.getYear(), childId);
+        checkIfCateringBillCanBeGenerated(cateringBillDTO.getMonth(), cateringBillDTO.getYear(), childId);
 
-        Child child = childService.findSingleChildByIdAndArchived(childId, false);
+        Child child = childService.findSingleNotArchivedChildById(childId);
         CateringBill cateringBill = new CateringBill(cateringBillDTO.getMonth(), cateringBillDTO.getYear());
 
         cateringBillDTO.getDailyCateringOrders().forEach(dailyCateringOrder -> dailyCateringOrder.setCateringBill(cateringBill));
@@ -87,7 +87,7 @@ public class CateringBillService {
         }
     }
 
-    private void checkAvailabilityToGenerateCateringBill(Month month, Year year, long childId) {
+    private void checkIfCateringBillCanBeGenerated(Month month, Year year, long childId) {
         if (cateringBillRepository.existsByMonthAndYearAndChild_Id(month, year, childId)) {
             throw new EntityExistsException(MessageFormat
                     .format("Catering bill for child #{0} for this month already exists.", childId));

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -25,19 +26,8 @@ public class ChildService {
     private final CateringOptionService cateringOptionService;
 
     @Transactional(readOnly = true)
-    public Child findSingleChildByIdAndArchived(long childId, boolean archived) {
-        return childRepository.findByIdAndArchived(childId, archived).orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
     public Child findSingleChildByIdWithAllDetails(long childId) {
         return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Child findSingleChildByIdAndArchivedWithAllDetails(long childId, boolean archived) {
-        return childRepository.findByIdAndArchivedWithAllDetails(childId, archived)
-                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
@@ -64,7 +54,6 @@ public class ChildService {
     public Collection<Child> findChildrenBySearchPhrase(String searchPhrase) {
         Set<Child> children = new LinkedHashSet<>();
 
-        //splits searchPhrase to get all adjacent words combinations to cover cases where firstName or lastName consists of multiple words
         Set<String> searchSubPhrases = splitSearchPhrase(searchPhrase);
 
         //attempts to find children by both firstName and LastName, to put at the start of the list (only when multiple words have been entered)
@@ -86,45 +75,38 @@ public class ChildService {
         if (child.isArchived()) {
             throw new IllegalArgumentException("New child cannot be saved directly to archive");
         }
-        if (childRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(child.getFirstName(), child.getLastName())) {
-            throw new EntityExistsException("Another child with the same first name and last name already exists");
-        }
+        checkNameAvailability(child.getFirstName(), child.getLastName(), null);
         return childRepository.save(child);
     }
 
     @Transactional
     public Child editChild(long childId, Child childFromRequest) {
-        if (childRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(childFromRequest.getFirstName(),
-                childFromRequest.getLastName(), childId)) {
-            throw new EntityExistsException("Another child with the same first name and last name already exists");
-        }
+        checkNameAvailability(childFromRequest.getFirstName(), childFromRequest.getLastName(), childId);
+
         Child childToEdit = findSingleChildById(childId);
         childToEdit.setFirstName(childFromRequest.getFirstName());
         childToEdit.setLastName(childFromRequest.getLastName());
         childToEdit.setParentEmail(childFromRequest.getParentEmail());
 
-        // Remove child from daycare group before moving it to archive
         if (childFromRequest.isArchived() && childToEdit.getDaycareGroup() != null) {
-            childToEdit.getDaycareGroup().getChildren().remove(childToEdit);
-            childToEdit.setDaycareGroup(null);
+            removeChildFromDaycareGroup(childToEdit);
         }
+
         childToEdit.setArchived(childFromRequest.isArchived());
         return childToEdit;
     }
 
     @Transactional
     public AssignedOption assignCateringOption(long childId, AssignedOptionDTO assignedOptionDTO) {
-        if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(assignedOptionDTO.getEffectiveDate(), childId)) {
-            throw new IllegalArgumentException(
-                    "Child #" + childId + " already has another catering option assigned with this effective date.\n" +
-                            "It must be removed first");
-        }
+        checkIfOptionCanBeAssignedWithGivenEffectiveDate(assignedOptionDTO.getEffectiveDate(), childId);
+
         CateringOption cateringOption = cateringOptionService.findById(assignedOptionDTO.getCateringOptionId());
         if (cateringOption.isDisabled()) {
             throw new IllegalArgumentException("Catering option#" + cateringOption.getId() + " is disabled.\n" +
                     "It can no longer be assigned");
         }
-        Child child = findSingleChildByIdAndArchivedWithAllDetails(childId, false);
+
+        Child child = findSingleNotArchivedChildByIdWithAssignedOptions(childId);
         AssignedOption assignedOption = new AssignedOption(assignedOptionDTO.getEffectiveDate(), child, cateringOption);
         child.getAssignedOptions().add(assignedOption);
         return assignedOption;
@@ -132,14 +114,48 @@ public class ChildService {
 
     @Transactional
     public void removeAssignedOption(long childId, long assignedOptionId) {
-        Child child = findSingleChildByIdAndArchivedWithAllDetails(childId, false);
+        Child child = findSingleNotArchivedChildByIdWithAssignedOptions(childId);
         AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
                 .orElseThrow(EntityNotFoundException::new);
         child.getAssignedOptions().remove(assignedOption);
     }
 
+
+    Child findSingleNotArchivedChildById(long childId) {
+        return childRepository.findByIdAndArchived(childId, false).orElseThrow(EntityNotFoundException::new);
+    }
+
     private Child findSingleChildById(long childId) {
         return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private Child findSingleNotArchivedChildByIdWithAssignedOptions(long childId) {
+        return childRepository.findByIdAndArchivedWithAssignedOptions(childId, false).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void checkNameAvailability(String firstName, String lastName, Long childId) {
+        boolean nameTaken;
+        if (childId == null) {
+            nameTaken = childRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName, lastName);
+        } else {
+            nameTaken = childRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(firstName, lastName, childId);
+        }
+        if (nameTaken) {
+            throw new EntityExistsException("Another child with the same first name and last name already exists");
+        }
+    }
+
+    private void checkIfOptionCanBeAssignedWithGivenEffectiveDate(LocalDate effectiveDate, long childId) {
+        if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(effectiveDate, childId)) {
+            throw new IllegalArgumentException(
+                    "Child #" + childId + " already has another catering option assigned with this effective date.\n" +
+                            "It must be removed first");
+        }
+    }
+
+    private void removeChildFromDaycareGroup(Child child) {
+        child.getDaycareGroup().getChildren().remove(child);
+        child.setDaycareGroup(null);
     }
 
     private Set<String> splitSearchPhrase(String searchPhrase) {

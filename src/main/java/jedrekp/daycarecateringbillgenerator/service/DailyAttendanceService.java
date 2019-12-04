@@ -28,43 +28,12 @@ public class DailyAttendanceService {
 
     @Transactional
     public DailyAttendance submitAttendanceForGroup(DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
-
         if (!Collections.disjoint(dailyGroupAttendanceDTO.getPresentChildrenIds(), dailyGroupAttendanceDTO.getAbsentChildrenIds())) {
-            throw new IllegalArgumentException("One or more children have been marked as both present or absent");
+            throw new IllegalArgumentException("One or more children are marked as both present or absent");
         }
-
-        // find dailyAttendance object by date if already exists or else create new
-        DailyAttendance dailyAttendance = dailyAttendanceRepository
-                .findByDateWithChildren(dailyGroupAttendanceDTO.getDate())
-                .orElse(new DailyAttendance(dailyGroupAttendanceDTO.getDate()));
-
-
-        //remove children marked as absent from present children set
-        dailyAttendance.getPresentChildren().removeAll(
-                dailyAttendance.getPresentChildren()
-                        .stream()
-                        .filter(child -> dailyGroupAttendanceDTO.getAbsentChildrenIds().contains(child.getId()))
-                        .collect(Collectors.toSet())
-        );
-
-        //remove children marked as present from absent children set
-        dailyAttendance.getAbsentChildren().removeAll(
-                dailyAttendance.getAbsentChildren()
-                        .stream()
-                        .filter(child -> dailyGroupAttendanceDTO.getPresentChildrenIds().contains(child.getId()))
-                        .collect(Collectors.toSet())
-        );
-
-        //add children marked as present to present children set
-        dailyGroupAttendanceDTO.getPresentChildrenIds()
-                .forEach(childId -> dailyAttendance.getPresentChildren()
-                        .add(childService.findSingleChildByIdAndArchived(childId, false)));
-
-        //add children marked as absent to absent children set
-        dailyGroupAttendanceDTO.getAbsentChildrenIds()
-                .forEach(childId -> dailyAttendance.getAbsentChildren()
-                        .add(childService.findSingleChildByIdAndArchived(childId, false)));
-
+        DailyAttendance dailyAttendance = findByDateOrElseCreateNew(dailyGroupAttendanceDTO.getDate());
+        addPresentChildrenToDailyAttendance(dailyAttendance, dailyGroupAttendanceDTO.getPresentChildrenIds());
+        addAbsentChildrenToDailyAttendance(dailyAttendance, dailyGroupAttendanceDTO.getAbsentChildrenIds());
         return dailyAttendanceRepository.save(dailyAttendance);
     }
 
@@ -91,7 +60,7 @@ public class DailyAttendanceService {
     public List<DailyAttendance> submitMonthlyAttendanceForChild(
             long childId, SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
 
-        Child child = childService.findSingleChildByIdAndArchived(childId, false);
+        Child child = childService.findSingleNotArchivedChildById(childId);
 
         List<DailyAttendance> dailyAttendances = new ArrayList<>();
 
@@ -144,4 +113,37 @@ public class DailyAttendanceService {
 
         return attendanceDTO;
     }
+
+    private DailyAttendance findByDateOrElseCreateNew(LocalDate date) {
+        return dailyAttendanceRepository
+                .findByDateWithChildren(date)
+                .orElse(new DailyAttendance(date));
+    }
+
+    private void addPresentChildrenToDailyAttendance(DailyAttendance dailyAttendance, Set<Long> presentChildrenIds) {
+        if (!dailyAttendance.getAbsentChildren().isEmpty())
+            dailyAttendance.getAbsentChildren().removeAll(
+                    dailyAttendance.getAbsentChildren()
+                            .stream()
+                            .filter(child -> presentChildrenIds.contains(child.getId()))
+                            .collect(Collectors.toSet())
+            );
+
+        presentChildrenIds.forEach(childId -> dailyAttendance.getPresentChildren()
+                .add(childService.findSingleNotArchivedChildById(childId)));
+    }
+
+    private void addAbsentChildrenToDailyAttendance(DailyAttendance dailyAttendance, Set<Long> absentChildrenIds) {
+        if (!dailyAttendance.getPresentChildren().isEmpty())
+            dailyAttendance.getPresentChildren().removeAll(
+                    dailyAttendance.getPresentChildren()
+                            .stream()
+                            .filter(child -> absentChildrenIds.contains(child.getId()))
+                            .collect(Collectors.toSet())
+            );
+
+        absentChildrenIds.forEach(childId -> dailyAttendance.getAbsentChildren()
+                .add(childService.findSingleNotArchivedChildById(childId)));
+    }
+
 }

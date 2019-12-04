@@ -62,7 +62,7 @@ public class DaycareGroupService {
 
     @Transactional
     public DaycareGroup addChildToDaycareGroup(long daycareGroupId, long childId) {
-        Child child = childService.findSingleChildByIdAndArchived(childId, false);
+        Child child = childService.findSingleNotArchivedChildById(childId);
         if (child.getDaycareGroup() != null) {
             throw new IllegalArgumentException("Child #" + child.getId() + " is already assigned to a daycare group");
         }

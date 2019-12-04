@@ -3,6 +3,7 @@ package jedrekp.daycarecateringbillgenerator.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
         uniqueConstraints = @UniqueConstraint(columnNames = {"effective_date", "child_id"}))
 @Getter
 @Setter
+@NoArgsConstructor
 public class AssignedOption {
 
     @Id

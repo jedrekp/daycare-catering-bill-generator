@@ -2,10 +2,8 @@ package jedrekp.daycarecateringbillgenerator.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jedrekp.daycarecateringbillgenerator.entity.DailyCateringOrder;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.time.Month;
@@ -13,10 +11,8 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class CateringBillDTO {
 
     @NotNull

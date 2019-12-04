@@ -24,11 +24,10 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
             "WHERE c.id = :childId")
     Optional<Child> findByIdWithAllDetails(@Param("childId") Long childId);
 
-    @Query("SELECT c FROM Child c LEFT JOIN FETCH c.daycareGroup " +
+    @Query("SELECT c FROM Child c " +
             "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
             "WHERE c.id = :childId AND c.archived = :archived")
-    Optional<Child> findByIdAndArchivedWithAllDetails(
-            @Param("childId") Long childId, @Param("archived") boolean archived);
+    Optional<Child> findByIdAndArchivedWithAssignedOptions(@Param("childId") Long childId, @Param("archived") boolean archived);
 
     List<Child> findAllByArchivedOrderByLastNameAscFirstNameAsc(boolean archived);
 
