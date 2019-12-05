@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -45,5 +46,13 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     @Query("SELECT c FROM Child c WHERE LOWER(c.firstName) IN :searchSubPhrases " +
             "ORDER BY c.lastName ASC, c.firstName ASC")
     List<Child> findAllByFirstName(@Param("searchSubPhrases") Collection<String> searchSubPhrases);
+
+    @Query("SELECT pc FROM AttendanceSheet att INNER JOIN att.presentChildren pc INNER JOIN pc.daycareGroup dg " +
+            "WHERE att.date = :date AND dg.id = :daycareGroupId")
+    List<Child> findPresentChildrenByDateAndDaycareGroupId(@Param("date") LocalDate date, @Param("daycareGroupId") Long daycareGroupId);
+
+    @Query("SELECT ac FROM AttendanceSheet att INNER JOIN att.absentChildren ac INNER JOIN ac.daycareGroup dg " +
+            "WHERE att.date = :date AND dg.id = :daycareGroupId")
+    List<Child> findAbsentChildrenByDateAndDaycareGroupId(@Param("date") LocalDate date, @Param("daycareGroupId") Long daycareGroupId);
 
 }

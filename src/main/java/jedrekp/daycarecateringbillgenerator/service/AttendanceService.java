@@ -2,10 +2,10 @@ package jedrekp.daycarecateringbillgenerator.service;
 
 import jedrekp.daycarecateringbillgenerator.DTO.DailyGroupAttendanceDTO;
 import jedrekp.daycarecateringbillgenerator.DTO.SingleChildMonthlyAttendanceDTO;
-import jedrekp.daycarecateringbillgenerator.entity.Child;
 import jedrekp.daycarecateringbillgenerator.entity.AttendanceSheet;
-import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
+import jedrekp.daycarecateringbillgenerator.entity.Child;
 import jedrekp.daycarecateringbillgenerator.repository.AttendanceSheetRepository;
+import jedrekp.daycarecateringbillgenerator.repository.ChildRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class AttendanceService {
 
     private final ChildService childService;
 
-    private final DaycareGroupService daycareGroupService;
+    private final ChildRepository childRepository;
 
     @Transactional
     public AttendanceSheet submitDailyAttendanceForGroup(DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
@@ -35,19 +35,26 @@ public class AttendanceService {
         }
 
         AttendanceSheet attendanceSheet = findByDateOrElseCreateNew(dailyGroupAttendanceDTO.getDate());
-        addPresentChildrenToDailyAttendance(attendanceSheet, dailyGroupAttendanceDTO.getPresentChildrenIds());
-        addAbsentChildrenToDailyAttendance(attendanceSheet, dailyGroupAttendanceDTO.getAbsentChildrenIds());
+        addPresentChildrenToAttendanceSheet(attendanceSheet, dailyGroupAttendanceDTO.getPresentChildrenIds());
+        addAbsentChildrenToAttendanceSheet(attendanceSheet, dailyGroupAttendanceDTO.getAbsentChildrenIds());
         return attendanceSheetRepository.save(attendanceSheet);
     }
 
     @Transactional(readOnly = true)
     public DailyGroupAttendanceDTO getDailyAttendanceForDaycareGroup(long daycareGroupId, LocalDate date) {
 
-        DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdWithChildren(daycareGroupId);
         DailyGroupAttendanceDTO dailyGroupAttendanceDTO = new DailyGroupAttendanceDTO(date);
-        dailyGroupAttendanceDTO.setPresentChildrenIds(getIdsOfChildrenMarkedPresent(date, daycareGroupId));
-        dailyGroupAttendanceDTO.setAbsentChildrenIds(
-                getIdsOfChildrenMarkedAbsentOrUnmarked(daycareGroup.getChildren(),dailyGroupAttendanceDTO.getPresentChildrenIds()));
+
+        dailyGroupAttendanceDTO.setPresentChildrenIds(childRepository.findPresentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
+                .stream()
+                .map(Child::getId)
+                .collect(Collectors.toSet()));
+
+        dailyGroupAttendanceDTO.setAbsentChildrenIds(childRepository.findAbsentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
+                .stream()
+                .map(Child::getId)
+                .collect(Collectors.toSet()));
+
         return dailyGroupAttendanceDTO;
     }
 
@@ -74,15 +81,15 @@ public class AttendanceService {
 
         SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO();
 
-        attendanceSheetRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
+        attendanceDTO.setDaysWhenPresent(attendanceSheetRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
                 .stream()
                 .map(AttendanceSheet::getDate)
-                .forEach(attendanceDTO.getDaysWhenPresent()::add);
+                .collect(Collectors.toSet()));
 
-        attendanceSheetRepository.findByAbsentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
+        attendanceDTO.setDaysWhenAbsent(attendanceSheetRepository.findByAbsentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
                 .stream()
                 .map(AttendanceSheet::getDate)
-                .forEach(attendanceDTO.getDaysWhenAbsent()::add);
+                .collect(Collectors.toSet()));
 
         return attendanceDTO;
     }
@@ -93,7 +100,7 @@ public class AttendanceService {
                 .orElse(new AttendanceSheet(date));
     }
 
-    private void addPresentChildrenToDailyAttendance(AttendanceSheet attendanceSheet, Set<Long> presentChildrenIds) {
+    private void addPresentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> presentChildrenIds) {
         if (!attendanceSheet.getAbsentChildren().isEmpty())
             attendanceSheet.getAbsentChildren().removeAll(
                     attendanceSheet.getAbsentChildren()
@@ -106,7 +113,7 @@ public class AttendanceService {
                 .add(childService.findSingleNotArchivedChildById(childId)));
     }
 
-    private void addAbsentChildrenToDailyAttendance(AttendanceSheet attendanceSheet, Set<Long> absentChildrenIds) {
+    private void addAbsentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> absentChildrenIds) {
         if (!attendanceSheet.getPresentChildren().isEmpty())
             attendanceSheet.getPresentChildren().removeAll(
                     attendanceSheet.getPresentChildren()
@@ -117,24 +124,6 @@ public class AttendanceService {
 
         absentChildrenIds.forEach(childId -> attendanceSheet.getAbsentChildren()
                 .add(childService.findSingleNotArchivedChildById(childId)));
-    }
-
-    private Set<Long> getIdsOfChildrenMarkedPresent(LocalDate date, long daycareGroupId) {
-        Set<Long> presentChildrenIds = new HashSet<>();
-        attendanceSheetRepository.findByDateAndDaycareGroupIdWithPresentChildren(date, daycareGroupId)
-                .ifPresent(attendanceSheet -> presentChildrenIds.addAll(attendanceSheet.getPresentChildren()
-                        .stream()
-                        .map(Child::getId)
-                        .collect(Collectors.toSet())));
-        return presentChildrenIds;
-    }
-
-    private Set<Long> getIdsOfChildrenMarkedAbsentOrUnmarked(Set<Child> children, Set<Long> presentChildrenIds) {
-        return children
-                .stream()
-                .map(Child::getId)
-                .filter(id -> !presentChildrenIds.contains(id))
-                .collect(Collectors.toSet());
     }
 
     private void markSingleChildAsPresentForGivenDates(

@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
+import { Child } from 'src/app/child/child';
 
 @Component({
   selector: 'app-track-attendance',
@@ -71,8 +72,17 @@ export class TrackAttendanceComponent implements OnInit {
               this.datePipe.transform(this.selectDateAndGroupForm.get('date').value, 'yyyy-MM-dd')).subscribe(
                 dailyAttendance => {
                   this.dailyAttendance = dailyAttendance
+                  for (let child of this.selectedDaycareGroup.children) {
+                    this.markChildWithUntrackedAttendanceAsAbsentByDefault(child)
+                  }
                 })
           })
+    }
+  }
+
+  markChildWithUntrackedAttendanceAsAbsentByDefault(child: Child) {
+    if (this.dailyAttendance.presentChildrenIds.indexOf(child.id) == -1 && this.dailyAttendance.absentChildrenIds.indexOf(child.id) == -1) {
+      this.dailyAttendance.absentChildrenIds.push(child.id)
     }
   }
 
