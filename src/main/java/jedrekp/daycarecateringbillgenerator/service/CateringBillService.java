@@ -4,7 +4,7 @@ import freemarker.template.TemplateException;
 import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
 import jedrekp.daycarecateringbillgenerator.entity.*;
 import jedrekp.daycarecateringbillgenerator.repository.CateringBillRepository;
-import jedrekp.daycarecateringbillgenerator.repository.DailyAttendanceRepository;
+import jedrekp.daycarecateringbillgenerator.repository.AttendanceSheetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CateringBillService {
 
-    private final DailyAttendanceRepository dailyAttendanceRepository;
+    private final AttendanceSheetRepository attendanceSheetRepository;
 
     private final CateringBillRepository cateringBillRepository;
 
@@ -45,10 +45,10 @@ public class CateringBillService {
 
         CateringBillDTO cateringBillDTO = new CateringBillDTO(month, year);
 
-        List<DailyAttendance> dailyAttendances = dailyAttendanceRepository
+        List<AttendanceSheet> attendanceSheets = attendanceSheetRepository
                 .findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue());
 
-        insertDailyOrdersIntoCateringBill(dailyAttendances, cateringBillDTO, childId);
+        insertDailyOrdersIntoCateringBill(attendanceSheets, cateringBillDTO, childId);
 
         return cateringBillDTO;
     }
@@ -100,11 +100,11 @@ public class CateringBillService {
         }
     }
 
-    private void insertDailyOrdersIntoCateringBill(List<DailyAttendance> dailyAttendances, CateringBillDTO cateringBillDTO, long childId) {
-        for (DailyAttendance dailyAttendance : dailyAttendances) {
-            CateringOption optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, dailyAttendance.getDate());
+    private void insertDailyOrdersIntoCateringBill(List<AttendanceSheet> attendanceSheets, CateringBillDTO cateringBillDTO, long childId) {
+        for (AttendanceSheet attendanceSheet : attendanceSheets) {
+            CateringOption optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, attendanceSheet.getDate());
             cateringBillDTO.getDailyCateringOrders()
-                    .add(new DailyCateringOrder(dailyAttendance.getDate(), optionInEffect.getOptionName(), optionInEffect.getDailyCost()));
+                    .add(new DailyCateringOrder(attendanceSheet.getDate(), optionInEffect.getOptionName(), optionInEffect.getDailyCost()));
         }
     }
 

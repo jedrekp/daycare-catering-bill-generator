@@ -18,9 +18,9 @@ public class CateringOptionController {
 
     private final CateringOptionService cateringOptionService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CateringOption> getSingleCateringOption(@PathVariable long id) {
-        return new ResponseEntity<>(cateringOptionService.findById(id), HttpStatus.OK);
+    @GetMapping("/{cateringOptionId}")
+    public ResponseEntity<CateringOption> getSingleCateringOption(@PathVariable long cateringOptionId) {
+        return new ResponseEntity<>(cateringOptionService.findById(cateringOptionId), HttpStatus.OK);
     }
 
     @GetMapping

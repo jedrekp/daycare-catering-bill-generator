@@ -16,13 +16,13 @@ export class AttendanceDataService {
     let params = new HttpParams()
       .set('daycareGroupId', daycareGroupId.toString())
       .set('date', date)
-    return this.httpClient.get<DailyGroupAttendance>('http://localhost:8081/dailyAttendances', { params: params })
+    return this.httpClient.get<DailyGroupAttendance>('http://localhost:8081/attendanceSheets', { params: params })
   }
 
   submitDailyGroupAttendance(daycareGroupId: number, attendance: DailyGroupAttendance) {
     let params = new HttpParams()
       .set('daycareGroupId', daycareGroupId.toString())
-    return this.httpClient.post<any>('http://localhost:8081/dailyAttendances', attendance, { params: params })
+    return this.httpClient.post<any>('http://localhost:8081/attendanceSheets', attendance, { params: params })
   }
 
   retrieveMonthlyAttendanceForChild(childId: number, month: string, year: number) {
@@ -30,7 +30,7 @@ export class AttendanceDataService {
       .set('childId', childId.toString())
       .set('month', month)
       .set('year', year.toString())
-    return this.httpClient.get<MonthlyChildAttendance>(`http://localhost:8081/dailyAttendances`, { params: params })
+    return this.httpClient.get<MonthlyChildAttendance>(`http://localhost:8081/attendanceSheets`, { params: params })
   }
 
   submitMonthlyAttendanceForChild(childId: number, month: string, year: number, attendance: MonthlyChildAttendance) {
@@ -38,7 +38,7 @@ export class AttendanceDataService {
       .set('childId', childId.toString())
       .set('month', month)
       .set('year', year.toString())
-    return this.httpClient.put<any>(`http://localhost:8081/dailyAttendances`, attendance, { params: params })
+    return this.httpClient.put<any>(`http://localhost:8081/attendanceSheets`, attendance, { params: params })
   }
 
 }

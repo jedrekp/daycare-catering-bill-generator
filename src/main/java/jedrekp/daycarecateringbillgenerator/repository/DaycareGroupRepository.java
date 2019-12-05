@@ -14,7 +14,7 @@ public interface DaycareGroupRepository extends JpaRepository<DaycareGroup, Long
 
     boolean existsByGroupName(String groupName);
 
-    boolean existsByGroupNameAndIdNot(String groupName, Long id);
+    boolean existsByGroupNameAndIdNot(String groupName, Long childId);
 
     @Query("SELECT dg FROM DaycareGroup dg LEFT JOIN FETCH dg.children " +
             "WHERE dg.id = :daycareGroupId")

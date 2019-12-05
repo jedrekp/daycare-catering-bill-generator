@@ -15,7 +15,7 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 
     boolean existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(String firstName, String lastName);
 
-    boolean existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(String firstName, String lastName, Long id);
+    boolean existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(String firstName, String lastName, Long childId);
 
     Optional<Child> findByIdAndArchived(Long childId, boolean archived);
 

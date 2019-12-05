@@ -15,7 +15,7 @@ public interface CateringOptionRepository extends JpaRepository<CateringOption, 
 
     boolean existsByOptionNameIgnoreCase(String optionName);
 
-    boolean existsByOptionNameIgnoreCaseAndIdNot(String optionName, Long id);
+    boolean existsByOptionNameIgnoreCaseAndIdNot(String optionName, Long cateringOptionId);
 
     @Query(value = "SELECT co.* FROM assigned_option ao " +
             "INNER JOIN catering_option co ON co.id = ao.catering_option_id " +

@@ -20,8 +20,8 @@ public class DaycareGroupService {
     private final ChildService childService;
 
     @Transactional(readOnly = true)
-    public DaycareGroup findSingleGroupById(long id) {
-        return daycareGroupRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public DaycareGroup findSingleGroupById(long daycareGroupId) {
+        return daycareGroupRepository.findById(daycareGroupId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

@@ -14,11 +14,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "daily_attendance")
+@Table(name = "attendance_sheet")
 @Getter
 @Setter
 @NoArgsConstructor
-public class DailyAttendance {
+public class AttendanceSheet {
 
     @Id
     @Setter(AccessLevel.NONE)
@@ -31,20 +31,20 @@ public class DailyAttendance {
     private LocalDate date;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "daily_attendance_present_child",
-            joinColumns = @JoinColumn(name = "daily_attendance_id"),
+    @JoinTable(name = "attendance_sheet_present_child",
+            joinColumns = @JoinColumn(name = "attendance_sheet_id"),
             inverseJoinColumns = @JoinColumn(name = "child_id"))
     @JsonIgnoreProperties({"daycareGroup", "assignedOptions"})
     private Set<Child> presentChildren = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "daily_attendance_absent_child",
-            joinColumns = @JoinColumn(name = "daily_attendance_id"),
+    @JoinTable(name = "attendance_sheet_absent_child",
+            joinColumns = @JoinColumn(name = "attendance_sheet_id"),
             inverseJoinColumns = @JoinColumn(name = "child_id"))
     @JsonIgnoreProperties({"daycareGroup", "assignedOptions"})
     private Set<Child> absentChildren = new HashSet<>();
 
-    public DailyAttendance(LocalDate date) {
+    public AttendanceSheet(LocalDate date) {
         this.date = date;
     }
 }
