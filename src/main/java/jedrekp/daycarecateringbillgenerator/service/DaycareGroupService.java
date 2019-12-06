@@ -20,11 +20,6 @@ public class DaycareGroupService {
     private final ChildService childService;
 
     @Transactional(readOnly = true)
-    public DaycareGroup findSingleGroupById(long daycareGroupId) {
-        return daycareGroupRepository.findById(daycareGroupId).orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
     public DaycareGroup findSingleGroupByIdWithChildren(long daycareGroupId) {
         return daycareGroupRepository.findByIdWithChildren(daycareGroupId).orElseThrow(EntityNotFoundException::new);
     }
@@ -36,17 +31,13 @@ public class DaycareGroupService {
 
     @Transactional
     public DaycareGroup saveNewDaycareGroup(DaycareGroup daycareGroup) {
-        if (daycareGroupRepository.existsByGroupName(daycareGroup.getGroupName())) {
-            throw new EntityExistsException("Another daycare group with the same group name already exists");
-        }
+        checkGroupNameAvailability(daycareGroup.getGroupName(), null);
         return daycareGroupRepository.save(daycareGroup);
     }
 
     @Transactional
     public DaycareGroup editDaycareGroup(long daycareGroupId, DaycareGroup daycareGroup) {
-        if (daycareGroupRepository.existsByGroupNameAndIdNot(daycareGroup.getGroupName(), daycareGroupId)) {
-            throw new EntityExistsException("Another daycare group with the same group name already exists");
-        }
+        checkGroupNameAvailability(daycareGroup.getGroupName(), daycareGroupId);
         DaycareGroup daycareGroupToEdit = findSingleGroupById(daycareGroupId);
         daycareGroupToEdit.setGroupName(daycareGroup.getGroupName());
         return daycareGroupToEdit;
@@ -81,6 +72,22 @@ public class DaycareGroupService {
             child.setDaycareGroup(null);
         } else {
             throw new IllegalArgumentException("Child #" + child.getId() + " is not in this daycare group");
+        }
+    }
+
+    private DaycareGroup findSingleGroupById(long daycareGroupId) {
+        return daycareGroupRepository.findById(daycareGroupId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void checkGroupNameAvailability(String groupName, Long daycareGroupId) {
+        boolean nameTaken;
+        if (daycareGroupId == null) {
+            nameTaken = daycareGroupRepository.existsByGroupNameIgnoreCase(groupName);
+        } else {
+            nameTaken = daycareGroupRepository.existsByGroupNameIgnoreCaseAndIdNot(groupName, daycareGroupId);
+        }
+        if (nameTaken) {
+            throw new EntityExistsException("Another daycare group with the same name already exists");
         }
     }
 }

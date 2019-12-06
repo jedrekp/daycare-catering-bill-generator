@@ -125,6 +125,14 @@ public class ChildService {
         return childRepository.findByIdAndArchived(childId, false).orElseThrow(EntityNotFoundException::new);
     }
 
+    List<Child> findPresentChildrenByDateAndDaycareGroupId(LocalDate date, long daycareGroupId) {
+        return childRepository.findPresentChildrenByDateAndDaycareGroupId(date, daycareGroupId);
+    }
+
+    List<Child> findAbsentChildrenByDateAndDaycareGroupId(LocalDate date, long daycareGroupId) {
+        return childRepository.findAbsentChildrenByDateAndDaycareGroupId(date, daycareGroupId);
+    }
+
     private Child findSingleChildById(long childId) {
         return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
     }

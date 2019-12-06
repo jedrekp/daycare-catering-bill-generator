@@ -5,7 +5,6 @@ import jedrekp.daycarecateringbillgenerator.DTO.SingleChildMonthlyAttendanceDTO;
 import jedrekp.daycarecateringbillgenerator.entity.AttendanceSheet;
 import jedrekp.daycarecateringbillgenerator.entity.Child;
 import jedrekp.daycarecateringbillgenerator.repository.AttendanceSheetRepository;
-import jedrekp.daycarecateringbillgenerator.repository.ChildRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +24,6 @@ public class AttendanceService {
 
     private final ChildService childService;
 
-    private final ChildRepository childRepository;
-
     @Transactional
     public AttendanceSheet submitDailyAttendanceForGroup(DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
 
@@ -45,12 +42,12 @@ public class AttendanceService {
 
         DailyGroupAttendanceDTO dailyGroupAttendanceDTO = new DailyGroupAttendanceDTO(date);
 
-        dailyGroupAttendanceDTO.setPresentChildrenIds(childRepository.findPresentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
+        dailyGroupAttendanceDTO.setPresentChildrenIds(childService.findPresentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
                 .stream()
                 .map(Child::getId)
                 .collect(Collectors.toSet()));
 
-        dailyGroupAttendanceDTO.setAbsentChildrenIds(childRepository.findAbsentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
+        dailyGroupAttendanceDTO.setAbsentChildrenIds(childService.findAbsentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
                 .stream()
                 .map(Child::getId)
                 .collect(Collectors.toSet()));
