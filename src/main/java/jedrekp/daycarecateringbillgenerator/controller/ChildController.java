@@ -65,6 +65,7 @@ public class ChildController {
     }
 
     @PostMapping("/{childId}/assignedOptions")
+    @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<AssignedOption> assignNewCateringOptionToChild(
             @PathVariable long childId, @RequestBody @Valid AssignedOptionDTO assignedOptionDTO) {
         return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
