@@ -22,9 +22,17 @@ a {
     color: white;
 }
 
+.text-purple {
+    color: #B5446E;
+}
+
 .bg-darkblue {
     background-color: #484D6D;
     color: white;
+}
+
+.text-darkblue {
+    color: #484D6D;
 }
 
 .heading-darkblue {
@@ -37,14 +45,13 @@ a {
     font-family: 'Montserrat', sans-serif;
 }
 
-.border-purple{
-border: 2px solid #B5446E;
+.border-purple {
+    border: 2px solid #B5446E;
 }
 
 .border-darkblue {
     border: 2px solid #484D6D;
 }
-
 
 .btn-outline-darkblue {
     color: #484D6D;
@@ -85,21 +92,21 @@ border: 2px solid #B5446E;
 
 .btn-darkblue {
     color: #fff;
-    background-color:#484D6D;
+    background-color: #484D6D;
     font-weight: bold;
     letter-spacing: 0.05em;
     border-radius: 0;
-  }
-  
-  .btn-darkblue:hover:not([disabled]), .btn-darkblue:active:not([disabled]), .btn-darkblue:focus:not([disabled]){
+}
+
+.btn-darkblue:hover:not([disabled]), .btn-darkblue:active:not([disabled]), .btn-darkblue:focus:not([disabled]) {
     background: #262B4D;
     color: white;
     box-shadow: none;
-  }
+}
 
 .form-control:focus, .custom-select:focus {
-    border-color:  #B5446E;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px  #B5446E;
+    border-color: #B5446E;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #B5446E;
 }
 
 .modal-content {
