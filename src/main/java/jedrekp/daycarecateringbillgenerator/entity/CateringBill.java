@@ -37,6 +37,10 @@ public class CateringBill {
     @Convert(converter = YearAttributeConverter.class)
     private Year year;
 
+    @Column(name = "correction_flag")
+    @NotNull
+    private boolean correction;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
     @JsonIgnore

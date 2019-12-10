@@ -12,7 +12,8 @@ public class AssignedOptionDTO {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate effectiveDate;
-
+    @NotNull
+    private long childId;
     @NotNull
     private Long cateringOptionId;
 

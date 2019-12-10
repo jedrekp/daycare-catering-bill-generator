@@ -1,8 +1,10 @@
 package jedrekp.daycarecateringbillgenerator.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
 import jedrekp.daycarecateringbillgenerator.entity.Child;
 import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
+import jedrekp.daycarecateringbillgenerator.service.CateringBillService;
 import jedrekp.daycarecateringbillgenerator.service.ChildService;
 import jedrekp.daycarecateringbillgenerator.service.DaycareGroupService;
 import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
@@ -11,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Month;
+import java.time.Year;
 import java.util.Collection;
 
 @RestController
@@ -22,6 +26,8 @@ public class DaycareGroupController {
     private final DaycareGroupService daycareGroupService;
 
     private final ChildService childService;
+
+    private final CateringBillService cateringBillService;
 
     @GetMapping("/{daycareGroupId}")
     public ResponseEntity<DaycareGroup> getSingleDaycareGroup(@PathVariable long daycareGroupId) {
@@ -69,5 +75,13 @@ public class DaycareGroupController {
     public ResponseEntity removeChildFromGroup(@PathVariable long daycareGroupId, @PathVariable long childId) {
         daycareGroupService.removeChildFromDaycareGroup(daycareGroupId, childId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{daycareGroupId}/children/cateringBills", params = {"month", "year"})
+    public ResponseEntity<Collection<CateringBillDTO>> getBillsForSpecificMonthForAllChildrenInGroup(
+            @PathVariable long daycareGroupId, @RequestParam Month month, @RequestParam Year year) {
+        return new ResponseEntity<>(
+                cateringBillService.findCateringBillsByMonthAndDaycareGroupId(daycareGroupId, month, year), HttpStatus.OK);
+
     }
 }

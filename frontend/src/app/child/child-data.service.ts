@@ -5,6 +5,7 @@ import { Child } from './child';
 
 class AssignedOptionDTO {
   constructor(
+    private childId: number,
     private effectiveDate: string,
     private cateringOptionId: number) { }
 }
@@ -41,7 +42,7 @@ export class ChildDataService {
 
   assignNewOptionToChild(childId: number, assignedOptionId: number, effectiveDate: string) {
     return this.httpClient.post<any>(`http://localhost:8081/children/${childId}/assignedOptions`,
-      new AssignedOptionDTO(effectiveDate, assignedOptionId))
+      new AssignedOptionDTO(childId, effectiveDate, assignedOptionId))
   }
 
   removeAssignedOptionFromChild(childId: number, assignedOptionId: number) {

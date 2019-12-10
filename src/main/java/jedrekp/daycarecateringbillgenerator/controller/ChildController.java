@@ -85,8 +85,8 @@ public class ChildController {
     }
 
     @PostMapping("/{childId}/cateringBills")
-    public ResponseEntity<CateringBill> addNewCateringBillToChild(
+    public ResponseEntity<CateringBill> addNewCateringBillOrBillCorrectionToChild(
             @PathVariable long childId, @RequestBody @Valid CateringBillDTO cateringBillDTO) {
-        return new ResponseEntity<>(cateringBillService.saveNewCateringBill(childId, cateringBillDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(cateringBillService.saveOrEditCateringBill(childId, cateringBillDTO), HttpStatus.CREATED);
     }
 }

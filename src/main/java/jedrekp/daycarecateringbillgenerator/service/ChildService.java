@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -133,6 +134,10 @@ public class ChildService {
         return childRepository.findAbsentChildrenByDateAndDaycareGroupId(date, daycareGroupId);
     }
 
+    String getFullNameOfChild(Child child) {
+        return MessageFormat.format("{0}, {1}", child.getFirstName(), child.getLastName());
+    }
+
     private Child findSingleChildById(long childId) {
         return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
     }
@@ -175,7 +180,7 @@ public class ChildService {
     }
 
     private void getAllAdjacentCombinations(Set<String> searchSubPhrases, String searchPhrase) {
-        while (!searchSubPhrases.contains(searchPhrase) && searchPhrase.contains(" ")) {
+        if (!searchSubPhrases.contains(searchPhrase) && searchPhrase.contains(" ")) {
             searchSubPhrases.add(searchPhrase);
             getAllAdjacentCombinations(
                     searchSubPhrases, searchPhrase.substring(0, searchPhrase.lastIndexOf(" ")));

@@ -40,7 +40,7 @@ public class AttendanceService {
     @Transactional(readOnly = true)
     public DailyGroupAttendanceDTO getDailyAttendanceForDaycareGroup(long daycareGroupId, LocalDate date) {
 
-        DailyGroupAttendanceDTO dailyGroupAttendanceDTO = new DailyGroupAttendanceDTO(date);
+        DailyGroupAttendanceDTO dailyGroupAttendanceDTO = new DailyGroupAttendanceDTO(daycareGroupId, date);
 
         dailyGroupAttendanceDTO.setPresentChildrenIds(childService.findPresentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
                 .stream()
@@ -76,7 +76,7 @@ public class AttendanceService {
     @Transactional(readOnly = true)
     public SingleChildMonthlyAttendanceDTO getMonthlyAttendanceForChild(long childId, Month month, Year year) {
 
-        SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO();
+        SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO(childId);
 
         attendanceDTO.setDaysWhenPresent(attendanceSheetRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
                 .stream()
