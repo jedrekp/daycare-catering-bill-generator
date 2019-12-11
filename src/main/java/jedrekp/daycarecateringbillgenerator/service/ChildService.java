@@ -1,6 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.service;
 
-import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.request.AssignOptionToChildRequest;
 import jedrekp.daycarecateringbillgenerator.entity.AssignedOption;
 import jedrekp.daycarecateringbillgenerator.entity.CateringOption;
 import jedrekp.daycarecateringbillgenerator.entity.Child;
@@ -98,17 +98,17 @@ public class ChildService {
     }
 
     @Transactional
-    public AssignedOption assignCateringOption(long childId, AssignedOptionDTO assignedOptionDTO) {
-        checkIfOptionCanBeAssignedWithGivenEffectiveDate(assignedOptionDTO.getEffectiveDate(), childId);
+    public AssignedOption assignCateringOption(long childId, AssignOptionToChildRequest assignOptionRequest) {
+        checkIfOptionCanBeAssignedWithGivenEffectiveDate(assignOptionRequest.getEffectiveDate(), childId);
 
-        CateringOption cateringOption = cateringOptionService.findById(assignedOptionDTO.getCateringOptionId());
+        CateringOption cateringOption = cateringOptionService.findById(assignOptionRequest.getCateringOptionId());
         if (cateringOption.isDisabled()) {
             throw new IllegalArgumentException("Catering option#" + cateringOption.getId() + " is disabled.\n" +
                     "It can no longer be assigned");
         }
 
         Child child = findSingleNotArchivedChildByIdWithAssignedOptions(childId);
-        AssignedOption assignedOption = new AssignedOption(assignedOptionDTO.getEffectiveDate(), child, cateringOption);
+        AssignedOption assignedOption = new AssignedOption(assignOptionRequest.getEffectiveDate(), child, cateringOption);
         child.getAssignedOptions().add(assignedOption);
         return assignedOption;
     }

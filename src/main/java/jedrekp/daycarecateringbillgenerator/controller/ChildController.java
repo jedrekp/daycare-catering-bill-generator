@@ -1,8 +1,8 @@
 package jedrekp.daycarecateringbillgenerator.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.daycarecateringbillgenerator.DTO.AssignedOptionDTO;
-import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.request.AssignOptionToChildRequest;
+import jedrekp.daycarecateringbillgenerator.DTO.request.CreateCateringBillRequest;
 import jedrekp.daycarecateringbillgenerator.entity.AssignedOption;
 import jedrekp.daycarecateringbillgenerator.entity.CateringBill;
 import jedrekp.daycarecateringbillgenerator.entity.Child;
@@ -67,8 +67,8 @@ public class ChildController {
     @PostMapping("/{childId}/assignedOptions")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<AssignedOption> assignNewCateringOptionToChild(
-            @PathVariable long childId, @RequestBody @Valid AssignedOptionDTO assignedOptionDTO) {
-        return new ResponseEntity<>(childService.assignCateringOption(childId, assignedOptionDTO), HttpStatus.OK);
+            @PathVariable long childId, @RequestBody @Valid AssignOptionToChildRequest assignOptionToChildRequest) {
+        return new ResponseEntity<>(childService.assignCateringOption(childId, assignOptionToChildRequest), HttpStatus.OK);
     }
 
     @DeleteMapping("/{childId}/assignedOptions/{assignedOptionId}")
@@ -85,8 +85,8 @@ public class ChildController {
     }
 
     @PostMapping("/{childId}/cateringBills")
-    public ResponseEntity<CateringBill> addNewCateringBillOrBillCorrectionToChild(
-            @PathVariable long childId, @RequestBody @Valid CateringBillDTO cateringBillDTO) {
-        return new ResponseEntity<>(cateringBillService.saveOrEditCateringBill(childId, cateringBillDTO), HttpStatus.CREATED);
+    public ResponseEntity<CateringBill> addNewCateringBillToChild(
+            @PathVariable long childId, @RequestBody @Valid CreateCateringBillRequest cateringBillRequest) {
+        return new ResponseEntity<>(cateringBillService.addNewCateringBillToChild(childId, cateringBillRequest), HttpStatus.CREATED);
     }
 }

@@ -1,19 +1,16 @@
-package jedrekp.daycarecateringbillgenerator.DTO;
+package jedrekp.daycarecateringbillgenerator.DTO.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
-public class DailyGroupAttendanceDTO {
+public class DailyGroupAttendanceResponse {
 
-    @NotNull
+
     private long daycareGroupId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -23,7 +20,8 @@ public class DailyGroupAttendanceDTO {
 
     private Set<Long> absentChildrenIds = new HashSet<>();
 
-    public DailyGroupAttendanceDTO(long daycareGroupId, LocalDate date) {
+    public DailyGroupAttendanceResponse(long daycareGroupId, LocalDate date) {
+        this.daycareGroupId = daycareGroupId;
         this.date = date;
     }
 }

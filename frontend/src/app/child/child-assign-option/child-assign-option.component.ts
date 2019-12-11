@@ -43,7 +43,7 @@ export class ChildAssignOptionComponent implements OnInit {
   }
 
   retrieveCateringOptions() {
-    this.cateringOptionDataService.retriveCateringOptionsByDisabled(false).subscribe(
+    this.cateringOptionDataService.retreiveCateringOptionsByDisabled(false).subscribe(
       cateringOptions => {
         this.cateringOptions = cateringOptions
         if (cateringOptions.length > 0) {

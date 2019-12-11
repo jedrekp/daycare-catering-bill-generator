@@ -1,7 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.response.CateringBillResponse;
 import jedrekp.daycarecateringbillgenerator.entity.Child;
 import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
 import jedrekp.daycarecateringbillgenerator.service.CateringBillService;
@@ -78,10 +78,10 @@ public class DaycareGroupController {
     }
 
     @GetMapping(value = "/{daycareGroupId}/children/cateringBills", params = {"month", "year"})
-    public ResponseEntity<Collection<CateringBillDTO>> getBillsForSpecificMonthForAllChildrenInGroup(
+    public ResponseEntity<Collection<CateringBillResponse>> getBillsForSpecificMonthForAllChildrenInGroup(
             @PathVariable long daycareGroupId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(
-                cateringBillService.findCateringBillsByMonthAndDaycareGroupId(daycareGroupId, month, year), HttpStatus.OK);
+                cateringBillService.getCateringBillsByMonthAndDaycareGroupId(daycareGroupId, month, year), HttpStatus.OK);
 
     }
 }

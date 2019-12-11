@@ -31,11 +31,11 @@ export class CateringOptionsListComponent implements OnInit {
   }
 
   retrieveCateringOptions() {
-    this.cateringOptionDataService.retriveCateringOptionsByDisabled(false).subscribe(
+    this.cateringOptionDataService.retreiveCateringOptionsByDisabled(false).subscribe(
       cateringOptions => {
         this.activeCateringOptions = cateringOptions
       })
-    this.cateringOptionDataService.retriveCateringOptionsByDisabled(true).subscribe(
+    this.cateringOptionDataService.retreiveCateringOptionsByDisabled(true).subscribe(
       cateringOptions => {
         this.disabledCateringOptions = cateringOptions
       })

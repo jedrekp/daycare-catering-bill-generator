@@ -3,9 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Child } from './child';
 
 
-class AssignedOptionDTO {
+class AssignOptionToChildDTO {
   constructor(
-    private childId: number,
     private effectiveDate: string,
     private cateringOptionId: number) { }
 }
@@ -42,7 +41,7 @@ export class ChildDataService {
 
   assignNewOptionToChild(childId: number, assignedOptionId: number, effectiveDate: string) {
     return this.httpClient.post<any>(`http://localhost:8081/children/${childId}/assignedOptions`,
-      new AssignedOptionDTO(childId, effectiveDate, assignedOptionId))
+      new AssignOptionToChildDTO(effectiveDate, assignedOptionId))
   }
 
   removeAssignedOptionFromChild(childId: number, assignedOptionId: number) {

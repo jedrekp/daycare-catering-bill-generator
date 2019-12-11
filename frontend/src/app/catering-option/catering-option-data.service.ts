@@ -13,7 +13,7 @@ export class CateringOptionDataService {
     return this.httpClient.get<CateringOption[]>('http://localhost:8081/cateringOptions')
   }
 
-  retriveCateringOptionsByDisabled(disabled: boolean) {
+  retreiveCateringOptionsByDisabled(disabled: boolean) {
     let params = new HttpParams().set('disabled', disabled.toString())
     return this.httpClient.get<CateringOption[]>('http://localhost:8081/cateringOptions', { params: params })
   }

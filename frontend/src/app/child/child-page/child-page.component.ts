@@ -171,8 +171,8 @@ export class ChildPageComponent implements OnInit {
   removeAssignedOption(assignedOption: AssignedOption) {
     this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
       `You are about to remove catering option #${assignedOption.cateringOption.id}(${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
-      This change may affect catering bills generated in future, for months when this option is in effect.\n
-                It will not affect catering bills that have already been generated.`)
+      If you want to select a new catering option for this child, add another option with new effective date instead.\n.
+      Proceed only if this option was mistakenly assigned and you need to correct an error.\n`)
     this.modalRef.content.onClose.subscribe(
       onClose => {
         if (onClose) {
@@ -225,9 +225,9 @@ export class ChildPageComponent implements OnInit {
 
   checkAttendanceStatus(date: Date) {
     let dateAsString = this.datePipe.transform(date, 'yyyy-MM-dd')
-    if (this.monthlyChildAttendance.daysWhenPresent.indexOf(dateAsString) > -1) {
+    if (this.monthlyChildAttendance.datesWhenPresent.indexOf(dateAsString) > -1) {
       return 1
-    } else if (this.monthlyChildAttendance.daysWhenAbsent.indexOf(dateAsString) > -1) {
+    } else if (this.monthlyChildAttendance.datesWhenAbsent.indexOf(dateAsString) > -1) {
       return 0
     } else {
       return -1
@@ -237,17 +237,17 @@ export class ChildPageComponent implements OnInit {
   adjustDailyAttendance(date: Date, optionValue: number) {
     let dateAsString = this.datePipe.transform(date, 'yyyy-MM-dd')
     if (optionValue == 1) {
-      let absentIndex = this.monthlyChildAttendance.daysWhenAbsent.indexOf(dateAsString)
+      let absentIndex = this.monthlyChildAttendance.datesWhenAbsent.indexOf(dateAsString)
       if (absentIndex > -1) {
-        this.monthlyChildAttendance.daysWhenAbsent.splice(absentIndex, 1)
+        this.monthlyChildAttendance.datesWhenAbsent.splice(absentIndex, 1)
       }
-      this.monthlyChildAttendance.daysWhenPresent.push(dateAsString)
+      this.monthlyChildAttendance.datesWhenPresent.push(dateAsString)
     } else if (optionValue == 0) {
-      let presentIndex = this.monthlyChildAttendance.daysWhenPresent.indexOf(dateAsString)
+      let presentIndex = this.monthlyChildAttendance.datesWhenPresent.indexOf(dateAsString)
       if (presentIndex > -1) {
-        this.monthlyChildAttendance.daysWhenPresent.splice(presentIndex, 1)
+        this.monthlyChildAttendance.datesWhenPresent.splice(presentIndex, 1)
       }
-      this.monthlyChildAttendance.daysWhenAbsent.push(dateAsString)
+      this.monthlyChildAttendance.datesWhenAbsent.push(dateAsString)
     }
   }
 

@@ -1,6 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.controller;
 
-import jedrekp.daycarecateringbillgenerator.DTO.CateringBillDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.response.CateringBillResponse;
 import jedrekp.daycarecateringbillgenerator.service.CateringBillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class CateringBillOperationsController {
     private final CateringBillService cateringBillService;
 
     @GetMapping(value = "/display-preview", params = {"childId", "month", "year"})
-    public ResponseEntity<CateringBillDTO> getCateringBillPreview(
+    public ResponseEntity<CateringBillResponse> getCateringBillPreview(
             @RequestParam long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(
                 cateringBillService.generateCateringBillPreview(childId, month, year), HttpStatus.OK);

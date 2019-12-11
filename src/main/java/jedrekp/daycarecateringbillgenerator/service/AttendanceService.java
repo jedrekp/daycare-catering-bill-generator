@@ -1,7 +1,9 @@
 package jedrekp.daycarecateringbillgenerator.service;
 
-import jedrekp.daycarecateringbillgenerator.DTO.DailyGroupAttendanceDTO;
-import jedrekp.daycarecateringbillgenerator.DTO.SingleChildMonthlyAttendanceDTO;
+import jedrekp.daycarecateringbillgenerator.DTO.request.TrackDailyGroupAttendanceRequest;
+import jedrekp.daycarecateringbillgenerator.DTO.request.UpdateMonthlyAttendanceForChildRequest;
+import jedrekp.daycarecateringbillgenerator.DTO.response.ChildMonthlyAttendanceResponse;
+import jedrekp.daycarecateringbillgenerator.DTO.response.DailyGroupAttendanceResponse;
 import jedrekp.daycarecateringbillgenerator.entity.AttendanceSheet;
 import jedrekp.daycarecateringbillgenerator.entity.Child;
 import jedrekp.daycarecateringbillgenerator.repository.AttendanceSheetRepository;
@@ -25,70 +27,70 @@ public class AttendanceService {
     private final ChildService childService;
 
     @Transactional
-    public AttendanceSheet submitDailyAttendanceForGroup(DailyGroupAttendanceDTO dailyGroupAttendanceDTO) {
+    public AttendanceSheet submitDailyAttendanceForGroup(TrackDailyGroupAttendanceRequest attendanceRequest) {
 
-        if (!Collections.disjoint(dailyGroupAttendanceDTO.getPresentChildrenIds(), dailyGroupAttendanceDTO.getAbsentChildrenIds())) {
+        if (!Collections.disjoint(attendanceRequest.getIdsOfChildrenToMarkAsPresent(), attendanceRequest.getIdsOfChildrenToMarkAsAbsent())) {
             throw new IllegalArgumentException("One or more children are marked as both present and absent.");
         }
 
-        AttendanceSheet attendanceSheet = findByDateOrElseCreateNew(dailyGroupAttendanceDTO.getDate());
-        addPresentChildrenToAttendanceSheet(attendanceSheet, dailyGroupAttendanceDTO.getPresentChildrenIds());
-        addAbsentChildrenToAttendanceSheet(attendanceSheet, dailyGroupAttendanceDTO.getAbsentChildrenIds());
+        AttendanceSheet attendanceSheet = findByDateOrElseCreateNew(attendanceRequest.getDate());
+        addPresentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsPresent());
+        addAbsentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsAbsent());
         return attendanceSheetRepository.save(attendanceSheet);
     }
 
     @Transactional(readOnly = true)
-    public DailyGroupAttendanceDTO getDailyAttendanceForDaycareGroup(long daycareGroupId, LocalDate date) {
+    public DailyGroupAttendanceResponse getDailyAttendanceForDaycareGroup(long daycareGroupId, LocalDate date) {
 
-        DailyGroupAttendanceDTO dailyGroupAttendanceDTO = new DailyGroupAttendanceDTO(daycareGroupId, date);
+        DailyGroupAttendanceResponse dailyGroupAttendanceResponse = new DailyGroupAttendanceResponse(daycareGroupId, date);
 
-        dailyGroupAttendanceDTO.setPresentChildrenIds(childService.findPresentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
+        dailyGroupAttendanceResponse.setPresentChildrenIds(childService.findPresentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
                 .stream()
                 .map(Child::getId)
                 .collect(Collectors.toSet()));
 
-        dailyGroupAttendanceDTO.setAbsentChildrenIds(childService.findAbsentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
+        dailyGroupAttendanceResponse.setAbsentChildrenIds(childService.findAbsentChildrenByDateAndDaycareGroupId(date, daycareGroupId)
                 .stream()
                 .map(Child::getId)
                 .collect(Collectors.toSet()));
 
-        return dailyGroupAttendanceDTO;
+        return dailyGroupAttendanceResponse;
     }
 
     @Transactional
     public List<AttendanceSheet> submitMonthlyAttendanceChangesForChild(
-            long childId, Month month, Year year, SingleChildMonthlyAttendanceDTO monthlyAttendanceDTO) {
+            long childId, Month month, Year year, UpdateMonthlyAttendanceForChildRequest request) {
 
-        if (!Collections.disjoint(monthlyAttendanceDTO.getDaysWhenPresent(), monthlyAttendanceDTO.getDaysWhenAbsent())) {
+        if (!Collections.disjoint(request.getDatesToMarkAsPresent(), request.getDatesToMarkAsAbsent())) {
             throw new IllegalArgumentException("Attendance update consists of dates for which child is marked as both present and absent");
         }
-        verifyIfAllDatesAreWithinTheSelectedMonth(monthlyAttendanceDTO, month, year);
+        verifyIfAllDatesAreWithinTheSelectedMonth(request, month, year);
 
         Child child = childService.findSingleNotArchivedChildById(childId);
         List<AttendanceSheet> attendanceSheets = new ArrayList<>();
-        markSingleChildAsPresentForGivenDates(monthlyAttendanceDTO.getDaysWhenPresent(), attendanceSheets, child);
-        markSingleChildAsAbsentForGivenDates(monthlyAttendanceDTO.getDaysWhenAbsent(), attendanceSheets, child);
+        markSingleChildAsPresentForGivenDates(request.getDatesToMarkAsPresent(), attendanceSheets, child);
+        markSingleChildAsAbsentForGivenDates(request.getDatesToMarkAsAbsent(), attendanceSheets, child);
 
         attendanceSheets.sort(Comparator.comparing(AttendanceSheet::getDate));
         return attendanceSheets;
     }
 
     @Transactional(readOnly = true)
-    public SingleChildMonthlyAttendanceDTO getMonthlyAttendanceForChild(long childId, Month month, Year year) {
+    public ChildMonthlyAttendanceResponse getMonthlyAttendanceForChild(long childId, Month month, Year year) {
 
-        SingleChildMonthlyAttendanceDTO attendanceDTO = new SingleChildMonthlyAttendanceDTO(childId);
+        ChildMonthlyAttendanceResponse attendanceResponse = new ChildMonthlyAttendanceResponse(childId);
 
-        attendanceDTO.setDaysWhenPresent(attendanceSheetRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
+        attendanceResponse.setDatesWhenPresent(attendanceSheetRepository.findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
                 .stream()
                 .map(AttendanceSheet::getDate)
                 .collect(Collectors.toSet()));
 
-        attendanceDTO.setDaysWhenAbsent(attendanceSheetRepository.findByAbsentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
+        attendanceResponse.setDatesWhenAbsent(attendanceSheetRepository.findByAbsentChildIdForSpecificMonth(childId, month.getValue(), year.getValue())
                 .stream()
                 .map(AttendanceSheet::getDate)
                 .collect(Collectors.toSet()));
 
-        return attendanceDTO;
+        return attendanceResponse;
     }
 
     private AttendanceSheet findByDateOrElseCreateNew(LocalDate date) {
@@ -124,8 +126,8 @@ public class AttendanceService {
     }
 
     private void markSingleChildAsPresentForGivenDates(
-            Set<LocalDate> daysWhenPresent, List<AttendanceSheet> attendanceSheets, Child child) {
-        for (LocalDate date : daysWhenPresent) {
+            Set<LocalDate> datesToMarkAsPresent, List<AttendanceSheet> attendanceSheets, Child child) {
+        for (LocalDate date : datesToMarkAsPresent) {
             attendanceSheetRepository.findByDateWithChildren(date).ifPresentOrElse(attendanceSheet ->
                     {
                         attendanceSheet.getPresentChildren().add(child);
@@ -141,8 +143,8 @@ public class AttendanceService {
     }
 
     private void markSingleChildAsAbsentForGivenDates(
-            Set<LocalDate> daysWhenAbsent, List<AttendanceSheet> attendanceSheets, Child child) {
-        for (LocalDate date : daysWhenAbsent) {
+            Set<LocalDate> datesToMarkAsAbsent, List<AttendanceSheet> attendanceSheets, Child child) {
+        for (LocalDate date : datesToMarkAsAbsent) {
             attendanceSheetRepository.findByDateWithChildren(date).ifPresentOrElse(attendanceSheet ->
                     {
                         attendanceSheet.getAbsentChildren().add(child);
@@ -157,8 +159,8 @@ public class AttendanceService {
         }
     }
 
-    private void verifyIfAllDatesAreWithinTheSelectedMonth(SingleChildMonthlyAttendanceDTO attendanceDTO, Month month, Year year) {
-        if (Stream.of(attendanceDTO.getDaysWhenPresent(), attendanceDTO.getDaysWhenAbsent())
+    private void verifyIfAllDatesAreWithinTheSelectedMonth(UpdateMonthlyAttendanceForChildRequest request, Month month, Year year) {
+        if (Stream.of(request.getDatesToMarkAsPresent(), request.getDatesToMarkAsAbsent())
                 .flatMap(Collection::stream)
                 .anyMatch(date -> date.getMonth() != month || date.getYear() != year.getValue())) {
             throw new IllegalArgumentException("Some of the dates are not within the selected month.");

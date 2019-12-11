@@ -3,6 +3,21 @@ import { DailyGroupAttendance } from './daily-group-attendance';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MonthlyChildAttendance } from './monthly-child-attandance';
 
+class TrackDailyGroupAttendanceDTO {
+  constructor(
+    private date: String,
+    private idsOfChildrenToMarkAsPresent: number[],
+    private idsOfChildrenToMarkAsAbsent: number[]
+  ) { }
+}
+
+class UpdateMonthlyAttendanceForChildDTO {
+  constructor(
+    private datesToMarkAsPresent: string[],
+    private datesToMarkAsAbsent: string[]
+  ) { }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,9 +35,10 @@ export class AttendanceDataService {
   }
 
   submitDailyGroupAttendance(daycareGroupId: number, attendance: DailyGroupAttendance) {
+    let attendanceDTO = new TrackDailyGroupAttendanceDTO(attendance.date.toString(), attendance.presentChildrenIds, attendance.absentChildrenIds)
     let params = new HttpParams()
       .set('daycareGroupId', daycareGroupId.toString())
-    return this.httpClient.post<any>('http://localhost:8081/attendanceSheets', attendance, { params: params })
+    return this.httpClient.put<any>('http://localhost:8081/attendanceSheets', attendanceDTO, { params: params })
   }
 
   retrieveMonthlyAttendanceForChild(childId: number, month: string, year: number) {
@@ -34,11 +50,12 @@ export class AttendanceDataService {
   }
 
   submitMonthlyAttendanceForChild(childId: number, month: string, year: number, attendance: MonthlyChildAttendance) {
+    let attendanceDTO = new UpdateMonthlyAttendanceForChildDTO(attendance.datesWhenPresent, attendance.datesWhenAbsent)
     let params = new HttpParams()
       .set('childId', childId.toString())
       .set('month', month)
       .set('year', year.toString())
-    return this.httpClient.put<any>(`http://localhost:8081/attendanceSheets`, attendance, { params: params })
+    return this.httpClient.put<any>(`http://localhost:8081/attendanceSheets`, attendanceDTO, { params: params })
   }
 
 }
