@@ -7,10 +7,12 @@ import jedrekp.daycarecateringbillgenerator.entity.*;
 import jedrekp.daycarecateringbillgenerator.repository.AttendanceSheetRepository;
 import jedrekp.daycarecateringbillgenerator.repository.CateringBillRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -34,6 +36,8 @@ public class CateringBillService {
     private final CateringOptionService cateringOptionService;
 
     private final EmailService emailService;
+
+    private final EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public Set<CateringBillResponse> getCateringBillsByMonthAndDaycareGroupId(long daycareGroupId, Month month, Year year) {
@@ -114,8 +118,8 @@ public class CateringBillService {
 
     private CateringBill mapRequestToCateringBill(CreateCateringBillRequest cateringBillRequest) {
         CateringBill cateringBill = new CateringBill(cateringBillRequest.getMonth(), cateringBillRequest.getYear());
-        cateringBill.getDailyCateringOrders().forEach(dailyCateringOrder -> dailyCateringOrder.setCateringBill(cateringBill));
-        cateringBill.setDailyCateringOrders(cateringBill.getDailyCateringOrders());
+        cateringBillRequest.getDailyCateringOrders().forEach(dailyCateringOrder -> dailyCateringOrder.setCateringBill(cateringBill));
+        cateringBill.setDailyCateringOrders(cateringBillRequest.getDailyCateringOrders());
         return cateringBill;
     }
 
@@ -132,7 +136,8 @@ public class CateringBillService {
     private void deletePreviousVersionOfCateringBillAndMarkNewVersionAsCorrection(
             CateringBill previousCateringBill, CateringBill newCateringBill, Child child) {
         child.getCateringBills().remove(previousCateringBill);
-        cateringBillRepository.deleteById(previousCateringBill.getId());
+        previousCateringBill.setChild(null);
+        entityManager.unwrap(Session.class).flush();
         newCateringBill.setCorrection(true);
     }
 

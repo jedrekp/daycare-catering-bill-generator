@@ -7,8 +7,8 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.Month;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class CateringBillResponse {
@@ -21,7 +21,7 @@ public class CateringBillResponse {
     private BigDecimal totalDue;
 
     @JsonIgnoreProperties("cateringBill")
-    private List<DailyCateringOrder> dailyCateringOrders = new ArrayList<>();
+    private Set<DailyCateringOrder> dailyCateringOrders = new HashSet<>();
 
     public CateringBillResponse(long childId, Month month, Year year) {
         this.childId = childId;

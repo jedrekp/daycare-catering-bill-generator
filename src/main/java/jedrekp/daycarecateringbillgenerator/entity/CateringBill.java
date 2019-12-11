@@ -1,6 +1,5 @@
 package jedrekp.daycarecateringbillgenerator.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jedrekp.daycarecateringbillgenerator.utility.YearAttributeConverter;
 import lombok.AccessLevel;
@@ -12,8 +11,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.Month;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "catering_bill",
@@ -43,13 +42,13 @@ public class CateringBill {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"daycareGroup", "assignedOptions", "cateringBills",})
     private Child child;
 
     @OneToMany(mappedBy = "cateringBill", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JsonIgnoreProperties("cateringBill")
     @OrderBy(value = "orderDate ASC")
-    private List<DailyCateringOrder> dailyCateringOrders = new ArrayList<>();
+    private Set<DailyCateringOrder> dailyCateringOrders = new HashSet<>();
 
     public CateringBill(Month month, Year year) {
         this.month = month;

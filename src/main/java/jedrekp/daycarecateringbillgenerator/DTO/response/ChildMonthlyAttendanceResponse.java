@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
 public class ChildMonthlyAttendanceResponse {
 
     private long childId;
