@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DaycareGroup } from 'src/app/daycare-group/daycare-group';
 import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-data.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-generate-catering-bills',
@@ -10,12 +11,14 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class GenerateCateringBillsComponent implements OnInit {
 
+  private minDate: Date
   private selectMonthAndGroupForm: FormGroup
   private daycareGroups: DaycareGroup[]
   private selectedDaycareGroup: DaycareGroup
-  private minDate: Date
+  private selectedMonth: string
 
   constructor(
+    private datePipe: DatePipe,
     private daycareGroupDataService: DaycareGroupDataService
   ) { }
 
@@ -48,6 +51,12 @@ export class GenerateCateringBillsComponent implements OnInit {
     )
   }
 
-  onSelect() { }
+  onSelect() {
+    this.selectedMonth = this.datePipe.transform(this.selectMonthAndGroupForm.get('firstDayOfSelectedMonth').value, 'MMMM yyyy')
+    this.daycareGroupDataService.retrieveSingleDaycareGroup(this.selectMonthAndGroupForm.get('daycareGroup').value.id).subscribe(
+      daycareGroup => {
+        this.selectedDaycareGroup = daycareGroup
+      })
+  }
 
 }

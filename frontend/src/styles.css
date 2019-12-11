@@ -38,11 +38,22 @@ a {
 .heading-darkblue {
     color: #484D6D;
     font-weight: bold;
-    font-family: 'Raleway', sans-serif;
     letter-spacing: 2px;
     text-align: center;
     display: inline-block;
     font-family: 'Montserrat', sans-serif;
+}
+
+.subheader-purple {
+    color: #B5446E;
+    font-weight: bold;
+    letter-spacing: 0px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.subheader-underline {
+    border-bottom: 2px solid #B5446E;
 }
 
 .border-purple {
@@ -127,8 +138,4 @@ a {
 
 .modal-header {
     border-radius: 0px;
-}
-
-.subheader-underline {
-    border-bottom: 2px solid #B5446E;
 }

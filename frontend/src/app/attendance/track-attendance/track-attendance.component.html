@@ -43,12 +43,13 @@
 
         <div *ngIf="selectedDaycareGroup && dailyAttendance" class="card-body pt-3">
 
-            <h5 class="text-left text-purple font-weight-bold pl-3">Selected group: {{selectedDaycareGroup.groupName}}
+            <h5 class="subheader-purple">Selected group: {{selectedDaycareGroup.groupName}}
             </h5>
-            <h5 class="text-left text-purple font-weight-bold pl-3">{{dailyAttendance.date | date:'fullDate'}}</h5>
+            <h5 class="subheader-purple">{{dailyAttendance.date | date:'fullDate'}}</h5>
+            <div class="subheader-underline mb-2"></div>
 
             <div class="table-responsive">
-                <table class="table table-hover table-borderless text-center">
+                <table class="table table-hover table-borderless table-striped text-center">
 
                     <thead>
                         <tr>
@@ -91,7 +92,7 @@
         </div>
 
         <div *ngIf="!selectedDaycareGroup || !dailyAttendance" class="card-body pt-4">
-            Please select date and daycare group for which you wish to track attendance.
+            Please select date and daycare group to track attendance for it's members.
         </div>
 
         <div class="card-footer">

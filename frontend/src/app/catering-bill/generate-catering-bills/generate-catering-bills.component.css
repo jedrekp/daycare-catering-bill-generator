@@ -4,26 +4,30 @@
     border: 1px solid #B5446E;
 }
 
-#group-input{
+#group-input {
     width: 150px;
     border: 1px solid #B5446E;
 }
 
-#select-button{
+#select-button {
     max-width: 75px;
 }
 
-@media (max-width: 576px){
-    .form-inline{
+@media (max-width: 576px) {
+    .form-inline {
         flex-direction: column;
     }
-    #month-group-select{
+    #month-group-select {
         margin-left: auto;
         margin-right: auto;
     }
-
-    #month-input,#group-input,#select-button{
+    #month-input, #group-input, #select-button {
         min-width: 200px;
         max-width: 200px;
     }
+}
+
+tbody tr, thead tr {
+    border-bottom: 1px solid #484D6D;
+    white-space: nowrap;
 }
