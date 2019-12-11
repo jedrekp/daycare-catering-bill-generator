@@ -84,12 +84,12 @@ export class ChildPageComponent implements OnInit {
         if (onClose) {
           this.childDataService.editChild(this.child.id,
             new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, true)).subscribe(
-              child => {
+              response => {
                 this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
                   `Child #${this.child.id} records have been moved to archive.`)
                 this.modalRef.content.onClose.subscribe(
                   onClose => {
-                    this.retrieveChild(child.id)
+                    this.retrieveChild(this.child.id)
                   })
               },
               err => {
@@ -102,12 +102,12 @@ export class ChildPageComponent implements OnInit {
   restoreFromArchive() {
     this.childDataService.editChild(this.child.id,
       new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, false)).subscribe(
-        child => {
+        response => {
           this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
             `Child #${this.child.id} records have been restored from archive.`)
           this.modalRef.content.onClose.subscribe(
             onclose => {
-              this.retrieveChild(child.id)
+              this.retrieveChild(this.child.id)
             })
         })
   }

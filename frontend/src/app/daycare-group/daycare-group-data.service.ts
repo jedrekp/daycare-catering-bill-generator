@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DaycareGroup } from './daycare-group';
 import { Child } from '../child/child';
+import { API_URL } from '../const';
 
 @Injectable({
   providedIn: 'root'
@@ -13,37 +14,37 @@ export class DaycareGroupDataService {
   ) { }
 
   retrieveDaycareGroups() {
-    return this.httpClient.get<DaycareGroup[]>('http://localhost:8081/daycareGroups')
+    return this.httpClient.get<DaycareGroup[]>(`${API_URL}/daycareGroups`)
   }
 
   retrieveSingleDaycareGroup(daycareGroupId: number) {
-    return this.httpClient.get<DaycareGroup>(`http://localhost:8081/daycareGroups/${daycareGroupId}`)
+    return this.httpClient.get<DaycareGroup>(`${API_URL}/daycareGroups/${daycareGroupId}`)
   }
 
   createDaycareGroup(daycareGroup: DaycareGroup) {
-    return this.httpClient.post<DaycareGroup>('http://localhost:8081/daycareGroups', daycareGroup)
+    return this.httpClient.post<DaycareGroup>(`${API_URL}/daycareGroups`, daycareGroup)
   }
 
   editDaycareGroup(daycareGroupId: number, daycareGroup: DaycareGroup) {
-    return this.httpClient.put<DaycareGroup>(`http://localhost:8081/daycareGroups/${daycareGroupId}`,
+    return this.httpClient.put<DaycareGroup>(`${API_URL}/daycareGroups/${daycareGroupId}`,
       daycareGroup)
   }
 
   deleteDaycareGroup(daycareGroupId: number) {
-    return this.httpClient.delete(`http://localhost:8081/daycareGroups/${daycareGroupId}`)
+    return this.httpClient.delete(`${API_URL}/daycareGroups/${daycareGroupId}`)
   }
 
   getChildrenFromGroup(daycareGroupId: number) {
-    return this.httpClient.get<Child[]>(`http://localhost:8081/daycareGroups/${daycareGroupId}/children`)
+    return this.httpClient.get<Child[]>(`${API_URL}/daycareGroups/${daycareGroupId}/children`)
   }
 
   addChildToDaycareGroup(daycareGroupId: number, childId: number) {
     return this.httpClient.put<DaycareGroup>(
-      `http://localhost:8081/daycareGroups/${daycareGroupId}/children/${childId}`, null)
+      `${API_URL}/daycareGroups/${daycareGroupId}/children/${childId}`, null)
   }
 
-  removeChildFromDaycareGroup(daycareGroupId: number, childId: number){
-    return this.httpClient.delete<DaycareGroup>(`http://localhost:8081/daycareGroups/${daycareGroupId}/children/${childId}`)
+  removeChildFromDaycareGroup(daycareGroupId: number, childId: number) {
+    return this.httpClient.delete<DaycareGroup>(`${API_URL}/daycareGroups/${daycareGroupId}/children/${childId}`)
   }
 
 }

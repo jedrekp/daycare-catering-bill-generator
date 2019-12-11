@@ -1,11 +1,10 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-data.service';
 import { DaycareGroup } from 'src/app/daycare-group/daycare-group';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AttendanceDataService } from '../attendance-data.service';
 import { DailyGroupAttendance } from '../daily-group-attendance';
 import { DatePipe } from '@angular/common';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
 import { Child } from 'src/app/child/child';
@@ -17,7 +16,6 @@ import { Child } from 'src/app/child/child';
 })
 export class TrackAttendanceComponent implements OnInit {
 
-  private modalRef: BsModalRef
   private selectDateAndGroupForm: FormGroup
   private daycareGroups: DaycareGroup[] = []
   private selectedDaycareGroup: DaycareGroup

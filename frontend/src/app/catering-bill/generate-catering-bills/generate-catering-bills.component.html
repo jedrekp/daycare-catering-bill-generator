@@ -1,0 +1,31 @@
+<div class="row">
+
+    <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-5 offset-1 offset-md-2 offset-lg-4 offset-xl-5">
+        <div id="date-group-select" class="border-darkblue py-2">
+
+            <form novalidate class=" form-inline" [formGroup]="selectMonthAndGroupForm" (ngSubmit)="onSelect()">
+
+                <div class="form-group mx-auto mr-sm-0">
+                    <input bsDatepicker class="form-control" id="month-input" formControlName="firstDayOfSelectedMonth"
+                        [bsConfig]="{dateInputFormat: 'MMMM YYYY', containerClass:'theme-default'}"
+                        (onShown)="onOpenCalendar($event)" [minDate]="minDate" readonly>
+                </div>
+
+                <div class="form-group mx-auto mx-sm-2">
+                    <select class="custom-select" id="group-input" formControlName="daycareGroup">
+                        <option *ngFor="let daycareGroup of daycareGroups" [ngValue]="daycareGroup">
+                            {{daycareGroup.groupName}}
+                        </option>
+                    </select>
+                </div>
+
+                <button class="btn btn-outline-purple mx-auto ml-sm-0" id="select-button" type="submit">
+                    Select
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

@@ -8,6 +8,7 @@ import { UnassignedChildrenListComponent } from './child/unassigned-children-lis
 import { ChildrenSearchResultsComponent } from './child/children-search-results/children-search-results.component';
 import { TrackAttendanceComponent } from './attendance/track-attendance/track-attendance.component';
 import { ArchivedChildrenListComponent } from './child/archived-children-list/archived-children-list.component';
+import { GenerateCateringBillsComponent } from './catering-bill/generate-catering-bills/generate-catering-bills.component';
 
 
 const routes: Routes = [
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'catering-options-list', component: CateringOptionsListComponent },
   { path: 'daycare-group-page/:groupId', component: DaycareGroupPageComponent },
   { path: 'daycare-group-list', component: DaycareGroupListComponent },
-  { path: 'track-attendance', component: TrackAttendanceComponent }
+  { path: 'track-attendance', component: TrackAttendanceComponent },
+  { path: 'generate-catering-bills', component: GenerateCateringBillsComponent }
 ];
 
 @NgModule({

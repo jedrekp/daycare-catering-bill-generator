@@ -33,7 +33,7 @@ export class ArchivedChildrenListComponent implements OnInit {
   restoreFromArchive(child: Child) {
     this.childDataService.editChild(child.id,
       new Child(child.id, child.firstName, child.lastName, child.parentEmail, false)).subscribe(
-        child => {
+        response => {
           this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
             `Child #${child.id} (${child.firstName} ${child.lastName}) has been restored from archive.`)
           this.modalRef.content.onClose.subscribe(
