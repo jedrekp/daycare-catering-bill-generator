@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { DaycareGroup } from './daycare-group';
 import { Child } from '../child/child';
 import { API_URL } from '../const';
+import { CateringBill } from '../catering-bill/catering-bill';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,13 @@ export class DaycareGroupDataService {
 
   removeChildFromDaycareGroup(daycareGroupId: number, childId: number) {
     return this.httpClient.delete<DaycareGroup>(`${API_URL}/daycareGroups/${daycareGroupId}/children/${childId}`)
+  }
+
+  retrieveBillsForSpecificMonthForAllChildrenInGroup(daycareGroupId: number, month: string, year: number) {
+    let params = new HttpParams()
+      .set('month', month)
+      .set('year', year.toString())
+    return this.httpClient.get<CateringBill[]>(`${API_URL}/daycareGroups/${daycareGroupId}/children/cateringBills`, { params: params })
   }
 
 }

@@ -52,7 +52,8 @@
                             <th>First name</th>
                             <th>Last Name</th>
                             <th>Child Id</th>
-                            <th id="attendance-header">Attendance</th>
+                            <th>Display bill</th>
+                            <th>Generate bill</th>
                         </tr>
                     </thead>
 
@@ -61,9 +62,31 @@
                             <td>{{child.firstName}}</td>
                             <td>{{child.lastName}}</td>
                             <td>#{{child.id}}</td>
-                            <td id="attendance-cell">
-                                xxx
-                            </td>
+                            <ng-template
+                                *ngIf="checkIfCateringBillExistsForChild(child.id) then billGenerated else billNotGenerated">
+                            </ng-template>
+                            <ng-template #billGenerated>
+                                <td>
+                                    <button class="btn btn-outline-purple" (click)="console.log(child.id)">
+                                        Display
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-purple" (click)="console.log(child.id)">
+                                        Correction
+                                    </button>
+                                </td>
+                            </ng-template>
+                            <ng-template #billNotGenerated>
+                                <td>
+                                    Not yet generated
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-purple" (click)="console.log(child.id)">
+                                        New bill
+                                    </button>
+                                </td>
+                            </ng-template>
                         </tr>
 
                     </tbody>
@@ -74,7 +97,7 @@
         </div>
 
         <div *ngIf="!selectedDaycareGroup" class="card-body pt-4">
-            Please select month and daycare group to generate catering bills for it's members.
+            Select month and daycare group to generate and/or display catering bills for it's members.
         </div>
 
     </div>

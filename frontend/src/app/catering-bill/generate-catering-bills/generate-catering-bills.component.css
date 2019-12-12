@@ -27,6 +27,16 @@
     }
 }
 
+td, th {
+    text-align: center;
+    vertical-align: middle;
+    width: 20%;
+}
+
+td > button{
+    width: 100%;
+}
+
 tbody tr, thead tr {
     border-bottom: 1px solid #484D6D;
     white-space: nowrap;
