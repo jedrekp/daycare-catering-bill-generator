@@ -18,7 +18,7 @@ public class CateringBillOperationsController {
 
     private final CateringBillService cateringBillService;
 
-    @GetMapping(value = "/display-preview", params = {"childId", "month", "year"})
+    @GetMapping(value = "/generate-preview", params = {"childId", "month", "year"})
     public ResponseEntity<CateringBillResponse> getCateringBillPreview(
             @RequestParam long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(

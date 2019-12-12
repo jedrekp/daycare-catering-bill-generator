@@ -1,0 +1,14 @@
+<div class="modal-header bg-purple text-center">
+    <h4 class="modal-title">Catering bill preview</h4>
+</div>
+
+<div class="modal-body">
+    <span *ngIf="cateringBill">{{cateringBill.childFullName}}</span>
+
+</div>
+
+<div class="modal-footer">
+    <button type="submit" class="btn btn-outline-purple" (click)="saveBillAndSendEmailToParent()">
+        Save and send to parent</button>
+    <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
+</div>

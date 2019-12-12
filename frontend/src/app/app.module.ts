@@ -28,6 +28,7 @@ import { ChildrenSearchResultsComponent } from './child/children-search-results/
 import { TrackAttendanceComponent } from './attendance/track-attendance/track-attendance.component';
 import { ArchivedChildrenListComponent } from './child/archived-children-list/archived-children-list.component';
 import { GenerateCateringBillsComponent } from './catering-bill/generate-catering-bills/generate-catering-bills.component';
+import { BillPreviewComponent } from './catering-bill/bill-preview/bill-preview.component';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { GenerateCateringBillsComponent } from './catering-bill/generate-caterin
     TrackAttendanceComponent,
     ArchivedChildrenListComponent,
     GenerateCateringBillsComponent,
+    BillPreviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,7 +72,8 @@ import { GenerateCateringBillsComponent } from './catering-bill/generate-caterin
     ChildAssignOptionComponent,
     AssignToGroupComponent,
     CateringOptionCreateEditComponent,
-    DaycareGroupCreateEditComponent
+    DaycareGroupCreateEditComponent,
+    BillPreviewComponent
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

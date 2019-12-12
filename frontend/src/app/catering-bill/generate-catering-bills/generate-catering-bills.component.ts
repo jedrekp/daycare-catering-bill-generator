@@ -4,7 +4,8 @@ import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-dat
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CateringBill } from '../catering-bill';
-import { filter } from 'rxjs/operators';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BillPreviewComponent } from '../bill-preview/bill-preview.component';
 
 @Component({
   selector: 'app-generate-catering-bills',
@@ -13,14 +14,16 @@ import { filter } from 'rxjs/operators';
 })
 export class GenerateCateringBillsComponent implements OnInit {
 
+  private modalRef: BsModalRef
   private minDate: Date
   private selectMonthAndGroupForm: FormGroup
   private daycareGroups: DaycareGroup[]
   private selectedDaycareGroup: DaycareGroup
   private cateringBills: CateringBill[] = []
-  private selectedMonth: string
+  private dateFromSelectedMonth: Date
 
   constructor(
+    private bsModalService: BsModalService,
     private datePipe: DatePipe,
     private daycareGroupDataService: DaycareGroupDataService
   ) { }
@@ -55,16 +58,15 @@ export class GenerateCateringBillsComponent implements OnInit {
   }
 
   onSelect() {
-    let dateFromSelectedMonth = this.selectMonthAndGroupForm.get('firstDayOfSelectedMonth').value
-    this.selectedMonth = this.datePipe.transform(dateFromSelectedMonth, 'MMMM yyyy')
+    this.dateFromSelectedMonth = this.selectMonthAndGroupForm.get('firstDayOfSelectedMonth').value
     this.daycareGroupDataService.retrieveSingleDaycareGroup(this.selectMonthAndGroupForm.get('daycareGroup').value.id)
       .subscribe(
         daycareGroup => {
           this.selectedDaycareGroup = daycareGroup
           this.daycareGroupDataService.retrieveBillsForSpecificMonthForAllChildrenInGroup(
             daycareGroup.id,
-            this.datePipe.transform(dateFromSelectedMonth, 'LLLL').toUpperCase(),
-            dateFromSelectedMonth.getFullYear()
+            this.datePipe.transform(this.dateFromSelectedMonth, 'LLLL').toUpperCase(),
+            this.dateFromSelectedMonth.getFullYear()
           ).subscribe(
             cateringBills => {
               this.cateringBills = cateringBills
@@ -74,6 +76,16 @@ export class GenerateCateringBillsComponent implements OnInit {
 
   checkIfCateringBillExistsForChild(childId: number) {
     return this.cateringBills.filter(cateringBill => cateringBill.childId == childId).length > 0
+  }
+
+  displayBillPreview(childId: number) {
+    let initialState = {
+      childId: childId,
+      month: this.datePipe.transform(this.dateFromSelectedMonth, 'LLLL').toUpperCase(),
+      year: this.dateFromSelectedMonth.getFullYear()
+    }
+    this.modalRef = this.bsModalService.show(BillPreviewComponent,
+      { class: 'modal-md', initialState, ignoreBackdropClick: false })
   }
 
 }

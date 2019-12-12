@@ -135,7 +135,7 @@ public class ChildService {
     }
 
     String getFullNameOfChild(Child child) {
-        return MessageFormat.format("{0}, {1}", child.getFirstName(), child.getLastName());
+        return MessageFormat.format("{0} {1}", child.getFirstName(), child.getLastName());
     }
 
     private Child findSingleChildById(long childId) {
