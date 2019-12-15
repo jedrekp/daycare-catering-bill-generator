@@ -18,10 +18,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Month;
 import java.time.Year;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.format.TextStyle;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +50,7 @@ public class CateringBillService {
 
         Child child = childService.findSingleNotArchivedChildById(childId);
 
-        CateringBillResponse cateringBillResponse = new CateringBillResponse(childId, month, year);
+        CateringBillResponse cateringBillResponse = new CateringBillResponse(childId, month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), year);
         cateringBillResponse.setChildFullName(childService.getFullNameOfChild(child));
         cateringBillResponse.setCorrection(cateringBillRepository.existsByMonthAndYearAndChild_Id(month, year, childId));
 
@@ -113,6 +111,7 @@ public class CateringBillService {
             CateringOption optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, attendanceSheet.getDate());
             cateringBillResponse.getDailyCateringOrders()
                     .add(new DailyCateringOrder(attendanceSheet.getDate(), optionInEffect.getOptionName(), optionInEffect.getDailyCost()));
+            cateringBillResponse.getDailyCateringOrders().sort(Comparator.comparing(DailyCateringOrder::getOrderDate));
         }
     }
 
@@ -124,12 +123,13 @@ public class CateringBillService {
     }
 
     private CateringBillResponse mapCateringBillToResponse(CateringBill cateringBill) {
-        CateringBillResponse cateringBillResponse = new CateringBillResponse(cateringBill.getChild().getId(), cateringBill.getMonth(),
-                cateringBill.getYear());
+        CateringBillResponse cateringBillResponse = new CateringBillResponse(cateringBill.getChild().getId(),
+                cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH), cateringBill.getYear());
         cateringBillResponse.setCorrection(cateringBill.isCorrection());
         cateringBillResponse.setChildFullName(childService.getFullNameOfChild(cateringBill.getChild()));
-        cateringBillResponse.setDailyCateringOrders(cateringBill.getDailyCateringOrders());
+        cateringBillResponse.setDailyCateringOrders(new ArrayList<>(cateringBill.getDailyCateringOrders()));
         cateringBillResponse.setTotalDue(calculateTotalDueFromDailyOrders(cateringBillResponse.getDailyCateringOrders()));
+        cateringBillResponse.getDailyCateringOrders().sort(Comparator.comparing(DailyCateringOrder::getOrderDate));
         return cateringBillResponse;
     }
 

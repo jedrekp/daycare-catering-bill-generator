@@ -5,25 +5,24 @@ import jedrekp.daycarecateringbillgenerator.entity.DailyCateringOrder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.Month;
 import java.time.Year;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class CateringBillResponse {
 
     private long childId;
-    private Month month;
+    private String month;
     private Year year;
     private boolean correction;
     private String childFullName;
     private BigDecimal totalDue;
 
     @JsonIgnoreProperties("cateringBill")
-    private Set<DailyCateringOrder> dailyCateringOrders = new HashSet<>();
+    private List<DailyCateringOrder> dailyCateringOrders = new ArrayList<>();
 
-    public CateringBillResponse(long childId, Month month, Year year) {
+    public CateringBillResponse(long childId, String month, Year year) {
         this.childId = childId;
         this.month = month;
         this.year = year;

@@ -41,7 +41,7 @@
         <div *ngIf="selectedDaycareGroup" class="card-body pt-3">
 
             <h5 class="subheader-purple">Selected group: {{selectedDaycareGroup.groupName}}</h5>
-            <h5 class="subheader-purple">{{selectedMonth}}</h5>
+            <h5 class="subheader-purple">{{dateFromSelectedMonth | date: 'MMMM yyyy'}}</h5>
             <div class="subheader-underline mb-2"></div>
 
             <div class="table-responsive">
@@ -52,8 +52,8 @@
                             <th>First name</th>
                             <th>Last Name</th>
                             <th>Child Id</th>
-                            <th>Display bill</th>
                             <th>Generate bill</th>
+                            <th>Display bill</th>
                         </tr>
                     </thead>
 
@@ -68,23 +68,23 @@
                             <ng-template #billGenerated>
                                 <td>
                                     <button class="btn btn-outline-purple" (click)="console.log(child.id)">
-                                        Display
+                                        Correction
                                     </button>
                                 </td>
                                 <td>
                                     <button class="btn btn-outline-purple" (click)="console.log(child.id)">
-                                        Correction
+                                        Display
                                     </button>
                                 </td>
                             </ng-template>
                             <ng-template #billNotGenerated>
                                 <td>
-                                    Not yet generated
-                                </td>
-                                <td>
                                     <button class="btn btn-outline-purple" (click)="displayBillPreview(child.id)">
                                         New bill
                                     </button>
+                                </td>
+                                <td>
+                                    Not yet generated
                                 </td>
                             </ng-template>
                         </tr>
