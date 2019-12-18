@@ -50,7 +50,7 @@ public class CateringBillService {
 
         Child child = childService.findSingleNotArchivedChildById(childId);
 
-        CateringBillResponse cateringBillResponse = new CateringBillResponse(childId, month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), year);
+        CateringBillResponse cateringBillResponse = new CateringBillResponse(0L, childId, month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), year);
         cateringBillResponse.setChildFullName(childService.getFullNameOfChild(child));
         cateringBillResponse.setCorrection(cateringBillRepository.existsByMonthAndYearAndChild_Id(month, year, childId));
 
@@ -123,7 +123,7 @@ public class CateringBillService {
     }
 
     private CateringBillResponse mapCateringBillToResponse(CateringBill cateringBill) {
-        CateringBillResponse cateringBillResponse = new CateringBillResponse(cateringBill.getChild().getId(),
+        CateringBillResponse cateringBillResponse = new CateringBillResponse(cateringBill.getId(), cateringBill.getChild().getId(),
                 cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH), cateringBill.getYear());
         cateringBillResponse.setCorrection(cateringBill.isCorrection());
         cateringBillResponse.setChildFullName(childService.getFullNameOfChild(cateringBill.getChild()));

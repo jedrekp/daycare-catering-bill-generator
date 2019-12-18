@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class CateringBillResponse {
 
+    private long billId;
     private long childId;
     private String month;
     private Year year;
@@ -22,7 +23,8 @@ public class CateringBillResponse {
     @JsonIgnoreProperties("cateringBill")
     private List<DailyCateringOrder> dailyCateringOrders = new ArrayList<>();
 
-    public CateringBillResponse(long childId, String month, Year year) {
+    public CateringBillResponse(long billId, long childId, String month, Year year) {
+        this.billId = billId;
         this.childId = childId;
         this.month = month;
         this.year = year;
