@@ -1,6 +1,7 @@
 export class CateringBill {
 
     constructor(
+        public billId: number,
         public childId: number,
         public month: string,
         public year: number,

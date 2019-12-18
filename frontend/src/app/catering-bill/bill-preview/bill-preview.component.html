@@ -1,49 +1,53 @@
 <div class="modal-header bg-purple text-center">
-    <span *ngIf="cateringBill">
-        <h4 class="modal-title">{{cateringBill.childFullName}}'s {{cateringBill.month}} {{cateringBill.year}} catering
-            bill preview </h4>
-    </span>
+    <h4 class="modal-title mx-auto">Catering bill preview </h4>
 </div>
 
-<div class="modal-body">
+<div class="modal-body text-center">
     <span *ngIf="cateringBill">
 
-        <small>*Below orders are based on the current state of child's attendance for this month and on catering
-            options
-            that are in effect for given dates.</small>
+        <h5 class="subheader-purple mx-auto" style="text-align: center;">
+            {{cateringBill.childFullName}}, {{cateringBill.month}} {{cateringBill.year}}
+        </h5>
+        <div class="subheader-underline"></div>
 
-        <div class="table-responsive">
+        <div class="table-responsive mt-3">
             <table class="table table-borderless table-striped text-center">
 
                 <thead>
-                    <tr *ngIf="cateringBill.dailyCateringOrders.length>0 else noOrdersInfo">
+                    <tr>
                         <th>Date</th>
                         <th>Catering option</th>
                         <th>Price</th>
                     </tr>
-                    <ng-template #noOrdersInfo>
-                        <tr>
-                            <th colspan="3">
-                                There are no catering orders in this month.
-                            </th>
-                        </tr>
-                    </ng-template>
+
                 </thead>
 
                 <tbody>
+                    <tr *ngIf="cateringBill.dailyCateringOrders.length==0">
+                        <td colspan="3">
+                            No catering orders in this month.
+                        </td>
+                    </tr>
                     <tr *ngFor="let dailyCateringOrder of cateringBill.dailyCateringOrders">
                         <td>{{dailyCateringOrder.orderDate}}</td>
                         <td>{{dailyCateringOrder.cateringOptionName}}</td>
                         <td>{{dailyCateringOrder.cateringOptionPrice | number:'1.2-2'}} PLN</td>
                     </tr>
+                </tbody>
+
+                <tfoot>
                     <tr class="font-weight-bold">
-                        <td colspan="2">Total due:</td>
+                        <td></td>
+                        <td>Total due:</td>
                         <td>{{cateringBill.totalDue | number:'1.2-2'}} PLN</td>
                     </tr>
-                </tbody>
+                </tfoot>
 
             </table>
         </div>
+
+        <small>*All orders are based on the current state of child's attendance for this month and catering
+            options that are in effect for given dates. </small>
 
     </span>
 
