@@ -54,8 +54,9 @@
 </div>
 
 
-<div class="modal-footer">
-    <button type="submit" class="btn btn-outline-purple" (click)="saveBillAndSendEmailToParent()">
+<div class="modal-footer"> 
+    <button type="submit" [disabled]="submitDisabled" class="btn btn-outline-purple"
+        (click)="saveBillAndSendEmailToParent()">
         Save and send to parent</button>
     <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
 </div>

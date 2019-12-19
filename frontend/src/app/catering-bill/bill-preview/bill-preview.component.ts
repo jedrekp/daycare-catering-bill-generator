@@ -18,10 +18,12 @@ export class BillPreviewComponent implements OnInit {
   @Input() private month: string
   @Input() private year: number
   private onClose: Subject<boolean>
+  private submitDisabled: boolean
   private cateringBill: CateringBill
 
   constructor(
     private modalRef: BsModalRef,
+    private nestedModalRef: BsModalRef,
     private dialogModalService: DialogModalService,
     private cateringBillOperationsService: CateringBillOperationsService,
     private childDataService: ChildDataService,
@@ -40,6 +42,7 @@ export class BillPreviewComponent implements OnInit {
   }
 
   saveBillAndSendEmailToParent() {
+    this.submitDisabled = true
     this.childDataService.saveCateringBill(this.cateringBill.childId, this.cateringBill.month.toUpperCase(),
       this.cateringBill.year, this.cateringBill.dailyCateringOrders).subscribe(
         cateringBill => {
@@ -47,10 +50,23 @@ export class BillPreviewComponent implements OnInit {
             response => {
               this.modalRef.hide()
               this.onClose.next(true)
-            })
+            },
+            err => {
+              this.nestedModalRef = this.dialogModalService.openNestedInformationModal(ERROR_HEADER, `Catering bill has been saved but an issue occured when trying to send the bill to parent.\n
+              You may open the saved bill later and try to re-send an email.`)
+              this.nestedModalRef.content.onClose.subscribe(
+                onClose => {
+                  if (onClose) {
+                    this.modalRef.hide()
+                    this.onClose.next(true)
+                  }
+                })
+            }
+          )
         },
         err => {
           this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.msg)
+          this.submitDisabled = false
         })
   }
 
