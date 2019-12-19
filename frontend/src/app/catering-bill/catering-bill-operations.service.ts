@@ -21,4 +21,10 @@ export class CateringBillOperationsService {
     return this.httpClient.get<CateringBill>(`${API_URL}/cateringBills/generate-preview`, { params: params })
   }
 
+  sendCateringBillToParent(billId: number) {
+    let params = new HttpParams()
+      .set('cateringBillId', billId.toString())
+    return this.httpClient.get(`${API_URL}/cateringBills/send-to-parent`, { params: params })
+  }
+
 }

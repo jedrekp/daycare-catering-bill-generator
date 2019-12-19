@@ -2,12 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Child } from './child';
 import { API_URL } from '../const';
+import { DailyCateringOrder, CateringBill } from '../catering-bill/catering-bill';
 
 
 class AssignOptionToChildDTO {
   constructor(
     private effectiveDate: string,
-    private cateringOptionId: number) { }
+    private cateringOptionId: number
+  ) { }
+}
+
+class CateringBillDTO {
+  constructor(
+    private month: string,
+    private year: number,
+    private dailyCateringOrders: DailyCateringOrder[]
+  ) { }
 }
 
 @Injectable({
@@ -47,6 +57,10 @@ export class ChildDataService {
 
   removeAssignedOptionFromChild(childId: number, assignedOptionId: number) {
     return this.httpClient.delete(`${API_URL}/children/${childId}/assignedOptions/${assignedOptionId}`)
+  }
+
+  saveCateringBill(childId: number, month: string, year: number, dailyCateringOrders: DailyCateringOrder[]) {
+    return this.httpClient.post<any>(`${API_URL}/children/${childId}/cateringBills`, new CateringBillDTO(month, year, dailyCateringOrders))
   }
 
 }

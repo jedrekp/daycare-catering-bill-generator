@@ -3,7 +3,8 @@
     <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-5 offset-1 offset-md-2 offset-lg-4 offset-xl-5">
         <div id="date-group-select" class="border-darkblue py-2">
 
-            <form novalidate class=" form-inline" [formGroup]="selectMonthAndGroupForm" (ngSubmit)="onSelect()">
+            <form novalidate class=" form-inline" [formGroup]="selectMonthAndGroupForm"
+                (ngSubmit)="retrieveChildrenAndBillInfo()">
 
                 <div class="form-group mx-auto mr-sm-0">
                     <input bsDatepicker class="form-control" id="month-input" formControlName="firstDayOfSelectedMonth"

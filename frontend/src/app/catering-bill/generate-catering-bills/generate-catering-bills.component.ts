@@ -57,7 +57,7 @@ export class GenerateCateringBillsComponent implements OnInit {
     )
   }
 
-  onSelect() {
+  retrieveChildrenAndBillInfo() {
     this.dateFromSelectedMonth = this.selectMonthAndGroupForm.get('firstDayOfSelectedMonth').value
     this.daycareGroupDataService.retrieveSingleDaycareGroup(this.selectMonthAndGroupForm.get('daycareGroup').value.id)
       .subscribe(
@@ -86,6 +86,13 @@ export class GenerateCateringBillsComponent implements OnInit {
     }
     this.modalRef = this.bsModalService.show(BillPreviewComponent,
       { class: 'modal-md', initialState, ignoreBackdropClick: false })
+
+    this.modalRef.content.onClose.subscribe(
+      onClose => {
+        if (onClose) {
+          this.retrieveChildrenAndBillInfo()
+        }
+      })
   }
 
 }

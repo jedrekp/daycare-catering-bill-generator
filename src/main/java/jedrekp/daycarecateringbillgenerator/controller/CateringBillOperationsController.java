@@ -25,7 +25,7 @@ public class CateringBillOperationsController {
                 cateringBillService.generateCateringBillPreview(childId, month, year), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/send-to-parent", params = {"childId"})
+    @GetMapping(value = "/send-to-parent", params = {"cateringBillId"})
     public ResponseEntity sendBillTOParentViaEmail(@RequestParam long cateringBillId) {
         cateringBillService.sendBillToParentViaEmail(cateringBillId);
         return ResponseEntity.noContent().build();
