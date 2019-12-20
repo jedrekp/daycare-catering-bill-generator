@@ -4,7 +4,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { CateringBillOperationsService } from '../catering-bill-operations.service';
 import { ChildDataService } from 'src/app/child/child-data.service';
-import { ERROR_HEADER } from 'src/app/const';
+import { ERROR_HEADER, CONFIRMATION_HEADER } from 'src/app/const';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -41,8 +41,23 @@ export class BillPreviewComponent implements OnInit {
       })
   }
 
-  saveBillAndSendEmailToParent() {
+  submitCateringBill() {
     this.submitDisabled = true
+    if (this.cateringBill.correction) {
+      this.nestedModalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `Saving this correction will override existing catering bill for this month.\n
+      Additionally, another email will be sent to parent with new version of catering bill (marked as a correction).`)
+    }
+    this.nestedModalRef.content.onClose.subscribe(
+      onClose => {
+        if (onClose) {
+          this.saveBillAndSendEmailToParent()
+        } else {
+          this.submitDisabled = false
+        }
+      })
+  }
+
+  saveBillAndSendEmailToParent() {
     this.childDataService.saveCateringBill(this.cateringBill.childId, this.cateringBill.month.toUpperCase(),
       this.cateringBill.year, this.cateringBill.dailyCateringOrders).subscribe(
         cateringBill => {
@@ -61,8 +76,7 @@ export class BillPreviewComponent implements OnInit {
                     this.onClose.next(true)
                   }
                 })
-            }
-          )
+            })
         },
         err => {
           this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.msg)

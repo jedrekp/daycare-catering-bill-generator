@@ -9,6 +9,10 @@ td, th {
     width: 33%;
 }
 
+th{
+    background-color: #dee2e6;
+}
+
 tbody tr, thead tr {
     border-bottom: 1px solid #484D6D;
     white-space: nowrap;

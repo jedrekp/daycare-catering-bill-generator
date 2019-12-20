@@ -68,7 +68,7 @@
                             </ng-template>
                             <ng-template #billGenerated>
                                 <td>
-                                    <button class="btn btn-outline-purple" (click)="console.log(child.id)">
+                                    <button class="btn btn-outline-purple" (click)="displayBillPreview(child.id)">
                                         Correction
                                     </button>
                                 </td>
@@ -85,7 +85,9 @@
                                     </button>
                                 </td>
                                 <td>
-                                    Not yet generated
+                                    <button class="btn btn-outline-purple" disabled>
+                                        Display
+                                    </button>
                                 </td>
                             </ng-template>
                         </tr>

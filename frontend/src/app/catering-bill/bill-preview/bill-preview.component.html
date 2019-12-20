@@ -7,11 +7,12 @@
 
         <h5 class="subheader-purple mx-auto" style="text-align: center;">
             {{cateringBill.childFullName}}, {{cateringBill.month}} {{cateringBill.year}}
+            <span *ngIf="cateringBill.correction"> (correction)</span>
         </h5>
         <div class="subheader-underline"></div>
 
         <div class="table-responsive mt-3">
-            <table class="table table-borderless table-striped text-center">
+            <table class="table table-borderless table-hover text-center">
 
                 <thead>
                     <tr>
@@ -54,9 +55,8 @@
 </div>
 
 
-<div class="modal-footer"> 
-    <button type="submit" [disabled]="submitDisabled" class="btn btn-outline-purple"
-        (click)="saveBillAndSendEmailToParent()">
+<div class="modal-footer">
+    <button type="submit" [disabled]="submitDisabled" class="btn btn-outline-purple" (click)="submitCateringBill()">
         Save and send to parent</button>
     <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
 </div>
