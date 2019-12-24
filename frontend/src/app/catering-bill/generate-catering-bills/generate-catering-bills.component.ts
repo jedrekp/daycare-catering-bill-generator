@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { CateringBill } from '../catering-bill';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BillPreviewComponent } from '../bill-preview/bill-preview.component';
+import { BillDisplayComponent } from '../bill-display/bill-display.component';
 
 @Component({
   selector: 'app-generate-catering-bills',
@@ -85,7 +86,7 @@ export class GenerateCateringBillsComponent implements OnInit {
       year: this.dateFromSelectedMonth.getFullYear()
     }
     this.modalRef = this.bsModalService.show(BillPreviewComponent,
-      { class: 'modal-md', initialState, ignoreBackdropClick: false })
+      { class: 'modal-md', initialState, ignoreBackdropClick: true, keyboard: false })
 
     this.modalRef.content.onClose.subscribe(
       onClose => {
@@ -93,6 +94,14 @@ export class GenerateCateringBillsComponent implements OnInit {
           this.retrieveChildrenAndBillInfo()
         }
       })
+  }
+
+  displayCateringBill(childId: number) {
+    let initialState = {
+      cateringBill: this.cateringBills.filter(cateringBill => cateringBill.childId == childId)[0]
+    }
+    this.modalRef = this.bsModalService.show(BillDisplayComponent,
+      { class: 'modal-md', initialState, ignoreBackdropClick: true, keyboard: false })
   }
 
 }

@@ -4,7 +4,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { CateringBillOperationsService } from '../catering-bill-operations.service';
 import { ChildDataService } from 'src/app/child/child-data.service';
-import { ERROR_HEADER, CONFIRMATION_HEADER } from 'src/app/const';
+import { ERROR_HEADER, CONFIRMATION_HEADER, ACTION_COMPLETED_HEADER } from 'src/app/const';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -18,7 +18,7 @@ export class BillPreviewComponent implements OnInit {
   @Input() private month: string
   @Input() private year: number
   private onClose: Subject<boolean>
-  private submitDisabled: boolean
+  private inputDisabled: boolean = false
   private cateringBill: CateringBill
 
   constructor(
@@ -42,19 +42,21 @@ export class BillPreviewComponent implements OnInit {
   }
 
   submitCateringBill() {
-    this.submitDisabled = true
+    this.inputDisabled = true
     if (this.cateringBill.correction) {
-      this.nestedModalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `Saving this correction will override existing catering bill for this month.\n
-      Additionally, another email will be sent to parent with new version of catering bill (marked as a correction).`)
+      this.nestedModalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `This correction will override existing catering bill for this month.\n
+      Additionally, another email will be sent to parent with new version of catering bill (It will be marked as a correction).`)
+      this.nestedModalRef.content.onClose.subscribe(
+        onClose => {
+          if (onClose) {
+            this.saveBillAndSendEmailToParent()
+          } else {
+            this.inputDisabled = false
+          }
+        })
+    } else {
+      this.saveBillAndSendEmailToParent()
     }
-    this.nestedModalRef.content.onClose.subscribe(
-      onClose => {
-        if (onClose) {
-          this.saveBillAndSendEmailToParent()
-        } else {
-          this.submitDisabled = false
-        }
-      })
   }
 
   saveBillAndSendEmailToParent() {
@@ -63,24 +65,26 @@ export class BillPreviewComponent implements OnInit {
         cateringBill => {
           this.cateringBillOperationsService.sendCateringBillToParent(cateringBill.id).subscribe(
             response => {
-              this.modalRef.hide()
-              this.onClose.next(true)
+              this.nestedModalRef = this.dialogModalService.openNestedInformationModal(ACTION_COMPLETED_HEADER, `Catering bill has been saved and sent to parent.`)
+              this.nestedModalRef.content.onClose.subscribe(
+                onClose => {
+                  this.modalRef.hide()
+                  this.onClose.next(true)
+                })
             },
             err => {
               this.nestedModalRef = this.dialogModalService.openNestedInformationModal(ERROR_HEADER, `Catering bill has been saved but an issue occured when trying to send the bill to parent.\n
               You may open the saved bill later and try to re-send an email.`)
               this.nestedModalRef.content.onClose.subscribe(
                 onClose => {
-                  if (onClose) {
-                    this.modalRef.hide()
-                    this.onClose.next(true)
-                  }
+                  this.modalRef.hide()
+                  this.onClose.next(true)
                 })
             })
         },
         err => {
           this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.msg)
-          this.submitDisabled = false
+          this.inputDisabled = false
         })
   }
 

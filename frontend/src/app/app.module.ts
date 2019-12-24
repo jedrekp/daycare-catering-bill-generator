@@ -29,6 +29,7 @@ import { TrackAttendanceComponent } from './attendance/track-attendance/track-at
 import { ArchivedChildrenListComponent } from './child/archived-children-list/archived-children-list.component';
 import { GenerateCateringBillsComponent } from './catering-bill/generate-catering-bills/generate-catering-bills.component';
 import { BillPreviewComponent } from './catering-bill/bill-preview/bill-preview.component';
+import { BillDisplayComponent } from './catering-bill/bill-display/bill-display.component';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { BillPreviewComponent } from './catering-bill/bill-preview/bill-preview.
     ArchivedChildrenListComponent,
     GenerateCateringBillsComponent,
     BillPreviewComponent,
+    BillDisplayComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,7 +75,8 @@ import { BillPreviewComponent } from './catering-bill/bill-preview/bill-preview.
     AssignToGroupComponent,
     CateringOptionCreateEditComponent,
     DaycareGroupCreateEditComponent,
-    BillPreviewComponent
+    BillPreviewComponent,
+    BillDisplayComponent
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

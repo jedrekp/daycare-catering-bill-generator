@@ -34,7 +34,7 @@
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;
-            background-color: darkslategray;
+            background-color: #484D6D;
             color: white;
         }
 
@@ -49,8 +49,15 @@
 <body>
 
 <p>
-    Below you may find catering bill for ${childName} for the month of ${month}. <br>
-    The table consists of all dates when ${childName} was present along with details regarding assigned catering option.
+    <#if correction == false>
+        This is ${month} catering bill for ${childName}. <br>
+    <#else>
+        This is a correction for the ${month} catering bill for ${childName}. <br>
+        Please disregard any previous versions of this month's catering bill. <br>
+    </#if>
+    <br>
+    You may find details regarding specific catering orders in the table below. <br>
+    Please feel free to contact us in case you have any questions on concerns.
 </p>
 
 <table>
@@ -70,6 +77,12 @@
         </tr>
     </#list>
 
+    <#if dailyOrders?size == 0>
+        <tr style="text-align: center">
+            <td colspan="3">No catering orders in this month.</td>
+        </tr>
+    </#if>
+
     <tr style="font-weight: bold">
         <td colspan="2" style="text-align: center">Total due:</td>
         <#setting locale="pl_PL">
@@ -79,7 +92,7 @@
 </table>
 
 <p>
-    Please find our bank account details below:<Br>
+    You may find our bank account details below:<Br>
     XXXXXXXXXXXXXXXXXX<br>
     XXXXXXXXXXXXXXXXXX
 </p>

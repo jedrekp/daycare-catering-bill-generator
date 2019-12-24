@@ -1,5 +1,7 @@
 <div class="modal-header bg-purple text-center">
-    <h4 class="modal-title mx-auto">Catering bill preview </h4>
+    <h4 class="modal-title mx-auto">
+        Catering bill<span *ngIf="cateringBill">#{{cateringBill.billId}}</span>
+    </h4>
 </div>
 
 <div class="modal-body text-center">
@@ -7,7 +9,6 @@
 
         <h5 class="subheader-purple mx-auto" style="text-align: center;">
             {{cateringBill.childFullName}}, {{cateringBill.month}} {{cateringBill.year}}
-            <span *ngIf="cateringBill.correction"> (correction)</span>
         </h5>
         <div class="subheader-underline"></div>
 
@@ -47,16 +48,14 @@
             </table>
         </div>
 
-        <small>*All orders in this preview are based on the current state of child's attendance for this month and
-            catering options that are in effect for given dates. </small>
-
     </span>
 
 </div>
 
 
 <div class="modal-footer">
-    <button type="submit" [disabled]="inputDisabled" class="btn btn-outline-purple" (click)="submitCateringBill()">
-        Save and send to parent</button>
-    <button type="button" [disabled]="inputDisabled" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
+    <button type="submit" [disabled]="inputDisabled" class="btn btn-outline-purple" (click)="resendBill()">
+        Re-send email to parent</button>
+    <button type="button" [disabled]="inputDisabled" class="btn btn-outline-purple"
+        (click)="closeBillPage()">Close</button>
 </div>

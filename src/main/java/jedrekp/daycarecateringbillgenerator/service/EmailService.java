@@ -64,6 +64,7 @@ public class EmailService {
                 cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH), String.valueOf(cateringBill.getYear())));
         templateModel.put("childName", MessageFormat.format("{0} {1}",
                 cateringBill.getChild().getFirstName(), cateringBill.getChild().getLastName()));
+        templateModel.put("correction", cateringBill.isCorrection());
         templateModel.put("dailyOrders", cateringBill.getDailyCateringOrders());
         templateModel.put("totalDue", totalDue);
         Template template = emailConfiguration.getTemplate("catering-bill-email.ftl");
@@ -71,8 +72,12 @@ public class EmailService {
     }
 
     private String createEmailSubject(CateringBill cateringBill) {
-        return MessageFormat.format("{0} {1} daycare catering bill for {2} {3}",
+        String subject = MessageFormat.format("{0} {1} daycare catering bill for {2} {3}",
                 cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH), String.valueOf(cateringBill.getYear()),
                 cateringBill.getChild().getFirstName(), cateringBill.getChild().getLastName());
+        if (cateringBill.isCorrection()) {
+            subject = subject + " (correction)";
+        }
+        return subject;
     }
 }

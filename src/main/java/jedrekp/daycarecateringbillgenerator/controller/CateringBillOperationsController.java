@@ -1,5 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.controller;
 
+import freemarker.template.TemplateException;
 import jedrekp.daycarecateringbillgenerator.DTO.response.CateringBillResponse;
 import jedrekp.daycarecateringbillgenerator.service.CateringBillService;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.time.Month;
 import java.time.Year;
 
@@ -26,7 +29,7 @@ public class CateringBillOperationsController {
     }
 
     @GetMapping(value = "/send-to-parent", params = {"cateringBillId"})
-    public ResponseEntity sendBillTOParentViaEmail(@RequestParam long cateringBillId) {
+    public ResponseEntity sendBillTOParentViaEmail(@RequestParam long cateringBillId) throws IOException, TemplateException, MessagingException {
         cateringBillService.sendBillToParentViaEmail(cateringBillId);
         return ResponseEntity.noContent().build();
     }

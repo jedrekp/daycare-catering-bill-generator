@@ -38,6 +38,13 @@ public class CateringBillService {
     private final EntityManager entityManager;
 
     @Transactional(readOnly = true)
+    public CateringBillResponse getSpecificBillForChild(long childId, Month month, Year year) {
+        CateringBill cateringBill = cateringBillRepository.findByMonthAndYearAndChildIdWithAllDetails(month, year, childId)
+                .orElseThrow(EntityNotFoundException::new);
+        return mapCateringBillToResponse(cateringBill);
+    }
+
+    @Transactional(readOnly = true)
     public Set<CateringBillResponse> getCateringBillsByMonthAndDaycareGroupId(long daycareGroupId, Month month, Year year) {
         Collection<CateringBill> cateringBills = cateringBillRepository.findAllByMonthAndYearAndDaycareGroupId(month, year, daycareGroupId);
         Set<CateringBillResponse> cateringBillResponses = new HashSet<>();
@@ -66,8 +73,6 @@ public class CateringBillService {
     @Transactional
     public CateringBill addNewCateringBillToChild(long childId, CreateCateringBillRequest cateringBillRequest) {
 
-        checkIfCateringBillRequestContainsAnyOrders(cateringBillRequest);
-
         Child child = childService.findSingleNotArchivedChildById(childId);
         CateringBill newCateringBill = mapRequestToCateringBill(cateringBillRequest);
 
@@ -83,27 +88,18 @@ public class CateringBillService {
 
     @Transactional(readOnly = true)
 
-    public void sendBillToParentViaEmail(long cateringBillId) {
+    public void sendBillToParentViaEmail(long cateringBillId) throws IOException, TemplateException, MessagingException {
 
         CateringBill cateringBill = findByIdWithAllDetails(cateringBillId);
 
         BigDecimal totalDue = calculateTotalDueFromDailyOrders(cateringBill.getDailyCateringOrders());
 
-        try {
-            emailService.sendEmailWithCateringBill(cateringBill, totalDue);
-        } catch (IOException | TemplateException | MessagingException ex) {
-            ex.printStackTrace();
-        }
+        emailService.sendEmailWithCateringBill(cateringBill, totalDue);
+
     }
 
     private CateringBill findByIdWithAllDetails(long cateringBillId) {
         return cateringBillRepository.findByIdWithAllDetails(cateringBillId).orElseThrow(EntityNotFoundException::new);
-    }
-
-    private void checkIfCateringBillRequestContainsAnyOrders(CreateCateringBillRequest cateringBillRequest) {
-        if (cateringBillRequest.getDailyCateringOrders().isEmpty()) {
-            throw new IllegalArgumentException("Cannot save catering bill with no daily orders");
-        }
     }
 
     private void insertDailyOrdersIntoNewCateringBill(List<AttendanceSheet> attendanceSheets, CateringBillResponse cateringBillResponse, long childId) {
