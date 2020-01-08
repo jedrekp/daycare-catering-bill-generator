@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ERROR_HEADER } from 'src/app/const';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-child-assign-option',
@@ -28,7 +29,8 @@ export class ChildAssignOptionComponent implements OnInit {
     private datePipe: DatePipe,
     private dialogModalService: DialogModalService,
     private childDataService: ChildDataService,
-    private cateringOptionDataService: CateringOptionDataService
+    private cateringOptionDataService: CateringOptionDataService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -49,6 +51,9 @@ export class ChildAssignOptionComponent implements OnInit {
         if (cateringOptions.length > 0) {
           this.assignCateringOptionForm.patchValue({ cateringOption: cateringOptions[0] })
         }
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
       })
   }
 
@@ -74,7 +79,7 @@ export class ChildAssignOptionComponent implements OnInit {
             this.onClose.next(this.assignCateringOptionForm.get('cateringOption').value)
           },
           err => {
-            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
+            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
           })
     }
   }

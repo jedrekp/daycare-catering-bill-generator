@@ -28,7 +28,9 @@ public class ChildService {
 
     @Transactional(readOnly = true)
     public Child findSingleChildByIdWithAllDetails(long childId) {
-        return childRepository.findByIdWithAllDetails(childId).orElseThrow(EntityNotFoundException::new);
+        return childRepository.findByIdWithAllDetails(childId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        MessageFormat.format("Child with id: {0} does not exist.", childId)));
     }
 
     @Transactional(readOnly = true)
@@ -74,7 +76,7 @@ public class ChildService {
     @Transactional
     public Child saveNewChild(Child child) {
         if (child.isArchived()) {
-            throw new IllegalArgumentException("New child cannot be saved directly to archive");
+            throw new IllegalArgumentException("New child cannot be saved directly to archive.");
         }
         checkNameAvailability(child.getFirstName(), child.getLastName(), null);
         return childRepository.save(child);
@@ -154,7 +156,7 @@ public class ChildService {
             nameTaken = childRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(firstName, lastName, childId);
         }
         if (nameTaken) {
-            throw new EntityExistsException("Another child with the same first name and last name already exists");
+            throw new EntityExistsException("Another child with the same first name and last name already exists.");
         }
     }
 
@@ -162,7 +164,7 @@ public class ChildService {
         if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(effectiveDate, childId)) {
             throw new IllegalArgumentException(
                     "Child #" + childId + " already has another catering option assigned with this effective date.\n" +
-                            "It must be removed first");
+                            "It must be removed first.");
         }
     }
 

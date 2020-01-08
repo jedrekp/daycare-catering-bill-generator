@@ -13,6 +13,8 @@ import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -54,18 +56,21 @@ public class ChildController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Child> addNewChild(@RequestBody Child child) {
+    public ResponseEntity<Child> addNewChild(@RequestBody @Valid Child child) {
         return new ResponseEntity<>(childService.saveNewChild(child), HttpStatus.CREATED);
     }
 
     @PutMapping("/{childId}")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Child> EditChild(@PathVariable long childId, @RequestBody Child child) {
+    public ResponseEntity<Child> EditChild(@PathVariable long childId, @RequestBody @Valid Child child) {
         return new ResponseEntity<>(childService.editChild(childId, child), HttpStatus.OK);
     }
 
     @PostMapping("/{childId}/assignedOptions")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<AssignedOption> assignNewCateringOptionToChild(
             @PathVariable long childId, @RequestBody @Valid AssignOptionToChildRequest assignOptionToChildRequest) {
@@ -73,6 +78,7 @@ public class ChildController {
     }
 
     @DeleteMapping("/{childId}/assignedOptions/{assignedOptionId}")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity removeAssignedOptionFromChild(
             @PathVariable long childId, @PathVariable long assignedOptionId) {
         childService.removeAssignedOption(childId, assignedOptionId);
@@ -80,12 +86,14 @@ public class ChildController {
     }
 
     @GetMapping(value = "/{childId}/cateringBills", params = {"month", "year"})
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<CateringBillResponse> getCateringBillForSpecificMonth(
             @PathVariable long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(cateringBillService.getSpecificBillForChild(childId, month, year), HttpStatus.OK);
     }
 
     @PostMapping("/{childId}/cateringBills")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<CateringBill> addNewCateringBillToChild(
             @PathVariable long childId, @RequestBody @Valid CreateCateringBillRequest cateringBillRequest) {
         return new ResponseEntity<>(cateringBillService.addNewCateringBillToChild(childId, cateringBillRequest), HttpStatus.CREATED);

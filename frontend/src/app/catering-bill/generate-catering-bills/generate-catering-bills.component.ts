@@ -7,6 +7,7 @@ import { CateringBill } from '../catering-bill';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BillPreviewComponent } from '../bill-preview/bill-preview.component';
 import { BillDisplayComponent } from '../bill-display/bill-display.component';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-generate-catering-bills',
@@ -26,7 +27,8 @@ export class GenerateCateringBillsComponent implements OnInit {
   constructor(
     private bsModalService: BsModalService,
     private datePipe: DatePipe,
-    private daycareGroupDataService: DaycareGroupDataService
+    private daycareGroupDataService: DaycareGroupDataService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -54,8 +56,10 @@ export class GenerateCateringBillsComponent implements OnInit {
         if (daycareGroups.length > 0) {
           this.selectMonthAndGroupForm.patchValue({ daycareGroup: daycareGroups[0] })
         }
-      }
-    )
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
+      })
   }
 
   retrieveChildrenAndBillInfo() {
@@ -71,7 +75,13 @@ export class GenerateCateringBillsComponent implements OnInit {
           ).subscribe(
             cateringBills => {
               this.cateringBills = cateringBills
+            },
+            err => {
+              this.errorHandlerService.redirectToErrorPage(err)
             })
+        },
+        err => {
+          this.errorHandlerService.redirectToErrorPage(err)
         })
   }
 

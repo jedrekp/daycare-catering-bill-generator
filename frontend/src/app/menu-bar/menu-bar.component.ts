@@ -9,6 +9,9 @@ import { CateringOption } from '../catering-option/CateringOption';
 import { CateringOptionCreateEditComponent } from '../catering-option/catering-option-create-edit/catering-option-create-edit.component';
 import { DaycareGroup } from '../daycare-group/daycare-group';
 import { DaycareGroupCreateEditComponent } from '../daycare-group/daycare-group-create-edit/daycare-group-create-edit.component';
+import { JwtAuthenticationService } from '../authentication/jwt-authentication.service';
+import { DialogModalService } from '../dialog/dialog-modal.service';
+import { ACTION_COMPLETED_HEADER } from '../const';
 
 @Component({
   selector: 'app-menu-bar',
@@ -24,6 +27,8 @@ export class MenuBarComponent implements OnInit {
   constructor(
     private router: Router,
     private modalService: BsModalService,
+    private dialogModalService: DialogModalService,
+    private authenticationService: JwtAuthenticationService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false
@@ -98,6 +103,16 @@ export class MenuBarComponent implements OnInit {
       this.closeNavbar()
       this.searchPhrase = null
     }
+  }
+
+  logout() {
+    this.authenticationService.logout()
+    this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,'You are now logged out.')
+    this.modalRef.content.onClose.subscribe(
+      onClose => {
+        this.router.navigate(['login'])
+        this.closeNavbar()
+      })
   }
 
 }

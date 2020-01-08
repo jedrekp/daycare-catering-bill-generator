@@ -30,7 +30,10 @@ import { ArchivedChildrenListComponent } from './child/archived-children-list/ar
 import { GenerateCateringBillsComponent } from './catering-bill/generate-catering-bills/generate-catering-bills.component';
 import { BillPreviewComponent } from './catering-bill/bill-preview/bill-preview.component';
 import { BillDisplayComponent } from './catering-bill/bill-display/bill-display.component';
-
+import { LoginComponent } from './authentication/login/login.component';
+import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { ErrorComponent } from './error/error.component';
+import { HttpInterceptorService } from './authentication/http-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -54,6 +57,9 @@ import { BillDisplayComponent } from './catering-bill/bill-display/bill-display.
     GenerateCateringBillsComponent,
     BillPreviewComponent,
     BillDisplayComponent,
+    LoginComponent,
+    WelcomePageComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +84,10 @@ import { BillDisplayComponent } from './catering-bill/bill-display/bill-display.
     BillPreviewComponent,
     BillDisplayComponent
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

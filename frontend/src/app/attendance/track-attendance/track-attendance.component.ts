@@ -8,6 +8,8 @@ import { DatePipe } from '@angular/common';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
 import { Child } from 'src/app/child/child';
+import { Router } from '@angular/router';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-track-attendance',
@@ -24,9 +26,11 @@ export class TrackAttendanceComponent implements OnInit {
 
   constructor(
     private datePipe: DatePipe,
+    private router: Router,
     private daycareGroupDataService: DaycareGroupDataService,
     private attendanceDataService: AttendanceDataService,
-    private dialogModalService: DialogModalService
+    private dialogModalService: DialogModalService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -56,6 +60,9 @@ export class TrackAttendanceComponent implements OnInit {
         if (daycareGroups.length > 0) {
           this.selectDateAndGroupForm.patchValue({ daycareGroup: daycareGroups[0] })
         }
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
       })
   }
 
@@ -73,7 +80,13 @@ export class TrackAttendanceComponent implements OnInit {
                   for (let child of this.selectedDaycareGroup.children) {
                     this.markChildWithUntrackedAttendanceAsAbsentByDefault(child)
                   }
+                },
+                err => {
+                  this.errorHandlerService.redirectToErrorPage(err)
                 })
+          },
+          err => {
+            this.errorHandlerService.redirectToErrorPage(err)
           })
     }
   }
@@ -105,7 +118,7 @@ export class TrackAttendanceComponent implements OnInit {
            has been sucessfully submited.`)
       },
       err => {
-        this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
+        this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
       })
   }
 

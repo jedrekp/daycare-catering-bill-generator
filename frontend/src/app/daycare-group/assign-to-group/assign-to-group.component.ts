@@ -6,6 +6,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DaycareGroup } from '../daycare-group';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ERROR_HEADER } from 'src/app/const';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-assign-to-group',
@@ -22,7 +23,8 @@ export class AssignToGroupComponent implements OnInit {
   constructor(
     private modalRef: BsModalRef,
     private dialogModalService: DialogModalService,
-    private daycareGroupDataService: DaycareGroupDataService
+    private daycareGroupDataService: DaycareGroupDataService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -40,6 +42,9 @@ export class AssignToGroupComponent implements OnInit {
         if (daycareGroups.length > 0) {
           this.assignChildToGroupForm.patchValue({ daycareGroup: daycareGroups[0] })
         }
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
       })
   }
 
@@ -54,7 +59,7 @@ export class AssignToGroupComponent implements OnInit {
           this.onClose.next(daycareGroup)
         },
         err => {
-          this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
+          this.dialogModalService.openNestedInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
         })
     }
   }

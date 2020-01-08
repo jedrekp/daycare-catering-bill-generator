@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,17 +28,21 @@ public class Child {
 
     @Column(name = "first_name")
     @JsonView(JsonViewFilter.BasicInfo.class)
+    @NotNull
     private String firstName;
 
     @Column(name = "last_name")
     @JsonView(JsonViewFilter.BasicInfo.class)
+    @NotNull
     private String lastName;
 
     @Column(name = "parent_email")
     @JsonView(JsonViewFilter.BasicInfo.class)
+    @NotNull
     private String parentEmail;
 
     @JsonView(JsonViewFilter.BasicInfo.class)
+    @NotNull
     private boolean archived;
 
     @ManyToOne(fetch = FetchType.LAZY)

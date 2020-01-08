@@ -6,6 +6,8 @@ import { CateringBillOperationsService } from '../catering-bill-operations.servi
 import { ChildDataService } from 'src/app/child/child-data.service';
 import { ERROR_HEADER, CONFIRMATION_HEADER, ACTION_COMPLETED_HEADER } from 'src/app/const';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-bill-preview',
@@ -22,11 +24,13 @@ export class BillPreviewComponent implements OnInit {
   private cateringBill: CateringBill
 
   constructor(
+    private router: Router,
     private modalRef: BsModalRef,
     private nestedModalRef: BsModalRef,
     private dialogModalService: DialogModalService,
     private cateringBillOperationsService: CateringBillOperationsService,
     private childDataService: ChildDataService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -38,6 +42,11 @@ export class BillPreviewComponent implements OnInit {
     this.cateringBillOperationsService.getCateringBillPreview(childId, month, year).subscribe(
       cateringBill => {
         this.cateringBill = cateringBill
+      },
+      err => {
+        this.modalRef.hide()
+        this.onClose.next(false)
+        this.errorHandlerService.redirectToErrorPage(err)
       })
   }
 
@@ -83,7 +92,7 @@ export class BillPreviewComponent implements OnInit {
             })
         },
         err => {
-          this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.msg)
+          this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.getErrorMessage())
           this.inputDisabled = false
         })
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChildDataService } from '../child-data.service';
 import { Child } from '../child';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-children-search-results',
@@ -14,7 +15,8 @@ export class ChildrenSearchResultsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private childDataService: ChildDataService
+    private childDataService: ChildDataService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -22,6 +24,9 @@ export class ChildrenSearchResultsComponent implements OnInit {
     this.childDataService.findChildrenBySearchPhrase(searchPhrase).subscribe(
       children => {
         this.children = children
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
       })
   }
 

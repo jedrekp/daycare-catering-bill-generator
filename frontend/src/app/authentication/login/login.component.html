@@ -1,0 +1,45 @@
+<div class="row">
+
+    <div class="card col-10 col-sm-8 col-md-6 col-lg-4 mx-auto my-4 p-0 text-center border-darkblue">
+
+        <div class="card-header bg-darkblue">
+            <h5 class="card-title my-0">Login to your account</h5>
+        </div>
+
+        <form novalidate [formGroup]="loginForm" (ngSubmit)="handleLogin()">
+
+            <div class="card-body pt-4">
+
+                <div class="form-group text-left">
+                    <label>Username</label>
+                    <input type="text" class="form-control" formControlName="username" />
+                </div>
+                <alert *ngIf="loginForm.get('username').hasError('required') && loginForm.get('username').touched"
+                    type="danger">
+                    Username <strong>cannot</strong> be empty.
+                </alert>
+
+
+                <div class="form-group text-left">
+                    <label>Password</label>
+                    <input type="password" class="form-control" formControlName="password" />
+                </div>
+                <alert *ngIf="loginForm.get('password').hasError('required') && loginForm.get('password').touched"
+                    type="danger">
+                    Password <strong>cannot</strong> be empty.
+                </alert>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-outline-darkblue" [disabled]="!loginForm.valid">Login</button>
+                <div *ngIf="invalidLogin" class="mt-3">
+                    <alert type="danger">
+                        <strong>Invalid credentials!</strong>
+                    </alert>
+                </div>
+            </div>
+
+        </form>
+
+    </div>

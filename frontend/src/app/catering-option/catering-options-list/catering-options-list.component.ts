@@ -4,6 +4,9 @@ import { CateringOptionDataService } from '../catering-option-data.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CateringOptionCreateEditComponent } from '../catering-option-create-edit/catering-option-create-edit.component';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
+import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
+import { ERROR_HEADER } from 'src/app/const';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-catering-options-list',
@@ -22,7 +25,9 @@ export class CateringOptionsListComponent implements OnInit {
   constructor(
     private cateringOptionDataService: CateringOptionDataService,
     private dialogModalService: DialogModalService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private authenticationService: JwtAuthenticationService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -34,10 +39,16 @@ export class CateringOptionsListComponent implements OnInit {
     this.cateringOptionDataService.retreiveCateringOptionsByDisabled(false).subscribe(
       cateringOptions => {
         this.activeCateringOptions = cateringOptions
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
       })
     this.cateringOptionDataService.retreiveCateringOptionsByDisabled(true).subscribe(
       cateringOptions => {
         this.disabledCateringOptions = cateringOptions
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
       })
   }
 
@@ -52,17 +63,21 @@ export class CateringOptionsListComponent implements OnInit {
   }
 
   openEditCateringOptionModal(cateringOptionToEdit: CateringOption) {
-    let initialState = { cateringOption: cateringOptionToEdit }
-    this.modalRef = this.modalService.show(CateringOptionCreateEditComponent,
-      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
-    this.modalRef.content.onClose.subscribe(
-      cateringOption => {
-        if (cateringOption) {
-          this.modalRef = this.dialogModalService.openInformationModal('Option edited',
-            `Catering option #${cateringOption.id} has been succesfully edited.`)
-          this.retrieveCateringOptions();
-        }
-      })
+    if (this.authenticationService.getUserRole() == "HEADMASTER") {
+      let initialState = { cateringOption: cateringOptionToEdit }
+      this.modalRef = this.modalService.show(CateringOptionCreateEditComponent,
+        { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
+      this.modalRef.content.onClose.subscribe(
+        cateringOption => {
+          if (cateringOption) {
+            this.modalRef = this.dialogModalService.openInformationModal('Option edited',
+              `Catering option #${cateringOption.id} has been succesfully edited.`)
+            this.retrieveCateringOptions();
+          }
+        })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
   }
 
 }

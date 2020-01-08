@@ -1,0 +1,38 @@
+package jedrekp.daycarecateringbillgenerator.security;
+
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+
+@RestController
+@CrossOrigin
+@RequiredArgsConstructor
+public class AuthenticationController {
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtUserDetailsService jwtUserDetailsService;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+
+        System.out.println("KUKU");
+
+        String token = jwtTokenUtil.generateToken(jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername()));
+
+        return new ResponseEntity<>(new AuthenticationResponse(token), HttpStatus.OK);
+    }
+
+}

@@ -3,6 +3,7 @@ package jedrekp.daycarecateringbillgenerator.DTO.request;
 import jedrekp.daycarecateringbillgenerator.entity.DailyCateringOrder;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.Month;
 import java.time.Year;
@@ -18,5 +19,6 @@ public class CreateCateringBillRequest {
     private Year year;
 
     @NotNull
+    @Valid
     private Set<DailyCateringOrder> dailyCateringOrders;
 }

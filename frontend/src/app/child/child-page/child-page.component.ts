@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChildDataService } from '../child-data.service';
 import { Child, AssignedOption } from '../child';
 import { ChildCreateEditComponent } from '../child-create-edit/child-create-edit.component';
@@ -12,6 +12,8 @@ import { CONFIRMATION_HEADER, ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/
 import { AttendanceDataService } from 'src/app/attendance/attendance-data.service';
 import { MonthlyChildAttendance } from 'src/app/attendance/monthly-child-attandance';
 import { DatePipe } from '@angular/common';
+import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-child-page',
@@ -30,12 +32,15 @@ export class ChildPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private datePipe: DatePipe,
     private bsModalService: BsModalService,
     private dialogModalService: DialogModalService,
     private childDataService: ChildDataService,
     private daycareGroupDataService: DaycareGroupDataService,
-    private attendanceDataService: AttendanceDataService
+    private attendanceDataService: AttendanceDataService,
+    private authenticationService: JwtAuthenticationService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -52,141 +57,175 @@ export class ChildPageComponent implements OnInit {
       child => {
         this.child = child
         this.retrieveAttendance()
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
       })
   }
 
   openEditChildModal() {
-    let initialState = {
-      child: new Child(this.child.id, this.child.firstName, this.child.lastName,
-        this.child.parentEmail, this.child.archived)
-    };
-    this.modalRef = this.bsModalService.show(ChildCreateEditComponent,
-      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
-    this.modalRef.content.onClose.subscribe(
-      childId => {
-        if (childId) {
-          this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Child #${this.child.id} has been succesfully edited.`)
-          this.modalRef.content.onClose.subscribe(
-            onClose => {
-              this.retrieveChild(this.child.id)
-            })
-        }
-      })
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+      let initialState = {
+        child: new Child(this.child.id, this.child.firstName, this.child.lastName,
+          this.child.parentEmail, this.child.archived)
+      };
+      this.modalRef = this.bsModalService.show(ChildCreateEditComponent,
+        { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
+      this.modalRef.content.onClose.subscribe(
+        childId => {
+          if (childId) {
+            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+              `Child #${this.child.id} has been succesfully edited.`)
+            this.modalRef.content.onClose.subscribe(
+              onClose => {
+                this.retrieveChild(this.child.id)
+              })
+          }
+        })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
   }
 
   moveToArchive() {
-    this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `You are about to move child #${this.child.id} records to archive.\n
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+      this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `You are about to move child #${this.child.id} records to archive.\n
   Some actions might be unavailalbe while children records are in archive.\n
   This will also result in child being removed from daycare group that it's currently assigned to.`)
-    this.modalRef.content.onClose.subscribe(
-      onClose => {
-        if (onClose) {
-          this.childDataService.editChild(this.child.id,
-            new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, true)).subscribe(
+      this.modalRef.content.onClose.subscribe(
+        onClose => {
+          if (onClose) {
+            this.childDataService.editChild(this.child.id,
+              new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, true)).subscribe(
+                response => {
+                  this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+                    `Child #${this.child.id} records have been moved to archive.`)
+                  this.modalRef.content.onClose.subscribe(
+                    onClose => {
+                      this.retrieveChild(this.child.id)
+                    })
+                },
+                err => {
+                  this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+                })
+          }
+        })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
+  }
+
+  restoreFromArchive() {
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+      this.childDataService.editChild(this.child.id,
+        new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, false)).subscribe(
+          response => {
+            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+              `Child #${this.child.id} records have been restored from archive.`)
+            this.modalRef.content.onClose.subscribe(
+              onclose => {
+                this.retrieveChild(this.child.id)
+              })
+          },
+          err => {
+            this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+          })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
+  }
+
+  openAssignChildToGroupModal() {
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+      let initialState = { childId: this.child.id }
+      this.modalRef = this.bsModalService.show(AssignToGroupComponent,
+        { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
+      this.modalRef.content.onClose.subscribe(
+        daycareGroup => {
+          if (daycareGroup) {
+            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+              `Child #${this.child.id} is now assigned to daycare group #${daycareGroup.id}(${daycareGroup.groupName}).`)
+            this.modalRef.content.onClose.subscribe(
+              onClose => {
+                this.retrieveChild(this.child.id)
+              })
+          }
+        })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
+  }
+
+  removeFromGroup() {
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+      this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
+        `You are about to remove child #${this.child.id} from daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
+      this.modalRef.content.onClose.subscribe(
+        onClose => {
+          if (onClose) {
+            this.daycareGroupDataService.removeChildFromDaycareGroup(this.child.daycareGroup.id, this.child.id).subscribe(
               response => {
                 this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                  `Child #${this.child.id} records have been moved to archive.`)
+                  `Child# ${this.child.id} is no longer assigned to daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
                 this.modalRef.content.onClose.subscribe(
-                  onClose => {
+                  onclose => {
                     this.retrieveChild(this.child.id)
                   })
               },
               err => {
-                this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
+                this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
               })
-        }
-      })
-  }
-
-  restoreFromArchive() {
-    this.childDataService.editChild(this.child.id,
-      new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, false)).subscribe(
-        response => {
-          this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Child #${this.child.id} records have been restored from archive.`)
-          this.modalRef.content.onClose.subscribe(
-            onclose => {
-              this.retrieveChild(this.child.id)
-            })
+          }
         })
-  }
-
-  openAssignChildToGroupModal() {
-    let initialState = { childId: this.child.id }
-    this.modalRef = this.bsModalService.show(AssignToGroupComponent,
-      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
-    this.modalRef.content.onClose.subscribe(
-      daycareGroup => {
-        if (daycareGroup) {
-          this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Child #${this.child.id} is now assigned to daycare group #${daycareGroup.id}(${daycareGroup.groupName}).`)
-          this.modalRef.content.onClose.subscribe(
-            onClose => {
-              this.retrieveChild(this.child.id)
-            })
-        }
-      })
-  }
-
-  removeFromGroup() {
-    this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to remove child #${this.child.id} from daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
-    this.modalRef.content.onClose.subscribe(
-      onClose => {
-        if (onClose) {
-          this.daycareGroupDataService.removeChildFromDaycareGroup(this.child.daycareGroup.id, this.child.id).subscribe(
-            response => {
-              this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                `Child# ${this.child.id} is no longer assigned to daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
-              this.modalRef.content.onClose.subscribe(
-                onclose => {
-                  this.retrieveChild(this.child.id)
-                })
-            },
-            err => {
-              this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
-            })
-        }
-      })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
   }
 
   openAssignNewOptionModal() {
-    let initialState = { childId: this.child.id }
-    this.modalRef = this.bsModalService.show(ChildAssignOptionComponent,
-      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
-    this.modalRef.content.onClose.subscribe(
-      cateringOption => {
-        if (cateringOption) {
-          this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Catering option #${cateringOption.id}(${cateringOption.optionName}) has been succesfully assigned to child #${this.child.id}.`)
-          this.modalRef.content.onClose.subscribe(
-            onClose => {
-              this.retrieveChild(this.child.id)
-            })
-        }
-      })
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+      let initialState = { childId: this.child.id }
+      this.modalRef = this.bsModalService.show(ChildAssignOptionComponent,
+        { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
+      this.modalRef.content.onClose.subscribe(
+        cateringOption => {
+          if (cateringOption) {
+            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+              `Catering option #${cateringOption.id}(${cateringOption.optionName}) has been succesfully assigned to child #${this.child.id}.`)
+            this.modalRef.content.onClose.subscribe(
+              onClose => {
+                this.retrieveChild(this.child.id)
+              })
+          }
+        })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
   }
 
   removeAssignedOption(assignedOption: AssignedOption) {
-    this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-      `You are about to remove catering option #${assignedOption.cateringOption.id}(${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+      this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
+        `You are about to remove catering option #${assignedOption.cateringOption.id}(${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
       If you want to select a new catering option for this child, add another option with new effective date instead.\n.
       Proceed only if this option was mistakenly assigned and you need to correct an error.\n`)
-    this.modalRef.content.onClose.subscribe(
-      onClose => {
-        if (onClose) {
-          this.childDataService.removeAssignedOptionFromChild(this.child.id, assignedOption.id).subscribe(
-            response => {
-              this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                `Catering option#${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) is no longer assigned to child #${this.child.id}.`)
-              this.retrieveChild(this.child.id);
-            },
-            err => {
-              this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
-            })
-        }
-      })
+      this.modalRef.content.onClose.subscribe(
+        onClose => {
+          if (onClose) {
+            this.childDataService.removeAssignedOptionFromChild(this.child.id, assignedOption.id).subscribe(
+              response => {
+                this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+                  `Catering option#${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) is no longer assigned to child #${this.child.id}.`)
+                this.retrieveChild(this.child.id);
+              },
+              err => {
+                this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+              })
+          }
+        })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
   }
 
   onOpenCalendar(container) {
@@ -218,9 +257,8 @@ export class ChildPageComponent implements OnInit {
         this.monthlyChildAttendance = monthlyChildAttendance
       },
       err => {
-        this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
+        this.errorHandlerService.redirectToErrorPage(err)
       })
-
   }
 
   checkAttendanceStatus(date: Date) {
@@ -264,7 +302,7 @@ export class ChildPageComponent implements OnInit {
           })
       },
       err => {
-        this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
+        this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
       })
   }
 

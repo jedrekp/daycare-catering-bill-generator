@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DaycareGroupDataService } from '../daycare-group-data.service';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ERROR_HEADER } from 'src/app/const';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-daycare-group-create-edit',
@@ -23,7 +24,8 @@ export class DaycareGroupCreateEditComponent implements OnInit {
   constructor(
     private modalRef: BsModalRef,
     private dialogModalService: DialogModalService,
-    private daycareGroupDataService: DaycareGroupDataService
+    private daycareGroupDataService: DaycareGroupDataService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -48,25 +50,33 @@ export class DaycareGroupCreateEditComponent implements OnInit {
         this.daycareGroupForm.get('groupName').value
       )
       if (this.daycareGroup.id === -1) {
-        this.daycareGroupDataService.createDaycareGroup(daycareGroupToSubmit).subscribe(
-          daycareGroup => {
-            this.modalRef.hide()
-            this.onClose.next(daycareGroup.id)
-          },
-          err => {
-            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
-          })
+        this.createNewDaycareGroup(daycareGroupToSubmit)
       } else {
-        this.daycareGroupDataService.editDaycareGroup(this.daycareGroup.id, daycareGroupToSubmit).subscribe(
-          daycareGroup => {
-            this.modalRef.hide()
-            this.onClose.next(daycareGroup.id)
-          },
-          err => {
-            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
-          })
+        this.editDaycareGroup(daycareGroupToSubmit)
       }
     }
+  }
+
+  createNewDaycareGroup(daycareGroupToSubmit: DaycareGroup) {
+    this.daycareGroupDataService.createDaycareGroup(daycareGroupToSubmit).subscribe(
+      daycareGroup => {
+        this.modalRef.hide()
+        this.onClose.next(daycareGroup.id)
+      },
+      err => {
+        this.dialogModalService.openNestedInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+      })
+  }
+
+  editDaycareGroup(daycareGroupToSubmit: DaycareGroup) {
+    this.daycareGroupDataService.editDaycareGroup(this.daycareGroup.id, daycareGroupToSubmit).subscribe(
+      daycareGroup => {
+        this.modalRef.hide()
+        this.onClose.next(daycareGroup.id)
+      },
+      err => {
+        this.dialogModalService.openNestedInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+      })
   }
 
   public onCancel() {

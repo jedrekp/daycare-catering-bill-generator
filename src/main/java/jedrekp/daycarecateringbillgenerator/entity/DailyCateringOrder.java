@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -27,12 +28,15 @@ public class DailyCateringOrder {
     private long id;
 
     @Column(name = "order_date")
+    @NotNull
     private LocalDate orderDate;
 
     @Column(name = "catering_option_name")
+    @NotNull
     private String cateringOptionName;
 
     @Column(name = "price")
+    @NotNull
     private BigDecimal cateringOptionPrice;
 
     @ManyToOne

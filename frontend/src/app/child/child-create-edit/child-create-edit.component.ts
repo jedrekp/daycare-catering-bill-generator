@@ -7,6 +7,7 @@ import { ChildDataService } from '../child-data.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ERROR_HEADER } from 'src/app/const';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-child-create-edit',
@@ -23,7 +24,8 @@ export class ChildCreateEditComponent implements OnInit {
   constructor(
     private bsModalRef: BsModalRef,
     private dialogModalService: DialogModalService,
-    private childDataService: ChildDataService
+    private childDataService: ChildDataService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -54,26 +56,34 @@ export class ChildCreateEditComponent implements OnInit {
         this.childBasicInfoForm.get('parentEmail').value,
         this.child.archived
       )
-      if (this.child.id === -1) {
-        this.childDataService.createChild(childToSubmit).subscribe(
-          child => {
-            this.bsModalRef.hide()
-            this.onClose.next(child.id)
-          },
-          err => {
-            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
-          })
+      if (this.child.id == -1) {
+        this.createNewChild(childToSubmit)
       } else {
-        this.childDataService.editChild(this.child.id, childToSubmit).subscribe(
-          child => {
-            this.bsModalRef.hide()
-            this.onClose.next(child.id)
-          },
-          err => {
-            this.dialogModalService.openNestedInformationModal(ERROR_HEADER, err.message)
-          })
+        this.editChild(childToSubmit)
       }
     }
+  }
+
+  createNewChild(childToSubmit: Child) {
+    this.childDataService.createChild(childToSubmit).subscribe(
+      child => {
+        this.bsModalRef.hide()
+        this.onClose.next(child.id)
+      },
+      err => {
+        this.dialogModalService.openNestedInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+      })
+  }
+
+  editChild(childToSubmit: Child) {
+    this.childDataService.editChild(this.child.id, childToSubmit).subscribe(
+      child => {
+        this.bsModalRef.hide()
+        this.onClose.next(child.id)
+      },
+      err => {
+        this.dialogModalService.openNestedInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+      })
   }
 
   public onCancel() {

@@ -4,6 +4,8 @@ import { Child } from '../child';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { BsModalRef } from 'ngx-bootstrap/modal/public_api';
 import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
+import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
+import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
   selector: 'app-archived-children-list',
@@ -17,7 +19,9 @@ export class ArchivedChildrenListComponent implements OnInit {
 
   constructor(
     private dialogModalService: DialogModalService,
-    private childDataService: ChildDataService
+    private childDataService: ChildDataService,
+    private authenticationService: JwtAuthenticationService,
+    private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
@@ -31,19 +35,23 @@ export class ArchivedChildrenListComponent implements OnInit {
   }
 
   restoreFromArchive(child: Child) {
-    this.childDataService.editChild(child.id,
-      new Child(child.id, child.firstName, child.lastName, child.parentEmail, false)).subscribe(
-        response => {
-          this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-            `Child #${child.id} (${child.firstName} ${child.lastName}) has been restored from archive.`)
-          this.modalRef.content.onClose.subscribe(
-            onClose => {
-              this.retrieveArchivedChildren()
-            })
-        },
-        err => {
-          this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, err.message)
-        })
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+      this.childDataService.editChild(child.id,
+        new Child(child.id, child.firstName, child.lastName, child.parentEmail, false)).subscribe(
+          response => {
+            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+              `Child #${child.id} (${child.firstName} ${child.lastName}) has been restored from archive.`)
+            this.modalRef.content.onClose.subscribe(
+              onClose => {
+                this.retrieveArchivedChildren()
+              })
+          },
+          err => {
+            this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+          })
+    } else {
+      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
+    }
   }
 
 }
