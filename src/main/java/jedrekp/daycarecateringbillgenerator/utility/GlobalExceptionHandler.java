@@ -10,10 +10,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -28,7 +30,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public String handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        String customErrorMessage = prepareErrorMessageForMethodArgumentNotValidException(e.getBindingResult());
+        String customErrorMessage = createCustomErrorMessageForMethodArgumentNotValidException(e.getBindingResult());
         log.warn("Method argument not valid exception : {}", e.getMessage());
         return customErrorMessage;
     }
@@ -36,9 +38,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public String handleConversionFailedException(HttpMessageNotReadableException e) {
+    public String handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         log.warn("Http message not readable exception : {}", e.getMessage());
         return e.getMessage();
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        String customErrorMessage = createCustomErrorMessageForMethodArgumentTypeMismatchException(e);
+        log.warn("Method argument type mismatch exception : {}", e.getMessage());
+        return customErrorMessage;
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -74,11 +85,18 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
-    private String prepareErrorMessageForMethodArgumentNotValidException(BindingResult result) {
+    private String createCustomErrorMessageForMethodArgumentNotValidException(BindingResult result) {
         String errorMessage = "Following properties have incorrect values :";
         for (FieldError fieldError : result.getFieldErrors()) {
             errorMessage = MessageFormat.format("{0}\n [{1}] - {2}", errorMessage, fieldError.getField(), fieldError.getDefaultMessage());
         }
         return errorMessage;
+    }
+
+    private String createCustomErrorMessageForMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        if (e.getValue() == null || e.toString().isEmpty()) {
+            return MessageFormat.format("You need to provide a value for property - {0}", e.getName());
+        }
+        return MessageFormat.format("{0} is not a correct value for property -  {1}", e.getValue().toString(), e.getName());
     }
 }

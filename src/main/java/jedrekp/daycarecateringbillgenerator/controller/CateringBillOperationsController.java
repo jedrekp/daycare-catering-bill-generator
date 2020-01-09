@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.Month;
 import java.time.Year;
@@ -24,7 +26,7 @@ public class CateringBillOperationsController {
 
     @GetMapping(value = "/generate-preview", params = {"childId", "month", "year"})
     public ResponseEntity<CateringBillResponse> getCateringBillPreview(
-            @RequestParam long childId, @RequestParam @Valid Month month, @RequestParam Year year) {
+            @RequestParam long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(
                 cateringBillService.generateCateringBillPreview(childId, month, year), HttpStatus.OK);
     }
