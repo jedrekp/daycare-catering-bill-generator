@@ -16,20 +16,26 @@ public class DaycareEmployee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
+
+
     @Column(name = "first_name")
+    @NotNull
     private String firstName;
-    @NotNull
+
     @Column(name = "last_name")
-    private String lastName;
     @NotNull
+    private String lastName;
+
     @Column(name = "app_username")
+    @NotNull
     private String appUsername;
+
     @NotNull
     private String password;
-    @NotNull
+
     @Enumerated(EnumType.STRING)
     @Column(name = "daycare_job_position")
+    @NotNull
     private DaycareJobPosition daycareJobPosition;
 
 }

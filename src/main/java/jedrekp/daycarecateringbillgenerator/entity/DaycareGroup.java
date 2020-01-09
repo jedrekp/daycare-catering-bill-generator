@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ public class DaycareGroup {
 
     @Column(name = "group_name", unique = true)
     @JsonView(JsonViewFilter.BasicInfo.class)
+    @NotNull
     private String groupName;
 
     @OneToMany(mappedBy = "daycareGroup", fetch = FetchType.LAZY)

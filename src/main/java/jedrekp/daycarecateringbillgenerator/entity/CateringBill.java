@@ -43,6 +43,7 @@ public class CateringBill {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
     @JsonIgnoreProperties({"daycareGroup", "assignedOptions", "cateringBills",})
+    @NotNull
     private Child child;
 
     @OneToMany(mappedBy = "cateringBill", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)

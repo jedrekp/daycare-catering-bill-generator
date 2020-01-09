@@ -6,8 +6,10 @@ import jedrekp.daycarecateringbillgenerator.service.CateringOptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -34,13 +36,15 @@ public class CateringOptionController {
     }
 
     @PostMapping
-    public ResponseEntity<CateringOption> addNewCateringOption(@RequestBody CateringOption cateringOption) {
+    @PreAuthorize("hasAuthority('HEADMASTER')")
+    public ResponseEntity<CateringOption> addNewCateringOption(@RequestBody @Valid  CateringOption cateringOption) {
         return new ResponseEntity<>(cateringOptionService.saveNewCateringOption(cateringOption), HttpStatus.CREATED);
     }
 
     @PutMapping("/{cateringOptionId}")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<CateringOption> editCateringOption(@PathVariable long cateringOptionId,
-                                                             @RequestBody CateringOption cateringOption) {
+                                                             @RequestBody @Valid CateringOption cateringOption) {
         return new ResponseEntity<>(
                 cateringOptionService.editCateringOption(cateringOption, cateringOptionId), HttpStatus.OK);
     }

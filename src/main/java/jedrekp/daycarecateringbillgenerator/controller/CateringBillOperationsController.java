@@ -6,12 +6,10 @@ import jedrekp.daycarecateringbillgenerator.service.CateringBillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.Month;
 import java.time.Year;
@@ -25,6 +23,7 @@ public class CateringBillOperationsController {
     private final CateringBillService cateringBillService;
 
     @GetMapping(value = "/generate-preview", params = {"childId", "month", "year"})
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<CateringBillResponse> getCateringBillPreview(
             @RequestParam long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(
@@ -32,6 +31,7 @@ public class CateringBillOperationsController {
     }
 
     @GetMapping(value = "/send-to-parent", params = {"cateringBillId"})
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity sendBillTOParentViaEmail(@RequestParam long cateringBillId) throws IOException, TemplateException, MessagingException {
         cateringBillService.sendBillToParentViaEmail(cateringBillId);
         return ResponseEntity.noContent().build();

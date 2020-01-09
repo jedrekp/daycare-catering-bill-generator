@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -24,14 +25,17 @@ public class AssignedOption {
 
     @Column(name = "effective_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @NotNull
     private LocalDate effectiveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
+    @NotNull
     private Child child;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "catering_option_id")
+    @NotNull
     private CateringOption cateringOption;
 
     public AssignedOption(LocalDate effectiveDate, Child child, CateringOption cateringOption) {

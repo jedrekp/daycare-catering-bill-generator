@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
@@ -19,11 +20,14 @@ public class CateringOption {
     private long id;
 
     @Column(name = "option_name", unique = true)
+    @NotNull
     private String optionName;
 
     @Column(name = "daily_cost")
+    @NotNull
     private BigDecimal dailyCost;
 
+    @NotNull
     private boolean disabled;
 
 }
