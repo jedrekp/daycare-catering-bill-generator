@@ -40,7 +40,7 @@ export class DaycareGroupListComponent implements OnInit {
   }
 
   deleteGroup(daycareGroup: DaycareGroup) {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to delete daycare group #${daycareGroup.id} ${daycareGroup.groupName}.\n
       Any children, that are currently assigned to it, will be left with no group.`)

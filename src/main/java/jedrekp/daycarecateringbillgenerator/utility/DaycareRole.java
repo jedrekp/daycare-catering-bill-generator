@@ -3,13 +3,13 @@ package jedrekp.daycarecateringbillgenerator.utility;
 import lombok.Getter;
 
 @Getter
-public enum DaycareJobPosition {
+public enum DaycareRole {
     HEADMASTER("headmaster"),
     GROUP_SUPERVISOR("group supervisor");
 
-    private String positionName;
+    private String roleName;
 
-    DaycareJobPosition(String positionName) {
-        this.positionName = positionName;
+    DaycareRole(String roleName) {
+        this.roleName = roleName;
     }
 }

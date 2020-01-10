@@ -28,8 +28,6 @@ public class AuthenticationController {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 
-        System.out.println("KUKU");
-
         String token = jwtTokenUtil.generateToken(jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername()));
 
         return new ResponseEntity<>(new AuthenticationResponse(token), HttpStatus.OK);

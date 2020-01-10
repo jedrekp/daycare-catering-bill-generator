@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.text.MessageFormat;
 import java.util.Collection;
 
 @Service
@@ -21,7 +22,8 @@ public class DaycareGroupService {
 
     @Transactional(readOnly = true)
     public DaycareGroup findSingleGroupByIdWithChildren(long daycareGroupId) {
-        return daycareGroupRepository.findByIdWithChildren(daycareGroupId).orElseThrow(EntityNotFoundException::new);
+        return daycareGroupRepository.findByIdWithChildren(daycareGroupId).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Daycare group #{0} does not exist.", daycareGroupId)));
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +57,7 @@ public class DaycareGroupService {
     public DaycareGroup addChildToDaycareGroup(long daycareGroupId, long childId) {
         Child child = childService.findSingleNotArchivedChildById(childId);
         if (child.getDaycareGroup() != null) {
-            throw new IllegalArgumentException("Child #" + child.getId() + " is already assigned to a daycare group");
+            throw new IllegalArgumentException(MessageFormat.format("Child #{0}is already assigned to a daycare group", childId));
         }
         DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
         child.setDaycareGroup(daycareGroup);
@@ -71,12 +73,13 @@ public class DaycareGroupService {
             daycareGroup.getChildren().remove(child);
             child.setDaycareGroup(null);
         } else {
-            throw new IllegalArgumentException("Child #" + child.getId() + " is not in this daycare group");
+            throw new IllegalArgumentException(MessageFormat.format("Child #{0} is not in this daycare group", childId));
         }
     }
 
     private DaycareGroup findSingleGroupById(long daycareGroupId) {
-        return daycareGroupRepository.findById(daycareGroupId).orElseThrow(EntityNotFoundException::new);
+        return daycareGroupRepository.findById(daycareGroupId).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Daycare group #{0} does not exist.", daycareGroupId)));
     }
 
     private void checkGroupNameAvailability(String groupName, Long daycareGroupId) {

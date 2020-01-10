@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -20,7 +21,9 @@ public class CateringOptionService {
 
     @Transactional(readOnly = true)
     public CateringOption findById(long cateringOptionId) {
-        return cateringOptionRepository.findById(cateringOptionId).orElseThrow(EntityNotFoundException::new);
+        return cateringOptionRepository.findById(cateringOptionId).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Catering option #{0} does not exist.", cateringOptionId)
+        ));
     }
 
     @Transactional(readOnly = true)
@@ -54,7 +57,8 @@ public class CateringOptionService {
 
     CateringOption findOptionInEffectForChild(long childId, LocalDate date) {
         return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format("There is no catering option " +
+                        "in effect on {0} for child #{1}", date, childId)));
     }
 
     private void checkOptionNameAvailability(String cateringOptionName, Long cateringOptionId) {
@@ -66,7 +70,7 @@ public class CateringOptionService {
         }
         if (nameTaken) {
             throw new EntityExistsException(
-                    "Another catering option with the name already exists. Please choose a different name");
+                    "Another catering option with this name already exists. Please choose a different name");
         }
     }
 }

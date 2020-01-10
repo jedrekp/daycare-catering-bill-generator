@@ -64,7 +64,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   openEditChildModal() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       let initialState = {
         child: new Child(this.child.id, this.child.firstName, this.child.lastName,
           this.child.parentEmail, this.child.archived)
@@ -88,7 +88,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   moveToArchive() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `You are about to move child #${this.child.id} records to archive.\n
   Some actions might be unavailalbe while children records are in archive.\n
   This will also result in child being removed from daycare group that it's currently assigned to.`)
@@ -116,7 +116,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   restoreFromArchive() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       this.childDataService.editChild(this.child.id,
         new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, false)).subscribe(
           response => {
@@ -136,7 +136,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   openAssignChildToGroupModal() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       let initialState = { childId: this.child.id }
       this.modalRef = this.bsModalService.show(AssignToGroupComponent,
         { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
@@ -157,7 +157,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   removeFromGroup() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to remove child #${this.child.id} from daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
       this.modalRef.content.onClose.subscribe(
@@ -183,7 +183,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   openAssignNewOptionModal() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       let initialState = { childId: this.child.id }
       this.modalRef = this.bsModalService.show(ChildAssignOptionComponent,
         { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
@@ -204,7 +204,7 @@ export class ChildPageComponent implements OnInit {
   }
 
   removeAssignedOption(assignedOption: AssignedOption) {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to remove catering option #${assignedOption.cateringOption.id}(${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
       If you want to select a new catering option for this child, add another option with new effective date instead.\n.
@@ -212,7 +212,7 @@ export class ChildPageComponent implements OnInit {
       this.modalRef.content.onClose.subscribe(
         onClose => {
           if (onClose) {
-            this.childDataService.removeAssignedOptionFromChild(this.child.id, assignedOption.id).subscribe(
+            this.childDataService.removeAssignedOptionFromChild(this.child.id, assignedOption.effectiveDate).subscribe(
               response => {
                 this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
                   `Catering option#${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) is no longer assigned to child #${this.child.id}.`)

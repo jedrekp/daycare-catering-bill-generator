@@ -7,6 +7,7 @@ import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ public class DaycareGroup {
     @Column(name = "group_name", unique = true)
     @JsonView(JsonViewFilter.BasicInfo.class)
     @NotNull
+    @Length(max = 20)
     private String groupName;
 
     @OneToMany(mappedBy = "daycareGroup", fetch = FetchType.LAZY)

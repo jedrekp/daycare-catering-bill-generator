@@ -17,8 +17,7 @@ export class Child {
 export class AssignedOption {
 
     constructor(
-        public id: number,
-        public effectiveDate: Date,
+        public effectiveDate: string,
         public cateringOption: CateringOption
     ) { }
 }

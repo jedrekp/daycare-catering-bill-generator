@@ -3,8 +3,11 @@ package jedrekp.daycarecateringbillgenerator.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -21,10 +24,13 @@ public class CateringOption {
 
     @Column(name = "option_name", unique = true)
     @NotNull
+    @Length(max = 15)
     private String optionName;
 
     @Column(name = "daily_cost")
     @NotNull
+    @Min(0)
+    @Max(25)
     private BigDecimal dailyCost;
 
     @NotNull

@@ -36,13 +36,13 @@ public class CateringOptionController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
     public ResponseEntity<CateringOption> addNewCateringOption(@RequestBody @Valid  CateringOption cateringOption) {
         return new ResponseEntity<>(cateringOptionService.saveNewCateringOption(cateringOption), HttpStatus.CREATED);
     }
 
     @PutMapping("/{cateringOptionId}")
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
     public ResponseEntity<CateringOption> editCateringOption(@PathVariable long cateringOptionId,
                                                              @RequestBody @Valid CateringOption cateringOption) {
         return new ResponseEntity<>(

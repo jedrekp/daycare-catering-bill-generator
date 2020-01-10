@@ -30,7 +30,7 @@ public class ChildService {
     public Child findSingleChildByIdWithAllDetails(long childId) {
         return childRepository.findByIdWithAllDetails(childId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        MessageFormat.format("Child with id: {0} does not exist.", childId)));
+                        MessageFormat.format("Child #{0} does not exist.", childId)));
     }
 
     @Transactional(readOnly = true)
@@ -105,8 +105,8 @@ public class ChildService {
 
         CateringOption cateringOption = cateringOptionService.findById(assignOptionRequest.getCateringOptionId());
         if (cateringOption.isDisabled()) {
-            throw new IllegalArgumentException("Catering option#" + cateringOption.getId() + " is disabled.\n" +
-                    "It can no longer be assigned");
+            throw new IllegalArgumentException(MessageFormat.format("Catering option #{0} is disabled.\n" +
+                    "It can no longer be assigned", cateringOption.getId()));
         }
 
         Child child = findSingleNotArchivedChildByIdWithAssignedOptions(childId);
@@ -116,16 +116,19 @@ public class ChildService {
     }
 
     @Transactional
-    public void removeAssignedOption(long childId, long assignedOptionId) {
+    public void removeAssignedOption(long childId, LocalDate effectiveDate) {
         Child child = findSingleNotArchivedChildByIdWithAssignedOptions(childId);
-        AssignedOption assignedOption = assignedOptionRepository.findById(assignedOptionId)
-                .orElseThrow(EntityNotFoundException::new);
+        AssignedOption assignedOption = assignedOptionRepository.findByEffectiveDateAndChild_Id(effectiveDate, childId)
+                .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format("There is no catering option assigned " +
+                        "to child #{0} with an effective date - {1}", childId, effectiveDate)));
         child.getAssignedOptions().remove(assignedOption);
+        assignedOption.setChild(null);
     }
 
 
     Child findSingleNotArchivedChildById(long childId) {
-        return childRepository.findByIdAndArchived(childId, false).orElseThrow(EntityNotFoundException::new);
+        return childRepository.findByIdAndArchived(childId, false).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Child #{0} does not exists or is archived.", childId)));
     }
 
     List<Child> findPresentChildrenByDateAndDaycareGroupId(LocalDate date, long daycareGroupId) {
@@ -141,11 +144,13 @@ public class ChildService {
     }
 
     private Child findSingleChildById(long childId) {
-        return childRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
+        return childRepository.findById(childId).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Child #{0} does not exist.", childId)));
     }
 
     private Child findSingleNotArchivedChildByIdWithAssignedOptions(long childId) {
-        return childRepository.findByIdAndArchivedWithAssignedOptions(childId, false).orElseThrow(EntityNotFoundException::new);
+        return childRepository.findByIdAndArchivedWithAssignedOptions(childId, false).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Child #{0} does not exist.", childId)));
     }
 
     private void checkNameAvailability(String firstName, String lastName, Long childId) {
@@ -163,8 +168,8 @@ public class ChildService {
     private void checkIfOptionCanBeAssignedWithGivenEffectiveDate(LocalDate effectiveDate, long childId) {
         if (assignedOptionRepository.existsByEffectiveDateAndChild_Id(effectiveDate, childId)) {
             throw new IllegalArgumentException(
-                    "Child #" + childId + " already has another catering option assigned with this effective date.\n" +
-                            "It must be removed first.");
+                    MessageFormat.format("Child #{0} already has another catering option assigned " +
+                            "with this effective date.\n It must be removed first.", childId));
         }
     }
 

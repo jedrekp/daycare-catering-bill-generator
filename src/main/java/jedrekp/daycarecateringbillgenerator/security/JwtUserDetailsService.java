@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     private User buildUserForAuthentication(DaycareEmployee daycareEmployee) {
         List<GrantedAuthority> grantedAuthorities = Collections.singletonList(
-                new SimpleGrantedAuthority(daycareEmployee.getDaycareJobPosition().toString()));
+                new SimpleGrantedAuthority(MessageFormat.format("ROLE_{0}", daycareEmployee.getDaycareRole().toString())));
         return new User(
                 daycareEmployee.getAppUsername(),
                 daycareEmployee.getPassword(),

@@ -23,7 +23,7 @@ public class CateringBillOperationsController {
     private final CateringBillService cateringBillService;
 
     @GetMapping(value = "/generate-preview", params = {"childId", "month", "year"})
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
     public ResponseEntity<CateringBillResponse> getCateringBillPreview(
             @RequestParam long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(
@@ -31,8 +31,8 @@ public class CateringBillOperationsController {
     }
 
     @GetMapping(value = "/send-to-parent", params = {"cateringBillId"})
-    @PreAuthorize("hasAuthority('HEADMASTER')")
-    public ResponseEntity sendBillTOParentViaEmail(@RequestParam long cateringBillId) throws IOException, TemplateException, MessagingException {
+    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    public ResponseEntity sendBillTOParentViaEmail(@RequestParam long cateringBillId) throws TemplateException, IOException, MessagingException {
         cateringBillService.sendBillToParentViaEmail(cateringBillId);
         return ResponseEntity.noContent().build();
     }

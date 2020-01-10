@@ -38,7 +38,7 @@ export class CateringOptionCreateEditComponent implements OnInit {
     }
     const priceFormat = /^\d+(\.)?(\d{1,2})?$/
     this.cateringOptionForm = new FormGroup({
-      optionName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
+      optionName: new FormControl('', [Validators.required, Validators.maxLength(15)]),
       dailyCost: new FormControl(0, [Validators.required, Validators.pattern(priceFormat), Validators.max(30)]),
       disabled: new FormControl(false)
     })

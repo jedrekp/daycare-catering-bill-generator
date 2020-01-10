@@ -10,7 +10,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -82,6 +81,14 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public String handleEntityExistsException(EntityExistsException e) {
         log.warn("Entity exists exception : {}", e.getMessage());
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public String handleIllegalArgumentException(IllegalArgumentException e) {
+        log.warn("Illegal argument exception : {}", e.getMessage());
         return e.getMessage();
     }
 

@@ -48,7 +48,7 @@ export class DaycareGroupPageComponent implements OnInit {
   }
 
   openEditGroupModal() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       let initialState = { daycareGroup: new DaycareGroup(this.daycareGroup.id, this.daycareGroup.groupName) }
       this.modalRef = this.bsModalService.show(DaycareGroupCreateEditComponent,
         { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
@@ -69,7 +69,7 @@ export class DaycareGroupPageComponent implements OnInit {
   }
 
   deleteGroup() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to delete daycare group #${this.daycareGroup.id} ${this.daycareGroup.groupName}.\n
       Any children, that are currently assigned to it will be left with no group.`)
@@ -96,7 +96,7 @@ export class DaycareGroupPageComponent implements OnInit {
   }
 
   removeChildFromGroup(child: Child) {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to remove child #${child.id} (${child.firstName} ${child.lastName}) from daycare group #${this.daycareGroup.id}`)
       this.modalRef.content.onClose.subscribe(

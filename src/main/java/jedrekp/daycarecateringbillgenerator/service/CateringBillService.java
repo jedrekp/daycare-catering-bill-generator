@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.Month;
 import java.time.Year;
 import java.time.format.TextStyle;
@@ -40,7 +41,9 @@ public class CateringBillService {
     @Transactional(readOnly = true)
     public CateringBillResponse getSpecificBillForChild(long childId, Month month, Year year) {
         CateringBill cateringBill = cateringBillRepository.findByMonthAndYearAndChildIdWithAllDetails(month, year, childId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
+                        "{0} {1} catering bill has not been generated yet for child with id : {2}",
+                        month, year, childId)));
         return mapCateringBillToResponse(cateringBill);
     }
 
@@ -99,7 +102,8 @@ public class CateringBillService {
     }
 
     private CateringBill findByIdWithAllDetails(long cateringBillId) {
-        return cateringBillRepository.findByIdWithAllDetails(cateringBillId).orElseThrow(EntityNotFoundException::new);
+        return cateringBillRepository.findByIdWithAllDetails(cateringBillId).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Catering bill #{0} does not exist.", cateringBillId)));
     }
 
     private void insertDailyOrdersIntoNewCateringBill(List<AttendanceSheet> attendanceSheets, CateringBillResponse cateringBillResponse, long childId) {

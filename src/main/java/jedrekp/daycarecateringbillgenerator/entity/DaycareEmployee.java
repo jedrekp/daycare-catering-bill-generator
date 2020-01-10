@@ -1,6 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.entity;
 
-import jedrekp.daycarecateringbillgenerator.utility.DaycareJobPosition;
+import jedrekp.daycarecateringbillgenerator.utility.DaycareRole;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,8 +34,8 @@ public class DaycareEmployee {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "daycare_job_position")
+    @Column(name = "daycare_role")
     @NotNull
-    private DaycareJobPosition daycareJobPosition;
+    private DaycareRole daycareRole;
 
 }

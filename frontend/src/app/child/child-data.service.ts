@@ -55,8 +55,9 @@ export class ChildDataService {
       new AssignOptionToChildDTO(effectiveDate, assignedOptionId))
   }
 
-  removeAssignedOptionFromChild(childId: number, assignedOptionId: number) {
-    return this.httpClient.delete(`${API_URL}/children/${childId}/assignedOptions/${assignedOptionId}`)
+  removeAssignedOptionFromChild(childId: number, effectiveDate: string) {
+    let params = new HttpParams().set("effectiveDate", effectiveDate)
+    return this.httpClient.delete(`${API_URL}/children/${childId}/assignedOptions/`, { params: params })
   }
 
   saveCateringBill(childId: number, month: string, year: number, dailyCateringOrders: DailyCateringOrder[]) {
