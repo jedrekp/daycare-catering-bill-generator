@@ -16,7 +16,7 @@ import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 export class UnassignedChildrenListComponent implements OnInit {
 
   private modalRef: BsModalRef
-  private children: Child[] = []
+  private children: Child[];
 
   constructor(
     private dialogModalService: DialogModalService,

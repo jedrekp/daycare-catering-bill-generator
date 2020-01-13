@@ -1,0 +1,33 @@
+#attendance-card td {
+    vertical-align: middle;
+    text-align: left;
+}
+
+#attendance-month-picker .form-control {
+    color: black;
+    border: 2px solid #484D6D;
+}
+
+#attendance-month-picker .form-control:hover{
+    cursor: pointer;
+}
+
+#attendance-month-picker .form-control:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 15px #484D6D;
+}
+
+#attendance-card table .form-control {
+    border: 1px solid #B5446E;
+}
+
+#attendance-card select {
+    color: black;
+    text-align: center;
+    text-align-last: center;
+}
+
+#attendance-card select[disabled]{
+    background-color: white;
+    color: gray;
+    border-color: gray !important;
+}

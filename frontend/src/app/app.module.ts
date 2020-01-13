@@ -34,6 +34,12 @@ import { LoginComponent } from './authentication/login/login.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { ErrorComponent } from './error/error.component';
 import { HttpInterceptorService } from './authentication/http-interceptor.service';
+import { SingleChildAttendanceComponent } from './attendance/single-child-attendance/single-child-attendance.component';
+import { ChildAssignedOptionsListComponent } from './child/child-assigned-options-list/child-assigned-options-list.component';
+import { ChildDaycareGroupInfoComponent } from './child/child-daycare-group-info/child-daycare-group-info.component';
+import { ChildBasicInfoComponent } from './child/child-basic-info/child-basic-info.component';
+import { DaycareGroupBasicInfoComponent } from './daycare-group/daycare-group-basic-info/daycare-group-basic-info.component';
+import { DaycareGroupChildrenListComponent } from './daycare-group/daycare-group-children-list/daycare-group-children-list.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +65,13 @@ import { HttpInterceptorService } from './authentication/http-interceptor.servic
     BillDisplayComponent,
     LoginComponent,
     WelcomePageComponent,
-    ErrorComponent
+    ErrorComponent,
+    SingleChildAttendanceComponent,
+    ChildAssignedOptionsListComponent,
+    ChildDaycareGroupInfoComponent,
+    ChildBasicInfoComponent,
+    DaycareGroupBasicInfoComponent,
+    DaycareGroupChildrenListComponent
   ],
   imports: [
     BrowserModule,

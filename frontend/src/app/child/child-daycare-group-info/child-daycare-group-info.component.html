@@ -1,0 +1,52 @@
+<div class="card mb-4 px-0 border-darkblue text-center" id="daycare-group-card">
+
+    <div class="card-header bg-darkblue">
+        <h5 class="card-title my-0">Daycare Group</h5>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-borderless mb-0 table-hover">
+                <tbody>
+                    <tr>
+                        <td><span class="font-weight-bold">Group name:</span></td>
+                        <td>
+                            <span *ngIf="child.daycareGroup">{{child.daycareGroup.groupName}} </span>
+                            <span *ngIf="!child.daycareGroup" class="text-secondary">None</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="font-weight-bold">Supervisor:</span></td>
+                        <td>Placeholder</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer">
+
+        <div class="row justify-content-center">
+            <button *ngIf="child.daycareGroup"
+                class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                [routerLink]="['/daycare-group-page',child.daycareGroup.id]">
+                View group page
+            </button>
+            <button *ngIf="!child.daycareGroup"
+                class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2" disabled="disabled">
+                View group page
+            </button>
+
+            <button *ngIf="!child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
+                (click)="openAssignChildToGroupModal()" [disabled]="child.archived">
+                Assign to group
+            </button>
+            <button *ngIf="child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
+                (click)="removeFromGroup()">
+                Remove from Group
+            </button>
+        </div>
+
+    </div>
+
+</div>

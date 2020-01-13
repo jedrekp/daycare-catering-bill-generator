@@ -11,7 +11,7 @@ import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 })
 export class ChildrenSearchResultsComponent implements OnInit {
 
-  private children: Child[] = []
+  private children: Child[]
 
   constructor(
     private route: ActivatedRoute,

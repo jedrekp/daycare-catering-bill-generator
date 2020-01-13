@@ -1,0 +1,44 @@
+<div class="card mb-4 px-0 border-darkblue text-center" id="children-list-card">
+
+    <div class="card-header bg-darkblue">
+        <h5 class="card-title my-0">List of children</h5>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-borderless text-center">
+
+                <thead>
+
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Child page</th>
+                        <th>Remove child</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let child of daycareGroup.children">
+                        <td>{{child.firstName}}</td>
+                        <td>{{child.lastName}}</td>
+                        <td>
+                            <button class="btn btn-outline-purple" [routerLink]="['/child-page', child.id]">
+                                Open
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-purple" (click)="removeChildFromGroup(child)">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

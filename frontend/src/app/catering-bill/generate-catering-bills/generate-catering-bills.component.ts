@@ -21,7 +21,7 @@ export class GenerateCateringBillsComponent implements OnInit {
   private selectMonthAndGroupForm: FormGroup
   private daycareGroups: DaycareGroup[]
   private selectedDaycareGroup: DaycareGroup
-  private cateringBills: CateringBill[] = []
+  private cateringBills: CateringBill[]
   private dateFromSelectedMonth: Date
 
   constructor(

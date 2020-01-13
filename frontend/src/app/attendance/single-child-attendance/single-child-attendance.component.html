@@ -1,0 +1,95 @@
+<div class="card mb-4 px-0 border-darkblue text-center" id="attendance-card">
+
+    <div class="card-header bg-darkblue">
+        <h5 class="card-title my-0">Attendance</h5>
+    </div>
+
+    <div class="card-body">
+
+        <div *ngIf="monthlyChildAttendance else loadingAttendance">
+
+            <div class="row justify-content-center" id="attendance-month-picker">
+                <div class="mb-3 col-10 col-sm-8 col-lg-6 col-xl-5">
+                    <input bsDatepicker class="form-control bg-white text-center"
+                        [(ngModel)]="firstDayOfSelectedAttendanceMonth" (ngModelChange)="retrieveAttendance()"
+                        [bsConfig]="{dateInputFormat: 'MMMM YYYY', containerClass:'theme-default'}"
+                        (onShown)="onOpenCalendar($event)" [minDate]="minDate" readonly>
+                </div>
+                <div class="col-12">
+                    <div class="subheader-underline mb-2"></div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+
+                <div class="table-responsive col-12 col-md-10 col-lg-8 col-xl-6">
+                    <table class="table table-borderless mb-0 table-hover">
+                        <tbody>
+                            <tr *ngFor="let date of weekdaysFromSelectedMonth | slice:0:calendarSlicePoint">
+                                <td style="width:30%">
+                                    {{date | date:'EE'}}<br>
+                                    {{date | date:'d/MM'}}
+                                </td>
+                                <td>
+                                    <select class="form-control" [disabled]="child.archived"
+                                        (change)="adjustDailyAttendance(date,$event.target.value)">
+                                        <option [value]=1 [selected]="checkAttendanceStatus(date)==1">Present
+                                        </option>
+                                        <option [value]=0 [selected]="checkAttendanceStatus(date)==0">Not Present
+                                        </option>
+                                        <option [value]=-1 [selected]="checkAttendanceStatus(date)==-1"
+                                            style="display:none;">
+                                            Untracked</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-responsive col-12 col-md-10 col-lg-8 col-xl-6">
+                    <table class="table table-borderless mb-0 table-hover">
+                        <tbody>
+                            <tr *ngFor="let date of weekdaysFromSelectedMonth | slice:calendarSlicePoint">
+                                <td>
+                                    {{date | date:'EE'}} <br>
+                                    {{date | date:'d/MM'}}
+                                </td>
+                                <td>
+                                    <select class="form-control" [disabled]="child.archived"
+                                        (change)="adjustDailyAttendance(date,$event.target.value)">
+                                        <option [value]=1 [selected]="checkAttendanceStatus(date)==1">Present
+                                        </option>
+                                        <option [value]=0 [selected]="checkAttendanceStatus(date)==0">Not Present
+                                        </option>
+                                        <option [value]=-1 [selected]="checkAttendanceStatus(date)==-1"
+                                            style="display:none;">
+                                            Untracked</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #loadingAttendance>
+            <div class="text-center my-3 mx-auto">
+                <h4 class="heading-darkblue">Loading attendance data...</h4>
+            </div>
+        </ng-template>
+
+    </div>
+
+    <div class="card-footer">
+
+        <div class="row justify-content-center">
+            <button class="btn btn-outline-darkblue btn-block col-8 col-md-6 col-lg-5 col-xl-4"
+                (click)="submitAttendanceChanges()" [disabled]="child.archived || !monthlyChildAttendance">
+                Submit changes
+            </button>
+        </div>
+
+    </div>
+</div>

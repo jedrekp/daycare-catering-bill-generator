@@ -2,16 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChildDataService } from '../child-data.service';
-import { Child, AssignedOption } from '../child';
+import { Child } from '../child';
 import { ChildCreateEditComponent } from '../child-create-edit/child-create-edit.component';
-import { ChildAssignOptionComponent } from '../child-assign-option/child-assign-option.component';
-import { DaycareGroupDataService } from 'src/app/daycare-group/daycare-group-data.service';
-import { AssignToGroupComponent } from 'src/app/daycare-group/assign-to-group/assign-to-group.component';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { CONFIRMATION_HEADER, ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
-import { AttendanceDataService } from 'src/app/attendance/attendance-data.service';
-import { MonthlyChildAttendance } from 'src/app/attendance/monthly-child-attandance';
-import { DatePipe } from '@angular/common';
 import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
 import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
@@ -22,33 +16,15 @@ import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 })
 export class ChildPageComponent implements OnInit {
 
-  private modalRef: BsModalRef
   private child: Child
-  private firstDayOfSelectedAttendanceMonth: Date
-  private weekdaysFromSelectedMonth: Date[]
-  private minDate: Date
-  private monthlyChildAttendance: MonthlyChildAttendance
-  private calendarSlicePoint: number;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private datePipe: DatePipe,
-    private bsModalService: BsModalService,
-    private dialogModalService: DialogModalService,
     private childDataService: ChildDataService,
-    private daycareGroupDataService: DaycareGroupDataService,
-    private attendanceDataService: AttendanceDataService,
-    private authenticationService: JwtAuthenticationService,
     private errorHandlerService: ErrorHandlerService
   ) { }
 
   ngOnInit() {
-    this.child = new Child(-1, '', '', '', false)
-    this.monthlyChildAttendance = new MonthlyChildAttendance(this.child.id)
-    this.minDate = new Date(2019, 0, 1)
-    let currentDate = new Date()
-    this.firstDayOfSelectedAttendanceMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
     this.retrieveChild(this.route.snapshot.params['childId'])
   }
 
@@ -56,254 +32,11 @@ export class ChildPageComponent implements OnInit {
     this.childDataService.retrieveChild(childId).subscribe(
       child => {
         this.child = child
-        this.retrieveAttendance()
       },
       err => {
         this.errorHandlerService.redirectToErrorPage(err)
-      })
-  }
-
-  openEditChildModal() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
-      let initialState = {
-        child: new Child(this.child.id, this.child.firstName, this.child.lastName,
-          this.child.parentEmail, this.child.archived)
-      };
-      this.modalRef = this.bsModalService.show(ChildCreateEditComponent,
-        { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
-      this.modalRef.content.onClose.subscribe(
-        childId => {
-          if (childId) {
-            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-              `Child #${this.child.id} has been succesfully edited.`)
-            this.modalRef.content.onClose.subscribe(
-              onClose => {
-                this.retrieveChild(this.child.id)
-              })
-          }
-        })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
-  }
-
-  moveToArchive() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
-      this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `You are about to move child #${this.child.id} records to archive.\n
-  Some actions might be unavailalbe while children records are in archive.\n
-  This will also result in child being removed from daycare group that it's currently assigned to.`)
-      this.modalRef.content.onClose.subscribe(
-        onClose => {
-          if (onClose) {
-            this.childDataService.editChild(this.child.id,
-              new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, true)).subscribe(
-                response => {
-                  this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                    `Child #${this.child.id} records have been moved to archive.`)
-                  this.modalRef.content.onClose.subscribe(
-                    onClose => {
-                      this.retrieveChild(this.child.id)
-                    })
-                },
-                err => {
-                  this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
-                })
-          }
-        })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
-  }
-
-  restoreFromArchive() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
-      this.childDataService.editChild(this.child.id,
-        new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, false)).subscribe(
-          response => {
-            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-              `Child #${this.child.id} records have been restored from archive.`)
-            this.modalRef.content.onClose.subscribe(
-              onclose => {
-                this.retrieveChild(this.child.id)
-              })
-          },
-          err => {
-            this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
-          })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
-  }
-
-  openAssignChildToGroupModal() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
-      let initialState = { childId: this.child.id }
-      this.modalRef = this.bsModalService.show(AssignToGroupComponent,
-        { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
-      this.modalRef.content.onClose.subscribe(
-        daycareGroup => {
-          if (daycareGroup) {
-            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-              `Child #${this.child.id} is now assigned to daycare group #${daycareGroup.id}(${daycareGroup.groupName}).`)
-            this.modalRef.content.onClose.subscribe(
-              onClose => {
-                this.retrieveChild(this.child.id)
-              })
-          }
-        })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
-  }
-
-  removeFromGroup() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
-      this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-        `You are about to remove child #${this.child.id} from daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
-      this.modalRef.content.onClose.subscribe(
-        onClose => {
-          if (onClose) {
-            this.daycareGroupDataService.removeChildFromDaycareGroup(this.child.daycareGroup.id, this.child.id).subscribe(
-              response => {
-                this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                  `Child# ${this.child.id} is no longer assigned to daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
-                this.modalRef.content.onClose.subscribe(
-                  onclose => {
-                    this.retrieveChild(this.child.id)
-                  })
-              },
-              err => {
-                this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
-              })
-          }
-        })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
-  }
-
-  openAssignNewOptionModal() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
-      let initialState = { childId: this.child.id }
-      this.modalRef = this.bsModalService.show(ChildAssignOptionComponent,
-        { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
-      this.modalRef.content.onClose.subscribe(
-        cateringOption => {
-          if (cateringOption) {
-            this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-              `Catering option #${cateringOption.id}(${cateringOption.optionName}) has been succesfully assigned to child #${this.child.id}.`)
-            this.modalRef.content.onClose.subscribe(
-              onClose => {
-                this.retrieveChild(this.child.id)
-              })
-          }
-        })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
-  }
-
-  removeAssignedOption(assignedOption: AssignedOption) {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
-      this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
-        `You are about to remove catering option #${assignedOption.cateringOption.id}(${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
-      If you want to select a new catering option for this child, add another option with new effective date instead.\n.
-      Proceed only if this option was mistakenly assigned and you need to correct an error.\n`)
-      this.modalRef.content.onClose.subscribe(
-        onClose => {
-          if (onClose) {
-            this.childDataService.removeAssignedOptionFromChild(this.child.id, assignedOption.effectiveDate).subscribe(
-              response => {
-                this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-                  `Catering option#${assignedOption.cateringOption.id} (${assignedOption.cateringOption.optionName}) is no longer assigned to child #${this.child.id}.`)
-                this.retrieveChild(this.child.id);
-              },
-              err => {
-                this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
-              })
-          }
-        })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
-  }
-
-  onOpenCalendar(container) {
-    container.monthSelectHandler = (event: any): void => {
-      container._store.dispatch(container._actions.select(event.date))
-    }
-    container.setViewMode('month')
-  }
-
-  getAllWeekdaysFromSelectedMonth() {
-    let date = new Date(this.firstDayOfSelectedAttendanceMonth)
-    let month = date.getMonth()
-    this.weekdaysFromSelectedMonth = []
-    while (date.getMonth() === month) {
-      if (!(date.getDay() == 0 || date.getDay() == 6)) {
-        this.weekdaysFromSelectedMonth.push(new Date(date));
-      }
-      date.setDate(date.getDate() + 1);
-    }
-    this.calendarSlicePoint = Math.ceil(this.weekdaysFromSelectedMonth.length / 2)
-  }
-
-  retrieveAttendance() {
-    this.getAllWeekdaysFromSelectedMonth()
-    let monthString = this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'LLLL').toUpperCase()
-    let year = this.firstDayOfSelectedAttendanceMonth.getFullYear()
-    this.attendanceDataService.retrieveMonthlyAttendanceForChild(this.child.id, monthString, year).subscribe(
-      monthlyChildAttendance => {
-        this.monthlyChildAttendance = monthlyChildAttendance
-      },
-      err => {
-        this.errorHandlerService.redirectToErrorPage(err)
-      })
-  }
-
-  checkAttendanceStatus(date: Date) {
-    let dateAsString = this.datePipe.transform(date, 'yyyy-MM-dd')
-    if (this.monthlyChildAttendance.datesWhenPresent.indexOf(dateAsString) > -1) {
-      return 1
-    } else if (this.monthlyChildAttendance.datesWhenAbsent.indexOf(dateAsString) > -1) {
-      return 0
-    } else {
-      return -1
-    }
-  }
-
-  adjustDailyAttendance(date: Date, optionValue: number) {
-    let dateAsString = this.datePipe.transform(date, 'yyyy-MM-dd')
-    if (optionValue == 1) {
-      let absentIndex = this.monthlyChildAttendance.datesWhenAbsent.indexOf(dateAsString)
-      if (absentIndex > -1) {
-        this.monthlyChildAttendance.datesWhenAbsent.splice(absentIndex, 1)
-      }
-      this.monthlyChildAttendance.datesWhenPresent.push(dateAsString)
-    } else if (optionValue == 0) {
-      let presentIndex = this.monthlyChildAttendance.datesWhenPresent.indexOf(dateAsString)
-      if (presentIndex > -1) {
-        this.monthlyChildAttendance.datesWhenPresent.splice(presentIndex, 1)
-      }
-      this.monthlyChildAttendance.datesWhenAbsent.push(dateAsString)
-    }
-  }
-
-  submitAttendanceChanges() {
-    let monthString = this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'LLLL').toUpperCase()
-    let year = this.firstDayOfSelectedAttendanceMonth.getFullYear()
-    this.attendanceDataService.submitMonthlyAttendanceForChild(this.child.id, monthString, year, this.monthlyChildAttendance).subscribe(
-      response => {
-        this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
-          `${this.datePipe.transform(this.firstDayOfSelectedAttendanceMonth, 'MMMM yyyy')} attendance for child #${this.child.id} has been modified.`)
-        this.modalRef.content.onClose.subscribe(
-          onClose => {
-            this.retrieveAttendance()
-          })
-      },
-      err => {
-        this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
       })
   }
 
 }
+

@@ -3,7 +3,7 @@
 </div>
 
 <div class="modal-body text-center">
-    <span *ngIf="cateringBill">
+    <div *ngIf="cateringBill else loadingBillPreview">
 
         <h5 class="subheader-purple mx-auto" style="text-align: center;">
             {{cateringBill.childFullName}}, {{cateringBill.month}} {{cateringBill.year}}
@@ -50,7 +50,13 @@
         <small>*All orders in this preview are based on the current state of child's attendance for this month and
             catering options that are in effect for given dates. </small>
 
-    </span>
+    </div>
+
+    <ng-template #loadingBillPreview>
+        <div class="text-center my-5 mx-auto">
+            <h4 class="heading-darkblue">Generating catering bill preview...</h4>
+        </div>
+    </ng-template>
 
 </div>
 

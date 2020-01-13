@@ -16,7 +16,7 @@ import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 export class DaycareGroupListComponent implements OnInit {
 
   private modalRef: BsModalRef
-  private daycareGroups: DaycareGroup[] = []
+  private daycareGroups: DaycareGroup[]
 
   constructor(
     private router: Router,

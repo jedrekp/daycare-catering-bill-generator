@@ -1,4 +1,4 @@
-<div class="row">
+<div *ngIf="daycareGroups else loadingDaycareGroups" class="row">
 
     <div class="card col-10 col-md-8 mx-auto my-4 p-0 text-center border-darkblue">
 
@@ -41,3 +41,10 @@
         </div>
     </div>
 </div>
+
+
+<ng-template #loadingDaycareGroups>
+    <div class="text-center my-5 mx-auto">
+        <h2 class="heading-darkblue">Loading daycare groups data...</h2>
+    </div>
+</ng-template>

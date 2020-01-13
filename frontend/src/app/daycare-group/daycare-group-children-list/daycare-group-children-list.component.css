@@ -1,0 +1,9 @@
+#children-list-card td, #children-list-card th {
+    width: 25%;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#children-list-card tbody tr, #children-list-card thead tr {
+    border-bottom: 1px solid #484D6D;
+}

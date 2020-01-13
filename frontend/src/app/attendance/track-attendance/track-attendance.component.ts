@@ -19,7 +19,7 @@ import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 export class TrackAttendanceComponent implements OnInit {
 
   private selectDateAndGroupForm: FormGroup
-  private daycareGroups: DaycareGroup[] = []
+  private daycareGroups: DaycareGroup[]
   private selectedDaycareGroup: DaycareGroup
   private dailyAttendance: DailyGroupAttendance
   private minDate: Date

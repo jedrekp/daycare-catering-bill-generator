@@ -1,0 +1,47 @@
+<div class="card mb-4 px-0 border-darkblue" id="group-info-card">
+
+    <div class="card-header bg-darkblue text-center">
+        <h5 class="card-title my-0">Group Information</h5>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-borderless mb-0 table-hover">
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">Group name:</td>
+                        <td>
+                            {{daycareGroup.groupName}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="font-weight-bold">Population:</span></td>
+                        <td>{{daycareGroup.children.length}}
+                            <span *ngIf="daycareGroup.children.length==1"> child</span>
+                            <span *ngIf="daycareGroup.children.length!=1"> children</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Supervisor:</td>
+                        <td>Placeholder</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer">
+
+        <div class="row justify-content-center">
+            <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                (click)="openEditGroupModal()">
+                Edit Information
+            </button>
+
+            <button class="btn btn-outline-darkblue btn-block col-8 col-md-7" (click)="deleteGroup()">Delete
+                group</button>
+        </div>
+
+    </div>
+
+</div>

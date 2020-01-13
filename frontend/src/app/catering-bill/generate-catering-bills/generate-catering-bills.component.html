@@ -1,4 +1,4 @@
-<div class="row">
+<div *ngIf="daycareGroups else loadingDaycareGroups" class="row">
 
     <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-5 offset-1 offset-md-2 offset-lg-4 offset-xl-5">
         <div id="date-group-select" class="border-darkblue py-2">
@@ -39,7 +39,7 @@
             <h5 class="card-title my-0">Generate catering bills</h5>
         </div>
 
-        <div *ngIf="selectedDaycareGroup" class="card-body pt-3">
+        <div *ngIf="selectedDaycareGroup else selectDaycareGroup" class="card-body pt-3">
 
             <h5 class="subheader-purple">Selected group: {{selectedDaycareGroup.groupName}}</h5>
             <h5 class="subheader-purple">{{dateFromSelectedMonth | date: 'MMMM yyyy'}}</h5>
@@ -99,10 +99,18 @@
 
         </div>
 
-        <div *ngIf="!selectedDaycareGroup" class="card-body pt-4">
-            Select month and daycare group to generate and/or display catering bills for it's members.
-        </div>
+        <ng-template #selectDaycareGroup>
+            <div class="card-body pt-4">
+                Select month and daycare group to generate and/or display catering bills for it's members.
+            </div>
+        </ng-template>
 
     </div>
 
 </div>
+
+<ng-template #loadingDaycareGroups>
+    <div class="text-center my-5 mx-auto">
+        <h2 class="heading-darkblue">Loading daycare groups data...</h2>
+    </div>
+</ng-template>

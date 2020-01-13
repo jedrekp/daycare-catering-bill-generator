@@ -1,0 +1,9 @@
+#assigned-options-card td, #assigned-options-card th {
+    width: 33%;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#assigned-options-card tbody tr, #assigned-options-card thead tr {
+    border-bottom: 1px solid #484D6D;
+}

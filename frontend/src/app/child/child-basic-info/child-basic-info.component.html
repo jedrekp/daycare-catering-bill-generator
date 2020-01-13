@@ -1,0 +1,45 @@
+<div class="card mb-4 px-0 border-darkblue text-center" id="basic-info-card">
+
+    <div class="card-header bg-darkblue">
+        <h5 class="card-title my-0">Basic Information</h5>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-borderless mb-0 table-hover">
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">First name:</td>
+                        <td>
+                            {{child.firstName}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Last name:</td>
+                        <td>{{child.lastName}}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="font-weight-bold">Parent email:</span></td>
+                        <td>{{child.parentEmail}} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer">
+
+        <div class="row justify-content-center">
+            <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                (click)="openEditChildModal()">
+                Edit information
+            </button>
+            <button *ngIf="!child.archived" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
+                (click)="moveToArchive()">
+                Move to archive</button>
+            <button *ngIf="child.archived" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
+                (click)="restoreFromArchive()">
+                Restore from archive</button>
+        </div>
+    </div>
+</div>

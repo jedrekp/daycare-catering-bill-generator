@@ -1,107 +1,118 @@
-<div class="row">
+<div *ngIf="daycareGroups else loadingDaycareGroups">
+    
+    <div class="row">
 
-    <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-5 offset-1 offset-md-2 offset-lg-4 offset-xl-5">
-        <div id="date-group-select" class="border-darkblue py-2 mx-sm-4">
+        <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-5 offset-1 offset-md-2 offset-lg-4 offset-xl-5">
+            <div id="date-group-select" class="border-darkblue py-2 mx-sm-4">
 
-            <form novalidate class=" form-inline" [formGroup]="selectDateAndGroupForm" (ngSubmit)="onSelect()">
+                <form novalidate class=" form-inline" [formGroup]="selectDateAndGroupForm" (ngSubmit)="onSelect()">
 
-                <div class="form-group mx-auto mr-sm-0">
-                    <input #datepickerMDY="bsDatepicker" bsDatepicker class="form-control" id="date-input"
-                        formControlName="date"
-                        [bsConfig]="{dateInputFormat: 'YYYY/MM/DD', containerClass:'theme-default'}"
-                        [daysDisabled]="[6,0]" [minDate]="minDate" readonly>
-                </div>
+                    <div class="form-group mx-auto mr-sm-0">
+                        <input #datepickerMDY="bsDatepicker" bsDatepicker class="form-control" id="date-input"
+                            formControlName="date"
+                            [bsConfig]="{dateInputFormat: 'YYYY/MM/DD', containerClass:'theme-default'}"
+                            [daysDisabled]="[6,0]" [minDate]="minDate" readonly>
+                    </div>
 
-                <div class="form-group mx-auto mx-sm-2">
-                    <select class="custom-select" id="group-input" formControlName="daycareGroup">
-                        <option *ngFor="let daycareGroup of daycareGroups" [ngValue]="daycareGroup">
-                            {{daycareGroup.groupName}}
-                        </option>
-                    </select>
-                </div>
+                    <div class="form-group mx-auto mx-sm-2">
+                        <select class="custom-select" id="group-input" formControlName="daycareGroup">
+                            <option *ngFor="let daycareGroup of daycareGroups" [ngValue]="daycareGroup">
+                                {{daycareGroup.groupName}}
+                            </option>
+                        </select>
+                    </div>
 
-                <button class="btn btn-outline-purple mx-auto ml-sm-0" id="select-button" type="submit">
-                    Select
-                </button>
+                    <button class="btn btn-outline-purple mx-auto ml-sm-0" id="select-button" type="submit">
+                        Select
+                    </button>
 
-            </form>
+                </form>
 
-        </div>
-
-    </div>
-
-</div>
-
-
-<div class="row">
-
-    <div class="card col-10 col-md-8 mx-auto my-4 p-0 text-center border-darkblue">
-
-        <div class="card-header bg-darkblue">
-            <h5 class="card-title my-0">Track attendance</h5>
-        </div>
-
-        <div *ngIf="selectedDaycareGroup && dailyAttendance" class="card-body pt-3">
-
-            <h5 class="subheader-purple">Selected group: {{selectedDaycareGroup.groupName}}
-            </h5>
-            <h5 class="subheader-purple">{{dailyAttendance.date | date:'fullDate'}}</h5>
-            <div class="subheader-underline mb-2"></div>
-
-            <div class="table-responsive">
-                <table class="table table-hover table-borderless table-striped text-center">
-
-                    <thead>
-                        <tr>
-                            <th>First name</th>
-                            <th>Last Name</th>
-                            <th>Child Id</th>
-                            <th id="attendance-header">Attendance</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr *ngFor="let child of selectedDaycareGroup.children">
-                            <td>{{child.firstName}}</td>
-                            <td>{{child.lastName}}</td>
-                            <td>#{{child.id}}</td>
-                            <td id="attendance-cell">
-
-                                <span *ngIf="dailyAttendance.presentChildrenIds.indexOf(child.id) != -1">
-                                    <button class="btn btn-sm checkbox-present" (click)="markAsAbsent(child.id)">
-                                        <i class="fa fa-check"></i>
-                                    </button>
-                                    Present
-                                </span>
-
-                                <span *ngIf="dailyAttendance.absentChildrenIds.indexOf(child.id) != -1">
-                                    <button class="btn btn-sm checkbox-not-present" (click)="markAsPresent(child.id)">
-                                        <i class="fa fa-check"></i>
-                                    </button>
-                                    Not Present
-                                </span>
-
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
             </div>
 
         </div>
 
-        <div *ngIf="!selectedDaycareGroup || !dailyAttendance" class="card-body pt-4">
-            Select date and daycare group to track attendance for it's members.
-        </div>
+    </div>
 
-        <div class="card-footer">
-            <button class="btn btn-outline-darkblue mx-auto" (click)="submitAttendanceList()"
-                [disabled]="!selectedDaycareGroup || !dailyAttendance">
-                Submit attendance list
-            </button>
+
+    <div class="row">
+
+        <div class="card col-10 col-md-8 mx-auto my-4 p-0 text-center border-darkblue">
+
+            <div class="card-header bg-darkblue">
+                <h5 class="card-title my-0">Track attendance</h5>
+            </div>
+
+            <div *ngIf="selectedDaycareGroup && dailyAttendance" class="card-body pt-3">
+
+                <h5 class="subheader-purple">Selected group: {{selectedDaycareGroup.groupName}}
+                </h5>
+                <h5 class="subheader-purple">{{dailyAttendance.date | date:'fullDate'}}</h5>
+                <div class="subheader-underline mb-2"></div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-borderless table-striped text-center">
+
+                        <thead>
+                            <tr>
+                                <th>First name</th>
+                                <th>Last Name</th>
+                                <th>Child Id</th>
+                                <th id="attendance-header">Attendance</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let child of selectedDaycareGroup.children">
+                                <td>{{child.firstName}}</td>
+                                <td>{{child.lastName}}</td>
+                                <td>#{{child.id}}</td>
+                                <td id="attendance-cell">
+
+                                    <span *ngIf="dailyAttendance.presentChildrenIds.indexOf(child.id) != -1">
+                                        <button class="btn btn-sm checkbox-present" (click)="markAsAbsent(child.id)">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        Present
+                                    </span>
+
+                                    <span *ngIf="dailyAttendance.absentChildrenIds.indexOf(child.id) != -1">
+                                        <button class="btn btn-sm checkbox-not-present"
+                                            (click)="markAsPresent(child.id)">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        Not Present
+                                    </span>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+
+            <div *ngIf="!selectedDaycareGroup || !dailyAttendance" class="card-body pt-4">
+                Select date and daycare group to track attendance for it's members.
+            </div>
+
+            <div class="card-footer">
+                <button class="btn btn-outline-darkblue mx-auto" (click)="submitAttendanceList()"
+                    [disabled]="!selectedDaycareGroup || !dailyAttendance">
+                    Submit attendance list
+                </button>
+            </div>
+
         </div>
 
     </div>
 
 </div>
+
+<ng-template #loadingDaycareGroups>
+    <div class="text-center my-5 mx-auto">
+        <h2 class="heading-darkblue">Loading daycare groups data...</h2>
+    </div>
+</ng-template>

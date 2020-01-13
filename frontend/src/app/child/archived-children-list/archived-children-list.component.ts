@@ -15,7 +15,7 @@ import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 export class ArchivedChildrenListComponent implements OnInit {
 
   private modalRef: BsModalRef
-  private archivedChildren: Child[] = []
+  private archivedChildren: Child[]
 
   constructor(
     private dialogModalService: DialogModalService,
@@ -30,8 +30,12 @@ export class ArchivedChildrenListComponent implements OnInit {
 
   retrieveArchivedChildren() {
     this.childDataService.retrieveArchivedChildren().subscribe(
-      children => this.archivedChildren = children
-    )
+      children => {
+        this.archivedChildren = children
+      },
+      err => {
+        this.errorHandlerService.redirectToErrorPage(err)
+      })
   }
 
   restoreFromArchive(child: Child) {

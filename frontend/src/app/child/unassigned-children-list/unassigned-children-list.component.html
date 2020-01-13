@@ -1,4 +1,4 @@
-<div class="row">
+<div *ngIf="children else loadingChildren" class="row">
 
     <div class="card col-10 col-md-8 mx-auto my-4 p-0 text-center border-darkblue">
 
@@ -43,3 +43,9 @@
         </div>
     </div>
 </div>
+
+<ng-template #loadingChildren>
+    <div class="text-center my-5 mx-auto">
+        <h2 class="heading-darkblue">Loading children data...</h2>
+    </div>
+</ng-template>
