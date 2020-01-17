@@ -3,6 +3,7 @@ package jedrekp.daycarecateringbillgenerator.entity;
 import jedrekp.daycarecateringbillgenerator.utility.DaycareRole;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,9 +29,11 @@ public class DaycareEmployee {
 
     @Column(name = "app_username")
     @NotNull
+    @Length(min = 5, max = 20)
     private String appUsername;
 
     @NotNull
+    @Length(min = 5)
     private String password;
 
     @Enumerated(EnumType.STRING)

@@ -36,10 +36,10 @@ export class LoginComponent implements OnInit {
           this.invalidLogin = false;
           this.router.navigate(['welcome-page'])
         }, err => {
-          if (err.status == 0) {
-            this.errorHandlerService.redirectToErrorPage(err)
-          } else {
+          if (err.status == 401) {
             this.invalidLogin = true;
+          } else {
+            this.errorHandlerService.redirectToErrorPage(err)
           }
         })
     }
