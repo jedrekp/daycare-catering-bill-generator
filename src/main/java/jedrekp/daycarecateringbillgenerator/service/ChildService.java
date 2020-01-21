@@ -59,15 +59,10 @@ public class ChildService {
 
         Set<String> searchSubPhrases = splitSearchPhrase(searchPhrase);
 
-        //attempts to find children by both firstName and LastName, to put at the start of the list (only when multiple words have been entered)
         if (searchSubPhrases.size() > 1) {
             children.addAll(childRepository.findAllByFirstNameAndLastName(searchSubPhrases));
         }
-
-        //attempts to find all children whose lastName matches one of the entered words
         children.addAll(childRepository.findAllByLastName(searchSubPhrases));
-
-        //attempts to find all children whose firstName matches one of the entered words, to put at the end of the list
         children.addAll(childRepository.findAllByFirstName(searchSubPhrases));
 
         return children;

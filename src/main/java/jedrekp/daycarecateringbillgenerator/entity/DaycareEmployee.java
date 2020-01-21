@@ -1,5 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jedrekp.daycarecateringbillgenerator.utility.DaycareRole;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +22,12 @@ public class DaycareEmployee {
 
     @Column(name = "first_name")
     @NotNull
+    @Length(max = 20)
     private String firstName;
 
     @Column(name = "last_name")
     @NotNull
+    @Length(max = 20)
     private String lastName;
 
     @Column(name = "app_username")
@@ -33,7 +36,7 @@ public class DaycareEmployee {
     private String appUsername;
 
     @NotNull
-    @Length(min = 5)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Enumerated(EnumType.STRING)

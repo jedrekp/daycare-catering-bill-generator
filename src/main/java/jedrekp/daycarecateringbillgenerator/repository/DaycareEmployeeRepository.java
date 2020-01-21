@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface DaycareEmployeeRepository extends JpaRepository<DaycareEmployee, Long> {
 
+    boolean existsByAppUsernameIgnoreCase(String appUsername);
+
     Optional<DaycareEmployee> findByAppUsername(String appUsername);
 }

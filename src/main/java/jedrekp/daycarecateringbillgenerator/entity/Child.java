@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +43,7 @@ public class Child {
     @Column(name = "parent_email")
     @JsonView(JsonViewFilter.BasicInfo.class)
     @NotNull
+    @Email
     private String parentEmail;
 
     @JsonView(JsonViewFilter.BasicInfo.class)
