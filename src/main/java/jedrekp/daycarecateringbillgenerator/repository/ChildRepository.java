@@ -18,7 +18,11 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 
     boolean existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(String firstName, String lastName, Long childId);
 
+    boolean existsByIdAndDaycareGroup_GroupSupervisor_AppUsername(Long childId, String appUsername);
+
     Optional<Child> findByIdAndArchived(Long childId, boolean archived);
+
+    Optional<Child> findByIdAndDaycareGroup_Id(Long childId, Long daycareGroupId);
 
     @Query("SELECT c FROM Child c LEFT JOIN FETCH c.daycareGroup " +
             "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +

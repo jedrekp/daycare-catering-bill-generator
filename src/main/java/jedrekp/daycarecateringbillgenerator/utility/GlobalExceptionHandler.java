@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ResponseBody
     public String handleIllegalArgumentException(IllegalArgumentException e) {
         log.warn("Illegal argument exception : {}", e.getMessage());
@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
     }
 
     private String createCustomErrorMessageForMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        if (e.getValue() == null || e.toString().isEmpty()) {
+        if (e.getValue() == null || e.getValue().toString().isEmpty()) {
             return MessageFormat.format("You need to provide a value for property - {0}", e.getName());
         }
         return MessageFormat.format("{0} is not a correct value for property -  {1}", e.getValue().toString(), e.getName());

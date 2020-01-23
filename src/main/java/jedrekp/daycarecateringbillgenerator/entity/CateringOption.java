@@ -24,7 +24,7 @@ public class CateringOption {
 
     @Column(name = "option_name", unique = true)
     @NotNull
-    @Length(max = 15)
+    @Length(min = 3, max = 15)
     private String optionName;
 
     @Column(name = "daily_cost")

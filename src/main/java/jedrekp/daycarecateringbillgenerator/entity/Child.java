@@ -31,13 +31,13 @@ public class Child {
     @Column(name = "first_name")
     @JsonView(JsonViewFilter.BasicInfo.class)
     @NotNull
-    @Length(max = 20)
+    @Length(min = 2, max = 20)
     private String firstName;
 
     @Column(name = "last_name")
     @JsonView(JsonViewFilter.BasicInfo.class)
     @NotNull
-    @Length(max = 20)
+    @Length(min = 2, max = 20)
     private String lastName;
 
     @Column(name = "parent_email")
@@ -52,7 +52,7 @@ public class Child {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "daycare_group_id")
-    @JsonIgnoreProperties({"children"})
+    @JsonIgnoreProperties({"children", "groupSupervisor"})
     private DaycareGroup daycareGroup;
 
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)

@@ -27,15 +27,15 @@ public class AttendanceService {
     private final ChildService childService;
 
     @Transactional
-    public AttendanceSheet submitDailyAttendanceForGroup(TrackDailyGroupAttendanceRequest attendanceRequest) {
+    public AttendanceSheet submitDailyAttendanceForGroup(TrackDailyGroupAttendanceRequest attendanceRequest, long daycareGroupId) {
 
         if (!Collections.disjoint(attendanceRequest.getIdsOfChildrenToMarkAsPresent(), attendanceRequest.getIdsOfChildrenToMarkAsAbsent())) {
             throw new IllegalArgumentException("One or more children are marked as both present and absent.");
         }
 
         AttendanceSheet attendanceSheet = findByDateOrElseCreateNew(attendanceRequest.getDate());
-        addPresentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsPresent());
-        addAbsentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsAbsent());
+        addPresentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsPresent(), daycareGroupId);
+        addAbsentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsAbsent(), daycareGroupId);
         return attendanceSheetRepository.save(attendanceSheet);
     }
 
@@ -99,7 +99,7 @@ public class AttendanceService {
                 .orElse(new AttendanceSheet(date));
     }
 
-    private void addPresentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> presentChildrenIds) {
+    private void addPresentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> presentChildrenIds, long daycareGroupId) {
         if (!attendanceSheet.getAbsentChildren().isEmpty())
             attendanceSheet.getAbsentChildren().removeAll(
                     attendanceSheet.getAbsentChildren()
@@ -109,10 +109,10 @@ public class AttendanceService {
             );
 
         presentChildrenIds.forEach(childId -> attendanceSheet.getPresentChildren()
-                .add(childService.findSingleNotArchivedChildById(childId)));
+                .add(childService.findSingleChildByIdAndDaycareGroupId(childId, daycareGroupId)));
     }
 
-    private void addAbsentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> absentChildrenIds) {
+    private void addAbsentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> absentChildrenIds, long daycareGroupId) {
         if (!attendanceSheet.getPresentChildren().isEmpty())
             attendanceSheet.getPresentChildren().removeAll(
                     attendanceSheet.getPresentChildren()
@@ -122,7 +122,7 @@ public class AttendanceService {
             );
 
         absentChildrenIds.forEach(childId -> attendanceSheet.getAbsentChildren()
-                .add(childService.findSingleNotArchivedChildById(childId)));
+                .add(childService.findSingleChildByIdAndDaycareGroupId(childId, daycareGroupId)));
     }
 
     private void markSingleChildAsPresentForGivenDates(
@@ -165,7 +165,12 @@ public class AttendanceService {
                 .anyMatch(date -> date.getMonth() != month || date.getYear() != year.getValue())) {
             throw new IllegalArgumentException("Some of the dates are not within the selected month.");
         }
-
     }
 
+   /* private void verifyIfUserIsAssignedToDaycareGroup(long daycareGroupId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.getAuthorities().contains("ROLE_HEADMASTER")) {
+
+        }
+    }*/
 }

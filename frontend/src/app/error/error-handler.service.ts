@@ -15,7 +15,8 @@ export class ErrorHandlerService {
     let statusCode = err.status
     if (statusCode == 0) {
       return NO_RESPONSE_MESSAGE
-    } else if (statusCode == 400 || statusCode == 401 || statusCode == 403 || statusCode == 404 || statusCode == 409) {
+    } else if (statusCode == 400 || statusCode == 401 || statusCode == 403 || statusCode == 404 ||
+      statusCode == 409 || statusCode == 422) {
       return err.error
     }
     return UNEXPECTED_ERROR_MESSAGE

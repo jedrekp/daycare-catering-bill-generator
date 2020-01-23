@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,31 +27,32 @@ public class AttendanceSheetController {
 
     private final AttendanceService attendanceService;
 
-    @PutMapping(params = "daycareGroupId")
-    public ResponseEntity<AttendanceSheet> submitAttendanceForGroup(
-            @RequestParam long daycareGroupId, @RequestBody @Valid TrackDailyGroupAttendanceRequest attendanceRequest) {
-        return new ResponseEntity<>(attendanceService.submitDailyAttendanceForGroup(attendanceRequest), HttpStatus.OK);
-    }
-
     @GetMapping(params = {"daycareGroupId", "date"})
     public ResponseEntity<DailyGroupAttendanceResponse> getDailyAttendanceForDaycareGroup(
             @RequestParam long daycareGroupId,
-            @RequestParam(required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return new ResponseEntity<>(attendanceService.getDailyAttendanceForDaycareGroup(daycareGroupId, date), HttpStatus.OK);
     }
 
-    @PutMapping(params = {"childId", "month", "year"})
-    public ResponseEntity<Collection<AttendanceSheet>> submitMonthlyAttendanceChangesForSingleChild(
-            @RequestParam long childId, @RequestParam Month month, @RequestParam Year year,
-            @RequestBody @Valid UpdateMonthlyAttendanceForChildRequest attendanceRequest) {
-        return new ResponseEntity<>(
-                attendanceService.submitMonthlyAttendanceChangesForChild(childId, month, year, attendanceRequest), HttpStatus.OK);
+    @PutMapping(params = "daycareGroupId")
+    @PreAuthorize("hasAuthority('ROLE_HEADMASTER') or @attendanceTrackingPermissionEvaluator.canMarkAttendanceForDaycareGroup(#daycareGroupId,authentication)")
+    public ResponseEntity<AttendanceSheet> submitAttendanceForGroup(
+            @RequestParam long daycareGroupId, @RequestBody @Valid TrackDailyGroupAttendanceRequest attendanceRequest) {
+        return new ResponseEntity<>(attendanceService.submitDailyAttendanceForGroup(attendanceRequest, daycareGroupId), HttpStatus.OK);
     }
 
     @GetMapping(params = {"childId", "month", "year"})
     public ResponseEntity<ChildMonthlyAttendanceResponse> getMonthlyAttendanceForChild(
             @RequestParam long childId, @RequestParam Month month, @RequestParam Year year) {
-        return new ResponseEntity<>(attendanceService
-                .getMonthlyAttendanceForChild(childId, month, year), HttpStatus.OK);
+        return new ResponseEntity<>(attendanceService.getMonthlyAttendanceForChild(childId, month, year), HttpStatus.OK);
+    }
+
+    @PutMapping(params = {"childId", "month", "year"})
+    @PreAuthorize("hasAuthority('ROLE_HEADMASTER') or @attendanceTrackingPermissionEvaluator.canMarkAttendanceForChild(#childId,authentication)")
+    public ResponseEntity<Collection<AttendanceSheet>> submitMonthlyAttendanceChangesForSingleChild(
+            @RequestParam long childId, @RequestParam Month month, @RequestParam Year year,
+            @RequestBody @Valid UpdateMonthlyAttendanceForChildRequest attendanceRequest) {
+        return new ResponseEntity<>(
+                attendanceService.submitMonthlyAttendanceChangesForChild(childId, month, year, attendanceRequest), HttpStatus.OK);
     }
 }

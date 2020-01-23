@@ -9,6 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.text.MessageFormat;
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +19,19 @@ public class DaycareEmployeeService {
 
     private final DaycareEmployeeRepository daycareEmployeeRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public DaycareEmployee findSingleEmployeeByIdWithAllDetails(long daycareEmployeeId) {
+        return daycareEmployeeRepository.findByIdWithAllDetails(daycareEmployeeId).orElseThrow(() ->
+                new EntityNotFoundException(MessageFormat.format("Daycare employee #{0} does not exist.", daycareEmployeeId)));
+    }
+
+    public Collection<DaycareEmployee> findAllDaycareEmployees() {
+        return daycareEmployeeRepository.findAll();
+    }
+
+    public Collection<DaycareEmployee> findDaycareEmployeesWithSpecificRole(DaycareRole daycareRole) {
+        return daycareEmployeeRepository.findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(daycareRole);
+    }
 
     public DaycareEmployee addNewGroupSupervisor(DaycareEmployee daycareEmployee) {
         if (daycareEmployee.getDaycareRole() != DaycareRole.GROUP_SUPERVISOR) {

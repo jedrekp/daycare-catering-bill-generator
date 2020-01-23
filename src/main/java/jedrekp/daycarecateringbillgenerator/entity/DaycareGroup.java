@@ -1,6 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
@@ -29,11 +30,16 @@ public class DaycareGroup {
     @Column(name = "group_name", unique = true)
     @JsonView(JsonViewFilter.BasicInfo.class)
     @NotNull
-    @Length(max = 20)
+    @Length(min = 3, max = 20)
     private String groupName;
 
     @OneToMany(mappedBy = "daycareGroup", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"daycareGroup", "assignedOptions"})
     @OrderBy(value = "lastName ASC, firstName ASC")
     private Set<Child> children = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_supervisor_id")
+    @JsonIgnore
+    private DaycareEmployee groupSupervisor;
 }

@@ -111,7 +111,13 @@ export class SingleChildAttendanceComponent implements OnInit {
           })
       },
       err => {
-        this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+        let errorMessage: string
+        if (err.status == 401) {
+          errorMessage = "Only headmaster and group supervisor assigned to this child's daycare group is allowed to modify this child's attendance."
+        } else {
+          errorMessage = this.errorHandlerService.getErrorMessage(err)
+        }
+        this.dialogModalService.openInformationModal(ERROR_HEADER, errorMessage)
       })
   }
 
