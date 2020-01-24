@@ -102,8 +102,8 @@ public class GlobalExceptionHandler {
 
     private String createCustomErrorMessageForMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         if (e.getValue() == null || e.getValue().toString().isEmpty()) {
-            return MessageFormat.format("You need to provide a value for property - {0}", e.getName());
+            return MessageFormat.format("You need to provide a value for property: [{0}].", e.getName());
         }
-        return MessageFormat.format("{0} is not a correct value for property -  {1}", e.getValue().toString(), e.getName());
+        return MessageFormat.format("''{0}'' is not a correct value for property - [{1}].", e.getValue().toString(), e.getName());
     }
 }

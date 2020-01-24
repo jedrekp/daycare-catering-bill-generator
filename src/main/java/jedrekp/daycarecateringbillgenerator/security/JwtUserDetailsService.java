@@ -1,7 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.security;
 
-import jedrekp.daycarecateringbillgenerator.entity.DaycareEmployee;
-import jedrekp.daycarecateringbillgenerator.repository.DaycareEmployeeRepository;
+import jedrekp.daycarecateringbillgenerator.entity.AppUser;
+import jedrekp.daycarecateringbillgenerator.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,21 +18,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService {
 
-    private final DaycareEmployeeRepository daycareEmployeeRepository;
+    private final AppUserRepository appUserRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        DaycareEmployee daycareEmployee = daycareEmployeeRepository.findByAppUsername(username)
+        AppUser appUser = appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found."));
-        return buildUserForAuthentication(daycareEmployee);
+        return buildUserForAuthentication(appUser);
     }
 
-    private User buildUserForAuthentication(DaycareEmployee daycareEmployee) {
+    private User buildUserForAuthentication(AppUser appUser) {
         List<GrantedAuthority> grantedAuthorities = Collections.singletonList(
-                new SimpleGrantedAuthority(MessageFormat.format("ROLE_{0}", daycareEmployee.getDaycareRole().toString())));
+                new SimpleGrantedAuthority(appUser.getDaycareRole().toString()));
         return new User(
-                daycareEmployee.getAppUsername(),
-                daycareEmployee.getPassword(),
+                appUser.getUsername(),
+                appUser.getPassword(),
                 true,
                 true,
                 true,

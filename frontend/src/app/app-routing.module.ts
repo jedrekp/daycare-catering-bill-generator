@@ -26,7 +26,7 @@ const routes: Routes = [
   { path: 'daycare-group-page/:groupId', component: DaycareGroupPageComponent, canActivate: [RouteGuardService] },
   { path: 'daycare-group-list', component: DaycareGroupListComponent, canActivate: [RouteGuardService] },
   { path: 'track-attendance', component: TrackAttendanceComponent, canActivate: [RouteGuardService] },
-  { path: 'generate-catering-bills', component: GenerateCateringBillsComponent, canActivate: [RouteGuardService], data: { authorizedUserRoles: ['ROLE_HEADMASTER'] } },
+  { path: 'generate-catering-bills', component: GenerateCateringBillsComponent, canActivate: [RouteGuardService], data: { authorizedUserRoles: ['HEADMASTER'] } },
   { path: 'error', component: ErrorComponent },
 
   { path: '**', component: ErrorComponent }

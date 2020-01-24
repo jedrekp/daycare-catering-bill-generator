@@ -63,7 +63,7 @@ export class CateringOptionsListComponent implements OnInit {
   }
 
   openEditCateringOptionModal(cateringOptionToEdit: CateringOption) {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       let initialState = { cateringOption: cateringOptionToEdit }
       this.modalRef = this.modalService.show(CateringOptionCreateEditComponent,
         { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })

@@ -1,6 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.utility;
 
-import jedrekp.daycarecateringbillgenerator.entity.DaycareEmployee;
+import jedrekp.daycarecateringbillgenerator.entity.AppUser;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -10,13 +10,13 @@ public class PreEncodedPasswordValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return DaycareEmployee.class.isAssignableFrom(aClass);
+        return AppUser.class.isAssignableFrom(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        DaycareEmployee daycareEmployee = (DaycareEmployee) o;
-        if (daycareEmployee.getPassword().length() < 5 || daycareEmployee.getPassword().length() > 20) {
+        AppUser appUser = (AppUser) o;
+        if (appUser.getPassword().length() < 5 || appUser.getPassword().length() > 20) {
             errors.rejectValue("password", "", "length must be between 5 and 20");
         }
     }

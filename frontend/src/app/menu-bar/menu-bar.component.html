@@ -20,7 +20,7 @@
                     Children
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
-                    <a *ngIf="authenticationService.isUserAuthorized(['ROLE_HEADMASTER'])" class="dropdown-item"
+                    <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
                         (click)="openCreateChildModal()">
                         Add new child</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/unassigned-children-list')">
@@ -35,7 +35,7 @@
                     Daycare
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
-                    <a *ngIf="authenticationService.isUserAuthorized(['ROLE_HEADMASTER'])" class="dropdown-item"
+                    <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
                         (click)="openCreateDaycareGroupModal()">Add new group</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/daycare-group-list')">
                         Display list of groups</a>
@@ -47,11 +47,11 @@
                     Catering
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
-                    <a *ngIf="authenticationService.isUserAuthorized(['ROLE_HEADMASTER'])" class="dropdown-item"
+                    <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
                         (click)="openCreateCateringOptionModal()">Add new option</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/catering-options-list')">
                         Display available options</a>
-                    <a *ngIf="authenticationService.isUserAuthorized(['ROLE_HEADMASTER'])" class="dropdown-item"
+                    <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
                         (click)="navigateFromMenu('/generate-catering-bills')">Generate/display
                         catering bills</a>
                 </div>

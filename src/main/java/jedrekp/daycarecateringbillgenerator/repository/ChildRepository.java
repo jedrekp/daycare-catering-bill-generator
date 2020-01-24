@@ -3,7 +3,6 @@ package jedrekp.daycarecateringbillgenerator.repository;
 import jedrekp.daycarecateringbillgenerator.entity.Child;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -18,21 +17,21 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 
     boolean existsByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndIdNot(String firstName, String lastName, Long childId);
 
-    boolean existsByIdAndDaycareGroup_GroupSupervisor_AppUsername(Long childId, String appUsername);
+    boolean existsByIdAndDaycareGroupGroupSupervisorUsername(Long childId, String username);
 
     Optional<Child> findByIdAndArchived(Long childId, boolean archived);
 
-    Optional<Child> findByIdAndDaycareGroup_Id(Long childId, Long daycareGroupId);
+    Optional<Child> findByIdAndDaycareGroupId(Long childId, Long daycareGroupId);
 
     @Query("SELECT c FROM Child c LEFT JOIN FETCH c.daycareGroup " +
             "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
             "WHERE c.id = :childId")
-    Optional<Child> findByIdWithAllDetails(@Param("childId") Long childId);
+    Optional<Child> findByIdWithAllDetails(Long childId);
 
     @Query("SELECT c FROM Child c " +
             "LEFT JOIN FETCH c.assignedOptions ao  LEFT JOIN FETCH ao.cateringOption " +
             "WHERE c.id = :childId AND c.archived = :archived")
-    Optional<Child> findByIdAndArchivedWithAssignedOptions(@Param("childId") Long childId, @Param("archived") boolean archived);
+    Optional<Child> findByIdAndArchivedWithAssignedOptions(Long childId, boolean archived);
 
     List<Child> findAllByArchivedOrderByLastNameAscFirstNameAsc(boolean archived);
 
@@ -41,22 +40,22 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 
     @Query("SELECT c FROM Child c WHERE LOWER(c.firstName) IN :searchSubPhrases " +
             "AND LOWER(c.lastName) IN :searchSubPhrases ORDER BY c.lastName ASC, c.firstName ASC")
-    List<Child> findAllByFirstNameAndLastName(@Param("searchSubPhrases") Collection<String> searchSubPhrases);
+    List<Child> findAllByFirstNameAndLastName(Collection<String> searchSubPhrases);
 
     @Query("SELECT c FROM Child c WHERE LOWER(c.lastName) IN :searchSubPhrases " +
             "ORDER BY c.lastName ASC, c.firstName ASC")
-    List<Child> findAllByLastName(@Param("searchSubPhrases") Collection<String> searchSubPhrases);
+    List<Child> findAllByLastName(Collection<String> searchSubPhrases);
 
     @Query("SELECT c FROM Child c WHERE LOWER(c.firstName) IN :searchSubPhrases " +
             "ORDER BY c.lastName ASC, c.firstName ASC")
-    List<Child> findAllByFirstName(@Param("searchSubPhrases") Collection<String> searchSubPhrases);
+    List<Child> findAllByFirstName(Collection<String> searchSubPhrases);
 
     @Query("SELECT pc FROM AttendanceSheet att INNER JOIN att.presentChildren pc INNER JOIN pc.daycareGroup dg " +
             "WHERE att.date = :date AND dg.id = :daycareGroupId")
-    List<Child> findPresentChildrenByDateAndDaycareGroupId(@Param("date") LocalDate date, @Param("daycareGroupId") Long daycareGroupId);
+    List<Child> findPresentChildrenByDateAndDaycareGroupId(LocalDate date, Long daycareGroupId);
 
     @Query("SELECT ac FROM AttendanceSheet att INNER JOIN att.absentChildren ac INNER JOIN ac.daycareGroup dg " +
             "WHERE att.date = :date AND dg.id = :daycareGroupId")
-    List<Child> findAbsentChildrenByDateAndDaycareGroupId(@Param("date") LocalDate date, @Param("daycareGroupId") Long daycareGroupId);
+    List<Child> findAbsentChildrenByDateAndDaycareGroupId(LocalDate date, Long daycareGroupId);
 
 }

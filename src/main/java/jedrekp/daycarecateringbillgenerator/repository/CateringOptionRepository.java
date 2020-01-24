@@ -3,7 +3,6 @@ package jedrekp.daycarecateringbillgenerator.repository;
 import jedrekp.daycarecateringbillgenerator.entity.CateringOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -23,8 +22,7 @@ public interface CateringOptionRepository extends JpaRepository<CateringOption, 
             "ORDER BY ao.effective_date DESC " +
             "LIMIT 1",
             nativeQuery = true)
-    Optional<CateringOption> findOptionInEffectByChildIdAndDate(@Param("childId") Long childId,
-                                                                @Param("date") LocalDate date);
+    Optional<CateringOption> findOptionInEffectByChildIdAndDate(Long childId, LocalDate date);
 
     List<CateringOption> findAllByDisabledOrderByOptionNameAsc(boolean disabled);
 }

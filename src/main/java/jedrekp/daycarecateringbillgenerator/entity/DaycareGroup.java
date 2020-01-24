@@ -1,7 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
@@ -40,6 +39,6 @@ public class DaycareGroup {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_supervisor_id")
-    @JsonIgnore
-    private DaycareEmployee groupSupervisor;
+    @JsonIgnoreProperties("daycareGroup")
+    private AppUser groupSupervisor;
 }

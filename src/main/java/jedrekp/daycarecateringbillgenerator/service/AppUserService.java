@@ -1,0 +1,82 @@
+package jedrekp.daycarecateringbillgenerator.service;
+
+import jedrekp.daycarecateringbillgenerator.entity.AppUser;
+import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
+import jedrekp.daycarecateringbillgenerator.repository.AppUserRepository;
+import jedrekp.daycarecateringbillgenerator.utility.DaycareRole;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.text.MessageFormat;
+import java.util.Collection;
+
+@Service
+@RequiredArgsConstructor
+public class AppUserService {
+
+    private final AppUserRepository appUserRepository;
+    private final DaycareGroupService daycareGroupService;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Transactional(readOnly = true)
+    public AppUser findSingleAppUserByIdWithAllDetails(long appUserId) {
+        return appUserRepository.findByIdWithAllDetails(appUserId).orElseThrow(() ->
+                new EntityNotFoundException(MessageFormat.format("User #{0} does not exist.", appUserId)));
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<AppUser> findAllAppUsers() {
+        return appUserRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<AppUser> findAllAppUsersByDaycareRole(DaycareRole daycareRole) {
+        return appUserRepository.findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(daycareRole);
+    }
+
+    @Transactional
+    public AppUser createNewGroupSupervisorAccount(AppUser appUser) {
+        if (appUser.getDaycareRole() != DaycareRole.GROUP_SUPERVISOR) {
+            throw new IllegalArgumentException("You may only create new accounts for group supervisors.");
+        }
+        checkUsernameAvailability(appUser.getUsername());
+        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+        return appUserRepository.save(appUser);
+    }
+
+    @Transactional
+    public AppUser assignDaycareGroupToGroupSupervisor(long appUserId, long daycareGroupId) {
+        AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
+        DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdWithAllDetails(daycareGroupId);
+        verifyIfDaycareGroupCanBeAssignedToUser(appUser, daycareGroup);
+        daycareGroup.setGroupSupervisor(appUser);
+        appUser.setDaycareGroup(daycareGroup);
+        return appUser;
+    }
+
+    private void checkUsernameAvailability(String username) {
+        if (appUserRepository.existsByUsernameIgnoreCase(username)) {
+            throw new EntityExistsException("This username is already taken.");
+        }
+    }
+
+    private void verifyIfDaycareGroupCanBeAssignedToUser(AppUser appUser, DaycareGroup daycareGroup) {
+        if (appUser.getDaycareRole() != DaycareRole.GROUP_SUPERVISOR) {
+            throw new IllegalArgumentException("Daycare group can only be assigned to group supervisors.");
+        }
+        if (appUser.getDaycareGroup() != null) {
+            throw new IllegalArgumentException(MessageFormat.format(
+                    "Another daycare group is already assigned to user #{0}. It must be removed first", appUser.getId()));
+        }
+        if (daycareGroup.getGroupSupervisor() != null) {
+            throw new IllegalArgumentException(MessageFormat.format("Daycare group #{0} is already assigned to user #{1}.",
+                    daycareGroup.getId(), daycareGroup.getGroupSupervisor().getId()));
+        }
+    }
+
+}

@@ -33,7 +33,7 @@ export class DaycareGroupChildrenListComponent implements OnInit {
   }
 
   removeChildFromGroup(child: Child) {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to remove child #${child.id} (${child.firstName} ${child.lastName}) from daycare group #${this.daycareGroup.id}`)
       this.modalRef.content.onClose.subscribe(

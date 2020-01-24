@@ -26,19 +26,6 @@ public class AttendanceService {
 
     private final ChildService childService;
 
-    @Transactional
-    public AttendanceSheet submitDailyAttendanceForGroup(TrackDailyGroupAttendanceRequest attendanceRequest, long daycareGroupId) {
-
-        if (!Collections.disjoint(attendanceRequest.getIdsOfChildrenToMarkAsPresent(), attendanceRequest.getIdsOfChildrenToMarkAsAbsent())) {
-            throw new IllegalArgumentException("One or more children are marked as both present and absent.");
-        }
-
-        AttendanceSheet attendanceSheet = findByDateOrElseCreateNew(attendanceRequest.getDate());
-        addPresentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsPresent(), daycareGroupId);
-        addAbsentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsAbsent(), daycareGroupId);
-        return attendanceSheetRepository.save(attendanceSheet);
-    }
-
     @Transactional(readOnly = true)
     public DailyGroupAttendanceResponse getDailyAttendanceForDaycareGroup(long daycareGroupId, LocalDate date) {
 
@@ -57,24 +44,6 @@ public class AttendanceService {
         return dailyGroupAttendanceResponse;
     }
 
-    @Transactional
-    public List<AttendanceSheet> submitMonthlyAttendanceChangesForChild(
-            long childId, Month month, Year year, UpdateMonthlyAttendanceForChildRequest request) {
-
-        if (!Collections.disjoint(request.getDatesToMarkAsPresent(), request.getDatesToMarkAsAbsent())) {
-            throw new IllegalArgumentException("Attendance update consists of dates for which child is marked as both present and absent");
-        }
-        verifyIfAllDatesAreWithinTheSelectedMonth(request, month, year);
-
-        Child child = childService.findSingleNotArchivedChildById(childId);
-        List<AttendanceSheet> attendanceSheets = new ArrayList<>();
-        markSingleChildAsPresentForGivenDates(request.getDatesToMarkAsPresent(), attendanceSheets, child);
-        markSingleChildAsAbsentForGivenDates(request.getDatesToMarkAsAbsent(), attendanceSheets, child);
-
-        attendanceSheets.sort(Comparator.comparing(AttendanceSheet::getDate));
-        return attendanceSheets;
-    }
-
     @Transactional(readOnly = true)
     public ChildMonthlyAttendanceResponse getMonthlyAttendanceForChild(long childId, Month month, Year year) {
 
@@ -91,6 +60,37 @@ public class AttendanceService {
                 .collect(Collectors.toSet()));
 
         return attendanceResponse;
+    }
+
+    @Transactional
+    public AttendanceSheet submitDailyAttendanceForGroup(TrackDailyGroupAttendanceRequest attendanceRequest, long daycareGroupId) {
+
+        if (!Collections.disjoint(attendanceRequest.getIdsOfChildrenToMarkAsPresent(), attendanceRequest.getIdsOfChildrenToMarkAsAbsent())) {
+            throw new IllegalArgumentException("One or more children are marked as both present and absent.");
+        }
+
+        AttendanceSheet attendanceSheet = findByDateOrElseCreateNew(attendanceRequest.getDate());
+        addPresentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsPresent(), daycareGroupId);
+        addAbsentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsAbsent(), daycareGroupId);
+        return attendanceSheetRepository.save(attendanceSheet);
+    }
+
+    @Transactional
+    public List<AttendanceSheet> submitMonthlyAttendanceChangesForChild(
+            long childId, Month month, Year year, UpdateMonthlyAttendanceForChildRequest request) {
+
+        if (!Collections.disjoint(request.getDatesToMarkAsPresent(), request.getDatesToMarkAsAbsent())) {
+            throw new IllegalArgumentException("Attendance update consists of dates for which child is marked as both present and absent");
+        }
+        verifyIfAllDatesAreWithinTheSelectedMonth(request, month, year);
+
+        Child child = childService.findSingleNotArchivedChildById(childId);
+        List<AttendanceSheet> attendanceSheets = new ArrayList<>();
+        markSingleChildAsPresentForGivenDates(request.getDatesToMarkAsPresent(), attendanceSheets, child);
+        markSingleChildAsAbsentForGivenDates(request.getDatesToMarkAsAbsent(), attendanceSheets, child);
+
+        attendanceSheets.sort(Comparator.comparing(AttendanceSheet::getDate));
+        return attendanceSheets;
     }
 
     private AttendanceSheet findByDateOrElseCreateNew(LocalDate date) {

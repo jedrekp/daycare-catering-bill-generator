@@ -10,8 +10,8 @@ import java.util.Optional;
 @Repository
 public interface AssignedOptionRepository extends JpaRepository<AssignedOption, Long> {
 
-    boolean existsByEffectiveDateAndChild_Id(LocalDate effectiveDate, Long childId);
+    boolean existsByEffectiveDateAndChildId(LocalDate effectiveDate, Long childId);
 
-    Optional<AssignedOption> findByEffectiveDateAndChild_Id(LocalDate effectiveDate, Long childId);
+    Optional<AssignedOption> findByEffectiveDateAndChildId(LocalDate effectiveDate, Long childId);
 
 }

@@ -3,7 +3,6 @@ package jedrekp.daycarecateringbillgenerator.repository;
 import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,9 +15,12 @@ public interface DaycareGroupRepository extends JpaRepository<DaycareGroup, Long
 
     boolean existsByGroupNameIgnoreCaseAndIdNot(String groupName, Long childId);
 
+    boolean existsByIdAndGroupSupervisorUsername(Long daycareGroupId, String groupSupervisorUsername);
+
     @Query("SELECT dg FROM DaycareGroup dg LEFT JOIN FETCH dg.children " +
+            "LEFT JOIN FETCH dg.groupSupervisor " +
             "WHERE dg.id = :daycareGroupId")
-    Optional<DaycareGroup> findByIdWithChildren(@Param("daycareGroupId") Long daycareGroupId);
+    Optional<DaycareGroup> findByIdWithAllDetails(Long daycareGroupId);
 
     List<DaycareGroup> findAllByOrderByGroupNameAsc();
 }

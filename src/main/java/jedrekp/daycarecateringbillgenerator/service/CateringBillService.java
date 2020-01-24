@@ -79,7 +79,7 @@ public class CateringBillService {
         Child child = childService.findSingleNotArchivedChildById(childId);
         CateringBill newCateringBill = mapRequestToCateringBill(cateringBillRequest);
 
-        cateringBillRepository.findByMonthAndYearAndChild_id(cateringBillRequest.getMonth(), cateringBillRequest.getYear(), childId)
+        cateringBillRepository.findByMonthAndYearAndChildId(cateringBillRequest.getMonth(), cateringBillRequest.getYear(), childId)
                 .ifPresent(previousCateringBill -> deletePreviousVersionOfCateringBillAndMarkNewVersionAsCorrection(
                         previousCateringBill, newCateringBill, child));
 
@@ -90,7 +90,6 @@ public class CateringBillService {
     }
 
     @Transactional(readOnly = true)
-
     public void sendBillToParentViaEmail(long cateringBillId) throws IOException, TemplateException, MessagingException {
 
         CateringBill cateringBill = findByIdWithAllDetails(cateringBillId);

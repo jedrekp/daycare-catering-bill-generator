@@ -33,7 +33,7 @@ export class ChildBasicInfoComponent implements OnInit {
   ngOnInit() { }
 
   openEditChildModal() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       let initialState = {
         child: new Child(this.child.id, this.child.firstName, this.child.lastName,
           this.child.parentEmail, this.child.archived)
@@ -57,7 +57,7 @@ export class ChildBasicInfoComponent implements OnInit {
   }
 
   moveToArchive() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER, `You are about to move child #${this.child.id} records to archive.\n
   Some actions might be unavailalbe while children records are in archive.\n
   This will also result in child being removed from daycare group that it's currently assigned to.`)
@@ -85,7 +85,7 @@ export class ChildBasicInfoComponent implements OnInit {
   }
 
   restoreFromArchive() {
-    if (this.authenticationService.getUserRole() == 'ROLE_HEADMASTER') {
+    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       this.childDataService.editChild(this.child.id,
         new Child(this.child.id, this.child.firstName, this.child.lastName, this.child.parentEmail, false)).subscribe(
           response => {

@@ -1,7 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.utility;
 
-import jedrekp.daycarecateringbillgenerator.repository.ChildRepository;
-import jedrekp.daycarecateringbillgenerator.repository.DaycareEmployeeRepository;
+import jedrekp.daycarecateringbillgenerator.service.ChildService;
+import jedrekp.daycarecateringbillgenerator.service.DaycareGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AttendanceTrackingPermissionEvaluator {
 
-    private final DaycareEmployeeRepository daycareEmployeeRepository;
-    private final ChildRepository childRepository;
+    private final DaycareGroupService daycareGroupService;
+    private final ChildService childService;
 
     public boolean canMarkAttendanceForDaycareGroup(long daycareGroupId, Authentication authentication) {
-        return daycareEmployeeRepository.existsByAppUsernameAndDaycareGroup_Id(authentication.getName(), daycareGroupId);
+        return daycareGroupService.verifyIfDaycareGroupIsSupervisedByUser(daycareGroupId, authentication.getName());
     }
 
     public boolean canMarkAttendanceForChild(long childId, Authentication authentication) {
-        return childRepository.existsByIdAndDaycareGroup_GroupSupervisor_AppUsername(childId, authentication.getName());
+        return childService.verifyIfChildIsAssignedToDaycareGroupSupervisedByUser(childId, authentication.getName());
     }
 
 }

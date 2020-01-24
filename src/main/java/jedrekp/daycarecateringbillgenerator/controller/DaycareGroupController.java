@@ -33,7 +33,7 @@ public class DaycareGroupController {
 
     @GetMapping("/{daycareGroupId}")
     public ResponseEntity<DaycareGroup> getSingleDaycareGroup(@PathVariable long daycareGroupId) {
-        return new ResponseEntity<>(daycareGroupService.findSingleGroupByIdWithChildren(daycareGroupId), HttpStatus.OK);
+        return new ResponseEntity<>(daycareGroupService.findSingleGroupByIdWithAllDetails(daycareGroupId), HttpStatus.OK);
     }
 
     @GetMapping
@@ -43,14 +43,14 @@ public class DaycareGroupController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<DaycareGroup> addNewDaycareGroup(@RequestBody @Valid DaycareGroup daycareGroup) {
         return new ResponseEntity<>(daycareGroupService.saveNewDaycareGroup(daycareGroup), HttpStatus.CREATED);
     }
 
     @PutMapping("/{daycareGroupId}")
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<DaycareGroup> editDaycareGroup(
             @PathVariable long daycareGroupId, @RequestBody @Valid DaycareGroup daycareGroup) {
@@ -58,7 +58,7 @@ public class DaycareGroupController {
     }
 
     @DeleteMapping("/{daycareGroupId}")
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity deleteDaycareGroup(@PathVariable long daycareGroupId) {
         daycareGroupService.deleteDaycareGroup(daycareGroupId);
         return ResponseEntity.noContent().build();
@@ -71,21 +71,21 @@ public class DaycareGroupController {
     }
 
     @PutMapping("/{daycareGroupId}/children/{childId}")
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<DaycareGroup> assignChildToDayCareGroup(
             @PathVariable long daycareGroupId, @PathVariable long childId) {
         return new ResponseEntity<>(daycareGroupService.addChildToDaycareGroup(daycareGroupId, childId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{daycareGroupId}/children/{childId}")
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity removeChildFromGroup(@PathVariable long daycareGroupId, @PathVariable long childId) {
         daycareGroupService.removeChildFromDaycareGroup(daycareGroupId, childId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{daycareGroupId}/children/cateringBills", params = {"month", "year"})
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<Collection<CateringBillResponse>> getBillsForSpecificMonthForAllChildrenInGroup(
             @PathVariable long daycareGroupId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(

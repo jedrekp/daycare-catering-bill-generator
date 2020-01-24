@@ -16,8 +16,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Entity
-@Table(name = "daycare_employee")
-public class DaycareEmployee {
+@Table(name = "app_user")
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,11 +37,11 @@ public class DaycareEmployee {
     @Length(min = 2, max = 20)
     private String lastName;
 
-    @Column(name = "app_username")
+    @Column(name = "username", unique = true)
     @JsonView(JsonViewFilter.BasicInfo.class)
     @NotNull
     @Length(min = 5, max = 20)
-    private String appUsername;
+    private String username;
 
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -54,7 +54,7 @@ public class DaycareEmployee {
     private DaycareRole daycareRole;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "groupSupervisor")
-    @JsonIgnoreProperties("group_supervisor")
+    @JsonIgnoreProperties({"children", "groupSupervisor"})
     private DaycareGroup daycareGroup;
 
 }

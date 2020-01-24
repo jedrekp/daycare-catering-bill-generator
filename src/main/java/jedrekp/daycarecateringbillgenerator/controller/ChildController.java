@@ -57,21 +57,21 @@ public class ChildController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Child> addNewChild(@RequestBody @Valid Child child) {
         return new ResponseEntity<>(childService.saveNewChild(child), HttpStatus.CREATED);
     }
 
     @PutMapping("/{childId}")
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Child> EditChild(@PathVariable long childId, @RequestBody @Valid Child child) {
         return new ResponseEntity<>(childService.editChild(childId, child), HttpStatus.OK);
     }
 
     @PostMapping("/{childId}/assignedOptions")
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<AssignedOption> assignNewCateringOptionToChild(
             @PathVariable long childId, @RequestBody @Valid AssignOptionToChildRequest assignOptionToChildRequest) {
@@ -79,7 +79,7 @@ public class ChildController {
     }
 
     @DeleteMapping(value = "/{childId}/assignedOptions", params = "effectiveDate")
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity removeAssignedOptionFromChild(
             @PathVariable long childId, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveDate) {
         childService.removeAssignedOption(childId, effectiveDate);
@@ -87,14 +87,14 @@ public class ChildController {
     }
 
     @GetMapping(value = "/{childId}/cateringBills", params = {"month", "year"})
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<CateringBillResponse> getCateringBillForSpecificMonth(
             @PathVariable long childId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(cateringBillService.getSpecificBillForChild(childId, month, year), HttpStatus.OK);
     }
 
     @PostMapping("/{childId}/cateringBills")
-    @PreAuthorize("hasAuthority('ROLE_HEADMASTER')")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<CateringBill> addNewCateringBillToChild(
             @PathVariable long childId, @RequestBody @Valid CreateCateringBillRequest cateringBillRequest) {
         return new ResponseEntity<>(cateringBillService.addNewCateringBillToChild(childId, cateringBillRequest), HttpStatus.CREATED);

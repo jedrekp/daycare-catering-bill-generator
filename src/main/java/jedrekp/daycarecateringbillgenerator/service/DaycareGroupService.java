@@ -21,14 +21,19 @@ public class DaycareGroupService {
     private final ChildService childService;
 
     @Transactional(readOnly = true)
-    public DaycareGroup findSingleGroupByIdWithChildren(long daycareGroupId) {
-        return daycareGroupRepository.findByIdWithChildren(daycareGroupId).orElseThrow(() -> new EntityNotFoundException(
+    public DaycareGroup findSingleGroupByIdWithAllDetails(long daycareGroupId) {
+        return daycareGroupRepository.findByIdWithAllDetails(daycareGroupId).orElseThrow(() -> new EntityNotFoundException(
                 MessageFormat.format("Daycare group #{0} does not exist.", daycareGroupId)));
     }
 
     @Transactional(readOnly = true)
     public Collection<DaycareGroup> findAll() {
         return daycareGroupRepository.findAllByOrderByGroupNameAsc();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean verifyIfDaycareGroupIsSupervisedByUser(long daycareGroupId, String groupSupervisorUsername) {
+        return daycareGroupRepository.existsByIdAndGroupSupervisorUsername(daycareGroupId, groupSupervisorUsername);
     }
 
     @Transactional
@@ -47,7 +52,7 @@ public class DaycareGroupService {
 
     @Transactional
     public void deleteDaycareGroup(long daycareGroupId) {
-        DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
+        DaycareGroup daycareGroup = findSingleGroupByIdWithAllDetails(daycareGroupId);
         Collection<Child> children = daycareGroup.getChildren();
         children.forEach(child -> child.setDaycareGroup(null));
         daycareGroupRepository.deleteById(daycareGroupId);
@@ -59,7 +64,7 @@ public class DaycareGroupService {
         if (child.getDaycareGroup() != null) {
             throw new IllegalArgumentException(MessageFormat.format("Child #{0}is already assigned to a daycare group", childId));
         }
-        DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
+        DaycareGroup daycareGroup = findSingleGroupByIdWithAllDetails(daycareGroupId);
         child.setDaycareGroup(daycareGroup);
         daycareGroup.getChildren().add(child);
         return daycareGroup;
@@ -68,7 +73,7 @@ public class DaycareGroupService {
     @Transactional
     public void removeChildFromDaycareGroup(long daycareGroupId, long childId) {
         Child child = childService.findSingleChildByIdWithAllDetails(childId);
-        DaycareGroup daycareGroup = findSingleGroupByIdWithChildren(daycareGroupId);
+        DaycareGroup daycareGroup = findSingleGroupByIdWithAllDetails(daycareGroupId);
         if (daycareGroup.getChildren().contains(child)) {
             daycareGroup.getChildren().remove(child);
             child.setDaycareGroup(null);
