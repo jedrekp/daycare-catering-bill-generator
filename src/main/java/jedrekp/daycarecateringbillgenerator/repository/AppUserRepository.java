@@ -18,5 +18,9 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
             "WHERE au.id = :appUserId")
     Optional<AppUser> findByIdWithAllDetails(Long appUserId);
 
+    @Query("SELECT au FROM AppUser au LEFT JOIN FETCH au.daycareGroup dg " +
+            "WHERE au.id = :appUserId AND dg.id = :daycareGroupId")
+    Optional<AppUser> findByIdAndDaycareGroupIdWithAllDetails(Long appUserId, Long daycareGroupId);
+
     List<AppUser> findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(DaycareRole daycareRole);
 }

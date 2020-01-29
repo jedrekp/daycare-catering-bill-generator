@@ -72,14 +72,15 @@ public class DaycareGroupService {
 
     @Transactional
     public void removeChildFromDaycareGroup(long daycareGroupId, long childId) {
-        Child child = childService.findSingleChildByIdWithAllDetails(childId);
+        Child child = childService.findSingleChildByIdAndDaycareGroupId(childId, daycareGroupId);
         DaycareGroup daycareGroup = findSingleGroupByIdWithAllDetails(daycareGroupId);
-        if (daycareGroup.getChildren().contains(child)) {
-            daycareGroup.getChildren().remove(child);
-            child.setDaycareGroup(null);
-        } else {
-            throw new IllegalArgumentException(MessageFormat.format("Child #{0} is not in this daycare group", childId));
-        }
+        daycareGroup.getChildren().remove(child);
+        child.setDaycareGroup(null);
+    }
+
+    DaycareGroup findSingleGroupByIdAndGroupSupervisorId(long daycareGroupId, long groupSupervisorId) {
+        return daycareGroupRepository.findByIdAndGroupSupervisor_Id(daycareGroupId, groupSupervisorId).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Daycare group #{0} is not assigned to user #{1}.", daycareGroupId, groupSupervisorId)));
     }
 
     private DaycareGroup findSingleGroupById(long daycareGroupId) {

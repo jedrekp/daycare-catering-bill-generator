@@ -45,7 +45,7 @@ public class AppUserController {
     @GetMapping(params = "daycareRole")
     @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Collection<AppUser>> getDaycareEmployeesWithSpecificRole(@RequestParam DaycareRole daycareRole) {
+    public ResponseEntity<Collection<AppUser>> getAppUsersWithSpecificRole(@RequestParam DaycareRole daycareRole) {
         return new ResponseEntity<>(appUserService.findAllAppUsersByDaycareRole(daycareRole), HttpStatus.OK);
     }
 
@@ -56,11 +56,18 @@ public class AppUserController {
         return new ResponseEntity<>(appUserService.createNewGroupSupervisorAccount(appUser), HttpStatus.CREATED);
     }
 
+    @DeleteMapping("{appUserId}/daycareGroups/{daycareGroupId}")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
+    public ResponseEntity removeDaycareGroupFromGroupSupervisor(@PathVariable long appUserId, @PathVariable long daycareGroupId) {
+        appUserService.removeAssignedGroupFromGroupSupervisor(appUserId,daycareGroupId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("{appUserId}/daycareGroups/{daycareGroupId}")
     @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<AppUser> assignDaycareGroupToGroupSupervisor(
             @PathVariable long appUserId, @PathVariable long daycareGroupId) {
-        return new ResponseEntity<>(appUserService.assignDaycareGroupToGroupSupervisor(appUserId, daycareGroupId),HttpStatus.OK);
+        return new ResponseEntity<>(appUserService.assignDaycareGroupToGroupSupervisor(appUserId, daycareGroupId), HttpStatus.OK);
     }
 
 }
