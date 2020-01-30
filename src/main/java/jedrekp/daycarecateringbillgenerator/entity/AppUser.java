@@ -53,7 +53,7 @@ public class AppUser {
     @NotNull
     private DaycareRole daycareRole;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "groupSupervisor")
+    @OneToOne(mappedBy = "groupSupervisor")
     @JsonIgnoreProperties({"children", "groupSupervisor"})
     private DaycareGroup daycareGroup;
 

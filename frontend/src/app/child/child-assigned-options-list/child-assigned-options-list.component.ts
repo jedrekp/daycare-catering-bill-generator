@@ -34,7 +34,6 @@ export class ChildAssignedOptionsListComponent implements OnInit {
 
 
   openAssignNewOptionModal() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       let initialState = { childId: this.child.id }
       this.modalRef = this.bsModalService.show(ChildAssignOptionComponent,
         { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
@@ -49,13 +48,9 @@ export class ChildAssignedOptionsListComponent implements OnInit {
               })
           }
         })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
   }
 
   removeAssignedOption(assignedOption: AssignedOption) {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to remove catering option #${assignedOption.cateringOption.id}(${assignedOption.cateringOption.optionName}) from child #${this.child.id}.\n
       If you want to select a new catering option for this child, add another option with new effective date instead.\n.
@@ -74,9 +69,6 @@ export class ChildAssignedOptionsListComponent implements OnInit {
               })
           }
         })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
   }
 
 

@@ -17,7 +17,15 @@
                     </tr>
                     <tr>
                         <td><span class="font-weight-bold">Supervisor:</span></td>
-                        <td>Placeholder</td>
+                        <td>
+                            <span *ngIf="child.daycareGroup.groupSupervisor">
+                                {{child.daycareGroup.groupSupervisor.firstName}}
+                                {{child.daycareGroup.groupSupervisor.lastName}}
+                            </span>
+                            <span *ngIf="!child.daycareGroup.groupSupervisor">
+                                None
+                            </span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -27,22 +35,21 @@
     <div class="card-footer">
 
         <div class="row justify-content-center">
-            <button *ngIf="child.daycareGroup"
-                class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+            <button *ngIf="child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
                 [routerLink]="['/daycare-group-page',child.daycareGroup.id]">
                 View group page
             </button>
-            <button *ngIf="!child.daycareGroup"
-                class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2" disabled="disabled">
+            <button *ngIf="!child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                disabled="disabled">
                 View group page
             </button>
-
             <button *ngIf="!child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
-                (click)="openAssignChildToGroupModal()" [disabled]="child.archived">
+                (click)="openAssignChildToGroupModal()"
+                [disabled]="child.archived || authenticationService.getUserRole!='HEADMASTER'">
                 Assign to group
             </button>
             <button *ngIf="child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
-                (click)="removeFromGroup()">
+                (click)="removeFromGroup()" [disabled]="authenticationService.getUserRole!='HEADMASTER'">
                 Remove from Group
             </button>
         </div>

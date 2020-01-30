@@ -31,14 +31,14 @@
 
         <div class="row justify-content-center">
             <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
-                (click)="openEditChildModal()">
+                (click)="openEditChildModal()" [disabled]="authenticationService.getUserRole!='HEADMASTER'">
                 Edit information
             </button>
             <button *ngIf="!child.archived" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
-                (click)="moveToArchive()">
+                (click)="moveToArchive()" [disabled]="authenticationService.getUserRole!='HEADMASTER'">
                 Move to archive</button>
             <button *ngIf="child.archived" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
-                (click)="restoreFromArchive()">
+                (click)="restoreFromArchive()" [disabled]="authenticationService.getUserRole!='HEADMASTER'">
                 Restore from archive</button>
         </div>
     </div>

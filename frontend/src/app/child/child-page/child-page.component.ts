@@ -1,12 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ChildDataService } from '../child-data.service';
 import { Child } from '../child';
-import { ChildCreateEditComponent } from '../child-create-edit/child-create-edit.component';
-import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
-import { CONFIRMATION_HEADER, ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
-import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
 import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
@@ -39,4 +34,3 @@ export class ChildPageComponent implements OnInit {
   }
 
 }
-

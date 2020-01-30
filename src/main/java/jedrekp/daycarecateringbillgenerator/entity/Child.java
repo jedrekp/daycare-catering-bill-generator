@@ -52,7 +52,7 @@ public class Child {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "daycare_group_id")
-    @JsonIgnoreProperties({"children", "groupSupervisor"})
+    @JsonIgnoreProperties({"children"})
     private DaycareGroup daycareGroup;
 
     @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)

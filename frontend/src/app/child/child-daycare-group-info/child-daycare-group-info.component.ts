@@ -33,7 +33,6 @@ export class ChildDaycareGroupInfoComponent implements OnInit {
   ngOnInit() { }
 
   openAssignChildToGroupModal() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       let initialState = { childId: this.child.id }
       this.modalRef = this.bsModalService.show(AssignToGroupComponent,
         { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
@@ -48,13 +47,9 @@ export class ChildDaycareGroupInfoComponent implements OnInit {
               })
           }
         })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
   }
 
   removeFromGroup() {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to remove child #${this.child.id} from daycare group #${this.child.daycareGroup.id}(${this.child.daycareGroup.groupName}).`)
       this.modalRef.content.onClose.subscribe(
@@ -74,9 +69,5 @@ export class ChildDaycareGroupInfoComponent implements OnInit {
               })
           }
         })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
+    } 
   }
-
-}
