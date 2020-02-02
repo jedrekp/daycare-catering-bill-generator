@@ -32,7 +32,8 @@
                                 </button>
                             </td>
                             <td>
-                                <button class="btn btn-outline-purple" (click)="restoreFromArchive(child)">
+                                <button class="btn btn-outline-purple" (click)="restoreFromArchive(child)"
+                                    [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
                                     Restore
                                 </button>
                             </td>

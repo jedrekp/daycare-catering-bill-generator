@@ -39,7 +39,6 @@ export class ArchivedChildrenListComponent implements OnInit {
   }
 
   restoreFromArchive(child: Child) {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       this.childDataService.editChild(child.id,
         new Child(child.id, child.firstName, child.lastName, child.parentEmail, false)).subscribe(
           response => {
@@ -53,9 +52,6 @@ export class ArchivedChildrenListComponent implements OnInit {
           err => {
             this.modalRef = this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
           })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
   }
 
 }

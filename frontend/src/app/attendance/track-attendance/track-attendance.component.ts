@@ -10,6 +10,7 @@ import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
 import { Child } from 'src/app/child/child';
 import { Router } from '@angular/router';
 import { ErrorHandlerService } from 'src/app/error/error-handler.service';
+import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
 
 @Component({
   selector: 'app-track-attendance',
@@ -29,6 +30,7 @@ export class TrackAttendanceComponent implements OnInit {
     private router: Router,
     private daycareGroupDataService: DaycareGroupDataService,
     private attendanceDataService: AttendanceDataService,
+    private authenticationService: JwtAuthenticationService,
     private dialogModalService: DialogModalService,
     private errorHandlerService: ErrorHandlerService
   ) { }
@@ -108,6 +110,16 @@ export class TrackAttendanceComponent implements OnInit {
     let index = this.dailyAttendance.presentChildrenIds.indexOf(id)
     this.dailyAttendance.absentChildrenIds.push(
       this.dailyAttendance.presentChildrenIds.splice(index, 1)[0])
+  }
+
+  verifyIfUserCanTrackAttendanceForGroup() {
+    if (this.authenticationService.isUserAuthorized(['HEADMASTER'])) {
+      return true
+    } else if (!this.selectedDaycareGroup.groupSupervisor) {
+      return false
+    } else {
+      return this.authenticationService.getUsername() == this.selectedDaycareGroup.groupSupervisor.username
+    }
   }
 
   submitAttendanceList() {

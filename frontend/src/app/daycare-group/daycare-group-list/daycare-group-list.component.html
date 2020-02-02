@@ -30,7 +30,7 @@
                                 </button>
                             </td>
                             <td>
-                                <button class="btn btn-outline-purple" (click)="deleteGroup(group)">
+                                <button class="btn btn-outline-purple" (click)="deleteGroup(group)" [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
                                     Delete
                                 </button>
                             </td>

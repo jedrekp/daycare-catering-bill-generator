@@ -11,19 +11,15 @@
                     <tr>
                         <td><span class="font-weight-bold">Group name:</span></td>
                         <td>
-                            <span *ngIf="child.daycareGroup">{{child.daycareGroup.groupName}} </span>
-                            <span *ngIf="!child.daycareGroup" class="text-secondary">None</span>
+                            <span *ngIf="child.daycareGroup else none">{{child.daycareGroup.groupName}} </span>
                         </td>
                     </tr>
                     <tr>
                         <td><span class="font-weight-bold">Supervisor:</span></td>
                         <td>
-                            <span *ngIf="child.daycareGroup.groupSupervisor">
+                            <span *ngIf="child.daycareGroup && child.daycareGroup.groupSupervisor else none">
                                 {{child.daycareGroup.groupSupervisor.firstName}}
                                 {{child.daycareGroup.groupSupervisor.lastName}}
-                            </span>
-                            <span *ngIf="!child.daycareGroup.groupSupervisor">
-                                None
                             </span>
                         </td>
                     </tr>
@@ -45,11 +41,11 @@
             </button>
             <button *ngIf="!child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
                 (click)="openAssignChildToGroupModal()"
-                [disabled]="child.archived || authenticationService.getUserRole!='HEADMASTER'">
+                [disabled]="child.archived || !authenticationService.isUserAuthorized(['HEADMASTER'])">
                 Assign to group
             </button>
             <button *ngIf="child.daycareGroup" class="btn btn-outline-darkblue btn-block col-8 col-md-7"
-                (click)="removeFromGroup()" [disabled]="authenticationService.getUserRole!='HEADMASTER'">
+                (click)="removeFromGroup()" [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
                 Remove from Group
             </button>
         </div>
@@ -57,3 +53,7 @@
     </div>
 
 </div>
+
+<ng-template #none>
+    <span>None</span>
+</ng-template>

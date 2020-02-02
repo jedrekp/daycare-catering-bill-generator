@@ -32,7 +32,8 @@
                                 </button>
                             </td>
                             <td>
-                                <button class="btn btn-outline-purple" (click)="openAssignChildToGroupModal(child)">
+                                <button class="btn btn-outline-purple" (click)="openAssignChildToGroupModal(child)"
+                                    [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
                                     Assign
                                 </button>
                             </td>

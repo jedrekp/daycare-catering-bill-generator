@@ -1,5 +1,15 @@
 import { CateringOption } from '../catering-option/CateringOption';
-import { DaycareGroup } from '../daycare-group/daycare-group';
+import { IDaycareGroup } from '../daycare-group/daycare-group';
+
+export interface IChild {
+    id: number
+    firstName: string
+    lastName: string
+    parentEmail: string
+    archived: boolean
+    daycareGroup: IDaycareGroup
+    assignedOptions: AssignedOption[]
+}
 
 export class Child {
 
@@ -9,7 +19,7 @@ export class Child {
         public lastName: string,
         public parentEmail: string,
         public archived: boolean,
-        public daycareGroup: DaycareGroup = null,
+        public daycareGroup: IDaycareGroup = null,
         public assignedOptions: AssignedOption[] = []
     ) { }
 }

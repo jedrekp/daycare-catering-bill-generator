@@ -42,16 +42,16 @@ export class JwtAuthenticationService {
     return jwt_decode(this.getToken())['exp'] > currentTimeInSeconds
   }
 
-  getAuthenticatedUser() {
+  getUsername() {
     if (!this.getToken()) {
-      return false
+      return 'User not authenticated.'
     }
     return jwt_decode(this.getToken())['sub']
   }
 
-  getUserRole() {
+  getUserRole(): string {
     if (!this.getToken()) {
-      'User not authenticated.'
+      return 'User not authenticated.'
     }
     return jwt_decode(this.getToken())['userRole']
   }

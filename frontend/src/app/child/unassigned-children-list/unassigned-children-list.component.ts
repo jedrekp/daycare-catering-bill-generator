@@ -41,7 +41,6 @@ export class UnassignedChildrenListComponent implements OnInit {
   }
 
   openAssignChildToGroupModal(child: Child) {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       let initialState = { childId: child.id }
       this.modalRef = this.bsModalService.show(AssignToGroupComponent,
         { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
@@ -57,9 +56,6 @@ export class UnassignedChildrenListComponent implements OnInit {
               })
           }
         })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
   }
 
 }

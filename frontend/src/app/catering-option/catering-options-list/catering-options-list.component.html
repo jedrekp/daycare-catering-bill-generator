@@ -41,8 +41,8 @@
                                 <td>{{option.dailyCost | number:'1.2-2'}} PLN</td>
                                 <td>
                                     <button class="btn btn-outline-purple"
-                                        (click)="openEditCateringOptionModal(option)">Edit
-                                        option
+                                        (click)="openEditCateringOptionModal(option)" [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
+                                        Edit option
                                     </button>
                                 </td>
                             </tr>
@@ -55,7 +55,8 @@
                                 <td>{{option.dailyCost | number:'1.2-2'}} PLN</td>
                                 <td>
                                     <button class="btn btn-outline-light btn-outline-purple"
-                                        (click)="openEditCateringOptionModal(option)">Edit option
+                                        (click)="openEditCateringOptionModal(option)" [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
+                                        Edit option
                                     </button>
                                 </td>
                             </tr>

@@ -7,6 +7,7 @@ import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { BsModalRef } from 'ngx-bootstrap/modal/public_api';
 import { Child } from 'src/app/child/child';
+import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
 
 @Component({
   selector: 'app-single-child-attendance',
@@ -26,6 +27,7 @@ export class SingleChildAttendanceComponent implements OnInit {
   constructor(
     private datePipe: DatePipe,
     private attendanceDataService: AttendanceDataService,
+    private authenticationService: JwtAuthenticationService,
     private dialogModalService: DialogModalService,
     private errorHandlerService: ErrorHandlerService
   ) { }
@@ -95,6 +97,16 @@ export class SingleChildAttendanceComponent implements OnInit {
         this.monthlyChildAttendance.datesWhenPresent.splice(presentIndex, 1)
       }
       this.monthlyChildAttendance.datesWhenAbsent.push(dateAsString)
+    }
+  }
+
+  verifyIfUserCanTrackAttendanceForChild() {
+    if (this.authenticationService.isUserAuthorized(['HEADMASTER'])) {
+      return true
+    } else if (!this.child.daycareGroup || !this.child.daycareGroup.groupSupervisor) {
+      return false
+    } else {
+      return this.authenticationService.getUsername() == this.child.daycareGroup.groupSupervisor.username
     }
   }
 

@@ -23,7 +23,9 @@
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Supervisor:</td>
-                        <td>Placeholder</td>
+                        <td>
+                            <span *ngIf="daycareGroup.groupSupervisor else none">{{daycareGroup.groupSupervisor.firstName}} {{daycareGroup.groupSupervisor.lastName}}</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -33,15 +35,20 @@
     <div class="card-footer">
 
         <div class="row justify-content-center">
-            <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
-                (click)="openEditGroupModal()">
-                Edit Information
+            <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2" (click)="openEditGroupModal()"
+                [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
+                Change group name
             </button>
 
-            <button class="btn btn-outline-darkblue btn-block col-8 col-md-7" (click)="deleteGroup()">Delete
+            <button class="btn btn-outline-darkblue btn-block col-8 col-md-7" (click)="deleteGroup()"
+                [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">Delete
                 group</button>
         </div>
 
     </div>
 
 </div>
+
+<ng-template #none>
+    <span>None</span>
+</ng-template>

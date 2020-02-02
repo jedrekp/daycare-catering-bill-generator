@@ -63,7 +63,6 @@ export class CateringOptionsListComponent implements OnInit {
   }
 
   openEditCateringOptionModal(cateringOptionToEdit: CateringOption) {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       let initialState = { cateringOption: cateringOptionToEdit }
       this.modalRef = this.modalService.show(CateringOptionCreateEditComponent,
         { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
@@ -75,9 +74,6 @@ export class CateringOptionsListComponent implements OnInit {
             this.retrieveCateringOptions();
           }
         })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this action.')
-    }
   }
 
 }

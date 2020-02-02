@@ -1,4 +1,12 @@
-import { DaycareGroup } from '../daycare-group/daycare-group';
+import { IDaycareGroup } from '../daycare-group/daycare-group';
+
+export interface IAppUser{
+        id: number
+        firstName: string
+        username: string
+        daycareRole: string
+        daycareGroup: IDaycareGroup
+}
 
 export class AppUser {
 
@@ -7,6 +15,6 @@ export class AppUser {
         public firstName: string,
         public username: string,
         public daycareRole: string,
-        public daycareGroup: DaycareGroup = null,
+        public daycareGroup: IDaycareGroup = null,
     ) { }
 }

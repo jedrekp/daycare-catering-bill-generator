@@ -1,5 +1,5 @@
 <div *ngIf="daycareGroups else loadingDaycareGroups">
-    
+
     <div class="row">
 
         <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-5 offset-1 offset-md-2 offset-lg-4 offset-xl-5">
@@ -45,9 +45,16 @@
 
             <div *ngIf="selectedDaycareGroup && dailyAttendance" class="card-body pt-3">
 
+                <h5 class="subheader-purple">{{dailyAttendance.date | date:'fullDate'}}</h5>
                 <h5 class="subheader-purple">Selected group: {{selectedDaycareGroup.groupName}}
                 </h5>
-                <h5 class="subheader-purple">{{dailyAttendance.date | date:'fullDate'}}</h5>
+                <h5 class="subheader-purple">
+                    Group supevisor:
+                    <span *ngIf="selectedDaycareGroup.groupSupervisor else none" >
+                        {{selectedDaycareGroup.groupSupervisor.firstName}}
+                        {{selectedDaycareGroup.groupSupervisor.lastName}}
+                    </span>
+                </h5>
                 <div class="subheader-underline mb-2"></div>
 
                 <div class="table-responsive">
@@ -100,7 +107,7 @@
 
             <div class="card-footer">
                 <button class="btn btn-outline-darkblue mx-auto" (click)="submitAttendanceList()"
-                    [disabled]="!selectedDaycareGroup || !dailyAttendance">
+                    [disabled]="!selectedDaycareGroup || !dailyAttendance || !verifyIfUserCanTrackAttendanceForGroup()">
                     Submit attendance list
                 </button>
             </div>
@@ -115,4 +122,8 @@
     <div class="text-center my-5 mx-auto">
         <h2 class="heading-darkblue">Loading daycare groups data...</h2>
     </div>
+</ng-template>
+
+<ng-template #none>
+    <span>None</span>
 </ng-template>

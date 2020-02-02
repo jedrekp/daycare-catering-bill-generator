@@ -40,7 +40,6 @@ export class DaycareGroupListComponent implements OnInit {
   }
 
   deleteGroup(daycareGroup: DaycareGroup) {
-    if (this.authenticationService.getUserRole() == 'HEADMASTER') {
       this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
         `You are about to delete daycare group #${daycareGroup.id} ${daycareGroup.groupName}.\n
       Any children, that are currently assigned to it, will be left with no group.`)
@@ -61,9 +60,6 @@ export class DaycareGroupListComponent implements OnInit {
               })
           }
         })
-    } else {
-      this.dialogModalService.openInformationModal(ERROR_HEADER, 'You are not authorized to perform this aciton.')
-    }
   }
 
 }
