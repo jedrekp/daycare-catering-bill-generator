@@ -8,7 +8,7 @@ export interface IDaycareGroup {
     groupSupervisor: IAppUser
 }
 
-export class DaycareGroup {
+export class DaycareGroup implements IDaycareGroup{
 
     constructor(
         public id: number,

@@ -1,4 +1,4 @@
-import { CateringOption } from '../catering-option/CateringOption';
+import { ICateringOption } from '../catering-option/CateringOption';
 import { IDaycareGroup } from '../daycare-group/daycare-group';
 
 export interface IChild {
@@ -11,7 +11,7 @@ export interface IChild {
     assignedOptions: AssignedOption[]
 }
 
-export class Child {
+export class Child implements IChild {
 
     constructor(
         public id: number,
@@ -28,6 +28,6 @@ export class AssignedOption {
 
     constructor(
         public effectiveDate: string,
-        public cateringOption: CateringOption
+        public cateringOption: ICateringOption
     ) { }
 }

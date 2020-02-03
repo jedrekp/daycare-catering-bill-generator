@@ -30,6 +30,12 @@ public class AppUserService {
     }
 
     @Transactional(readOnly = true)
+    public AppUser findSingleAppUserByUsername(String username) {
+        return appUserRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(
+                MessageFormat.format("Username: {0} does not exist", username)));
+    }
+
+    @Transactional(readOnly = true)
     public Collection<AppUser> findAllAppUsers() {
         return appUserRepository.findAll();
     }

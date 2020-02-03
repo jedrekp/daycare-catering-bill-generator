@@ -30,7 +30,7 @@ export class ChildCreateEditComponent implements OnInit {
 
   ngOnInit() {
     this.onClose = new Subject<number>()
-    if (this.child.id === -1) {
+    if (this.child.id == -1) {
       this.header = 'New child'
     } else {
       this.header = `Edit child #${this.child.id}`
@@ -86,7 +86,7 @@ export class ChildCreateEditComponent implements OnInit {
       })
   }
 
-  public onCancel() {
+  onCancel() {
     this.bsModalRef.hide()
     this.onClose.next(null)
   }

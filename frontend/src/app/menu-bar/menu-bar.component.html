@@ -36,9 +36,11 @@
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
-                        (click)="openCreateDaycareGroupModal()">Add new group</a>
+                        (click)="openCreateDaycareGroupModal()">New group</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/daycare-group-list')">
                         Display list of groups</a>
+                    <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
+                        (click)="openCreateGroupSupervisorAccountModal()">New group supervisor account </a>
                 </div>
             </li>
 

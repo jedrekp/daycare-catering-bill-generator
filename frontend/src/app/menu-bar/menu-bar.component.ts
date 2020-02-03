@@ -12,6 +12,8 @@ import { DaycareGroupCreateEditComponent } from '../daycare-group/daycare-group-
 import { JwtAuthenticationService } from '../authentication/jwt-authentication.service';
 import { DialogModalService } from '../dialog/dialog-modal.service';
 import { ACTION_COMPLETED_HEADER } from '../const';
+import { AppUser } from '../app-users/appUser';
+import { AppUserAccountCreateComponent } from '../app-users/app-user-account-create/app-user-account-create.component';
 
 @Component({
   selector: 'app-menu-bar',
@@ -96,6 +98,21 @@ export class MenuBarComponent implements OnInit {
       })
   }
 
+  openCreateGroupSupervisorAccountModal() {
+    let initialState = { appUser: new AppUser(-1, '', '', '', '', 'GROUP_SUPERVISOR') }
+    this.modalRef = this.modalService.show(AppUserAccountCreateComponent,
+      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
+    this.modalRef.content.onClose.subscribe(
+      appUserId => {
+        if (appUserId) {
+          this.router.navigated = false
+          this.router.navigate(['child-page', appUserId])
+          this.closeNavbar()
+          this.searchPhrase = null
+        }
+      })
+  }
+
   findChildren() {
     if (this.searchPhrase) {
       this.router.navigated = false
@@ -107,7 +124,7 @@ export class MenuBarComponent implements OnInit {
 
   logout() {
     this.authenticationService.logout()
-    this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,'You are now logged out.')
+    this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER, 'You are now logged out.')
     this.modalRef.content.onClose.subscribe(
       onClose => {
         this.router.navigate(['login'])

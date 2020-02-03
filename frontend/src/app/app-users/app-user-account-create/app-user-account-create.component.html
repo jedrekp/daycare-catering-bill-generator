@@ -1,0 +1,89 @@
+<div class="modal-header bg-purple text-center">
+    <h4 class="modal-title mx-auto">{{header}}</h4>
+</div>
+
+<form novalidate [formGroup]="appUserForm" (ngSubmit)="onSubmit()">
+
+    <div class="modal-body">
+
+        <div class="form-group">
+            <label>First name</label>
+            <input type="text" class="form-control" formControlName="firstName" />
+        </div>
+        <alert *ngIf="appUserForm.get('firstName').hasError('required') && appUserForm.get('firstName').touched"
+            type="danger" class="mt-1">
+            First name <strong>cannot</strong> be empty.
+        </alert>
+        <alert *ngIf="appUserForm.get('firstName').hasError('minlength') && appUserForm.get('firstName').touched"
+            type="danger" class="mt-1">
+            First name <strong>must</strong> have <strong>at least 2</strong> characters.
+        </alert>
+        <alert *ngIf="appUserForm.get('firstName').hasError('maxlength')" type="danger" class="mt-1">
+            First name <strong>cannot</strong> exceed <strong>20</strong> characters.
+        </alert>
+
+        <div class="form-group">
+            <label>Last name</label>
+            <input type="text" class="form-control" formControlName="lastName" />
+        </div>
+        <alert *ngIf="appUserForm.get('lastName').hasError('required') && appUserForm.get('lastName').touched"
+            type="danger" class="mt-1">
+            Last name <strong>cannot</strong> be empty.
+        </alert>
+        <alert *ngIf="appUserForm.get('lastName').hasError('minlength') && appUserForm.get('username').touched"
+            type="danger" class="mt-1">
+            Last name <strong>must</strong> have <strong>at least 2</strong> characters.
+        </alert>
+        <alert *ngIf="appUserForm.get('lastName').hasError('maxlength')" type="danger" class="mt-1">
+            Last name <strong>cannot</strong> exceed <strong>20</strong> characters.
+        </alert>
+
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" class="form-control" formControlName="username" />
+        </div>
+        <alert *ngIf="appUserForm.get('username').hasError('required') && appUserForm.get('username').touched"
+            type="danger" class="mt-1">
+            Username <strong>cannot</strong> be empty.
+        </alert>
+        <alert *ngIf="appUserForm.get('username').hasError('minlength') && appUserForm.get('username').touched"
+            type="danger" class="mt-1">
+            Username <strong>must</strong> have <strong>at least 5</strong> characters.
+        </alert>
+        <alert *ngIf="appUserForm.get('username').hasError('maxlength')" type="danger" class="mt-1">
+            Username <strong>cannot</strong> exceed <strong>20</strong> characters.
+        </alert>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" formControlName="password" />
+        </div>
+        <alert *ngIf="appUserForm.get('password').hasError('required') && appUserForm.get('password').touched"
+            type="danger" class="mt-1">
+            Password <strong>cannot</strong> be empty.
+        </alert>
+        <alert *ngIf="appUserForm.get('password').hasError('minlength') && appUserForm.get('password').touched"
+            type="danger" class="mt-1">
+            Password <strong>must</strong> have <strong>at least 5</strong> characters.
+        </alert>
+        <alert *ngIf="appUserForm.get('password').hasError('maxlength')" type="danger" class="mt-1">
+            Password <strong>cannot</strong> exceed <strong>20</strong> characters.
+        </alert>
+
+        <div class="form-group">
+            <label>Confirm password</label>
+            <input type="password" class="form-control" formControlName="passwordConfirm" />
+        </div>
+        <alert *ngIf="appUserForm.get('passwordConfirm').hasError('required') && appUserForm.get('passwordConfirm').touched"
+            type="danger" class="mt-1">
+            You need to confirm the chosen password.
+        </alert>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-purple" [disabled]="!appUserForm.valid">Save</button>
+        <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
+    </div>
+
+</form>

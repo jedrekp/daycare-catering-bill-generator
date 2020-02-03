@@ -1,4 +1,15 @@
-export class CateringBill {
+export interface ICateringBill {
+    billId: number
+    childId: number
+    month: string
+    year: number
+    correction: boolean
+    childFullName: string
+    totalDue: number
+    dailyCateringOrders: DailyCateringOrder[]
+}
+
+export class CateringBill implements ICateringBill {
 
     constructor(
         public billId: number,

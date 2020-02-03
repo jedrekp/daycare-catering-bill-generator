@@ -13,20 +13,22 @@ import { LoginComponent } from './authentication/login/login.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { RouteGuardService } from './authentication/route-guard.service';
 import { ErrorComponent } from './error/error.component';
+import { AppUserPageComponent } from './app-users/app-user-page/app-user-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: WelcomePageComponent, canActivate: [RouteGuardService] },
   { path: 'welcome-page', component: WelcomePageComponent, canActivate: [RouteGuardService] },
   { path: 'child-page/:childId', component: ChildPageComponent, canActivate: [RouteGuardService] },
-  { path: 'unassigned-children-list', component: UnassignedChildrenListComponent, canActivate: [RouteGuardService]},
+  { path: 'unassigned-children-list', component: UnassignedChildrenListComponent, canActivate: [RouteGuardService] },
   { path: 'children-search-results/:searchPhrase', component: ChildrenSearchResultsComponent, canActivate: [RouteGuardService] },
-  { path: 'children-archive', component: ArchivedChildrenListComponent, canActivate: [RouteGuardService]},
+  { path: 'children-archive', component: ArchivedChildrenListComponent, canActivate: [RouteGuardService] },
   { path: 'catering-options-list', component: CateringOptionsListComponent, canActivate: [RouteGuardService] },
   { path: 'daycare-group-page/:groupId', component: DaycareGroupPageComponent, canActivate: [RouteGuardService] },
   { path: 'daycare-group-list', component: DaycareGroupListComponent, canActivate: [RouteGuardService] },
   { path: 'track-attendance', component: TrackAttendanceComponent, canActivate: [RouteGuardService] },
   { path: 'generate-catering-bills', component: GenerateCateringBillsComponent, canActivate: [RouteGuardService], data: { authorizedUserRoles: ['HEADMASTER'] } },
+  { path: 'app-user-page/:username', component: AppUserPageComponent, canActivate: [RouteGuardService] },
   { path: 'error', component: ErrorComponent },
 
   { path: '**', component: ErrorComponent }

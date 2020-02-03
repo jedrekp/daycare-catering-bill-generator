@@ -35,6 +35,11 @@ public class AppUserController {
         return new ResponseEntity<>(appUserService.findSingleAppUserByIdWithAllDetails(appUserId), HttpStatus.OK);
     }
 
+    @GetMapping(params = "username")
+    public ResponseEntity<AppUser> getSingleAppUserByUsername(@RequestParam String username) {
+        return new ResponseEntity<>(appUserService.findSingleAppUserByUsername(username), HttpStatus.OK);
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
@@ -59,7 +64,7 @@ public class AppUserController {
     @DeleteMapping("{appUserId}/daycareGroups/{daycareGroupId}")
     @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity removeDaycareGroupFromGroupSupervisor(@PathVariable long appUserId, @PathVariable long daycareGroupId) {
-        appUserService.removeAssignedGroupFromGroupSupervisor(appUserId,daycareGroupId);
+        appUserService.removeAssignedGroupFromGroupSupervisor(appUserId, daycareGroupId);
         return ResponseEntity.noContent().build();
     }
 

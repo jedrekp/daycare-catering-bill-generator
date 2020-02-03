@@ -40,6 +40,8 @@ import { ChildDaycareGroupInfoComponent } from './child/child-daycare-group-info
 import { ChildBasicInfoComponent } from './child/child-basic-info/child-basic-info.component';
 import { DaycareGroupBasicInfoComponent } from './daycare-group/daycare-group-basic-info/daycare-group-basic-info.component';
 import { DaycareGroupChildrenListComponent } from './daycare-group/daycare-group-children-list/daycare-group-children-list.component';
+import { AppUserAccountCreateComponent } from './app-users/app-user-account-create/app-user-account-create.component';
+import { AppUserPageComponent } from './app-users/app-user-page/app-user-page.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,9 @@ import { DaycareGroupChildrenListComponent } from './daycare-group/daycare-group
     ChildDaycareGroupInfoComponent,
     ChildBasicInfoComponent,
     DaycareGroupBasicInfoComponent,
-    DaycareGroupChildrenListComponent
+    DaycareGroupChildrenListComponent,
+    AppUserAccountCreateComponent,
+    AppUserPageComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +98,8 @@ import { DaycareGroupChildrenListComponent } from './daycare-group/daycare-group
     CateringOptionCreateEditComponent,
     DaycareGroupCreateEditComponent,
     BillPreviewComponent,
-    BillDisplayComponent
+    BillDisplayComponent,
+    AppUserAccountCreateComponent
   ],
   providers: [
     DatePipe,

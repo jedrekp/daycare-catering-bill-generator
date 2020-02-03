@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Child } from './child';
 import { API_URL } from '../const';
-import { DailyCateringOrder, CateringBill } from '../catering-bill/catering-bill';
+import { DailyCateringOrder } from '../catering-bill/catering-bill';
 
 
 class AssignOptionToChildDTO {
