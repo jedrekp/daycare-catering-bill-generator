@@ -13,7 +13,7 @@ import { LoginComponent } from './authentication/login/login.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { RouteGuardService } from './authentication/route-guard.service';
 import { ErrorComponent } from './error/error.component';
-import { AppUserPageComponent } from './app-users/app-user-page/app-user-page.component';
+import { UserPageComponent } from './user/user-page/user-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -28,7 +28,7 @@ const routes: Routes = [
   { path: 'daycare-group-list', component: DaycareGroupListComponent, canActivate: [RouteGuardService] },
   { path: 'track-attendance', component: TrackAttendanceComponent, canActivate: [RouteGuardService] },
   { path: 'generate-catering-bills', component: GenerateCateringBillsComponent, canActivate: [RouteGuardService], data: { authorizedUserRoles: ['HEADMASTER'] } },
-  { path: 'app-user-page/:username', component: AppUserPageComponent, canActivate: [RouteGuardService] },
+  { path: 'user-page/:username', component: UserPageComponent, canActivate: [RouteGuardService] },
   { path: 'error', component: ErrorComponent },
 
   { path: '**', component: ErrorComponent }

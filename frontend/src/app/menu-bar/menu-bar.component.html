@@ -22,7 +22,7 @@
                 <div class="dropdown-menu" *dropdownMenu>
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
                         (click)="openCreateChildModal()">
-                        Add new child</a>
+                        New child</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/unassigned-children-list')">
                         View unassigned children</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/children-archive')">View children archive</a>
@@ -36,7 +36,7 @@
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
-                        (click)="openCreateDaycareGroupModal()">New group</a>
+                        (click)="openCreateDaycareGroupModal()">New daycare group</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/daycare-group-list')">
                         Display list of groups</a>
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
@@ -50,7 +50,7 @@
                 </a>
                 <div class="dropdown-menu" *dropdownMenu>
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
-                        (click)="openCreateCateringOptionModal()">Add new option</a>
+                        (click)="openCreateCateringOptionModal()">New catering option</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/catering-options-list')">
                         Display available options</a>
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"

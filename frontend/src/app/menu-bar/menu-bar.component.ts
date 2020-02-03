@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
-
-
 import { Child } from '../child/child';
 import { ChildCreateEditComponent } from '../child/child-create-edit/child-create-edit.component';
 import { CateringOption } from '../catering-option/CateringOption';
@@ -12,8 +10,8 @@ import { DaycareGroupCreateEditComponent } from '../daycare-group/daycare-group-
 import { JwtAuthenticationService } from '../authentication/jwt-authentication.service';
 import { DialogModalService } from '../dialog/dialog-modal.service';
 import { ACTION_COMPLETED_HEADER } from '../const';
-import { AppUser } from '../app-users/appUser';
-import { AppUserAccountCreateComponent } from '../app-users/app-user-account-create/app-user-account-create.component';
+import { User } from '../user/user';
+import { UserCreateAccountComponent } from '../user/user-create-account/user-create-account.component';
 
 @Component({
   selector: 'app-menu-bar',
@@ -99,14 +97,14 @@ export class MenuBarComponent implements OnInit {
   }
 
   openCreateGroupSupervisorAccountModal() {
-    let initialState = { appUser: new AppUser(-1, '', '', '', '', 'GROUP_SUPERVISOR') }
-    this.modalRef = this.modalService.show(AppUserAccountCreateComponent,
+    let initialState = { appUser: new User(-1, '', '', '', '', 'GROUP_SUPERVISOR') }
+    this.modalRef = this.modalService.show(UserCreateAccountComponent,
       { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
     this.modalRef.content.onClose.subscribe(
-      appUserId => {
-        if (appUserId) {
+      username => {
+        if (username) {
           this.router.navigated = false
-          this.router.navigate(['child-page', appUserId])
+          this.router.navigate(['user-page', username])
           this.closeNavbar()
           this.searchPhrase = null
         }

@@ -1,6 +1,6 @@
 import { IDaycareGroup } from '../daycare-group/daycare-group';
 
-export interface IAppUser {
+export interface IUser {
     id: number
     firstName: string
     lastName: string
@@ -9,7 +9,7 @@ export interface IAppUser {
     daycareGroup: IDaycareGroup
 }
 
-export class AppUser implements IAppUser {
+export class User implements IUser {
 
     constructor(
         public id: number,

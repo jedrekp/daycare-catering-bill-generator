@@ -1,0 +1,94 @@
+<div *ngIf="user else loadingUser">
+
+    <div class="text-center mx-auto my-4">
+        <h2 class="heading-darkblue">
+            <span *ngIf="!checkIfAccountBelongsToLoggedUser() else yourProfile">User#{{user.id}}</span>
+        </h2>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-10 col-md-7 col-lg-4 mr-lg-4">
+
+            <div class="card mb-4 px-0 border-darkblue text-center">
+
+                <div class="card-header bg-darkblue">
+                    <h5 class="card-title my-0">User account information</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0 table-hover">
+                            <tbody>
+                                <tr>
+                                    <td class="font-weight-bold">First name:</td>
+                                    <td>
+                                        {{user.firstName}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold">Last name:</td>
+                                    <td>{{user.lastName}}</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="font-weight-bold">Username:</span></td>
+                                    <td>{{user.username}} </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold">Daycare role:</td>
+                                    <td>
+                                        <span *ngIf="user.daycareRole == 'HEADMASTER' else groupSupervisor">Headmaster
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="user.daycareRole == 'GROUP_SUPERVISOR'">
+                                    <td class="font-weight-bold">Daycare group:</td>
+                                    <td>
+                                        <span
+                                            *ngIf="user.daycareGroup else notAssigned">{{user.daycareGroup.groupName}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+
+                    <div class="row justify-content-center">
+                        <button *ngIf="checkIfAccountBelongsToLoggedUser()"
+                            class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2">
+                            Change password
+                        </button>
+                        <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                            [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
+                            Assign to daycare group</button>
+                        <button class="btn btn-outline-darkblue btn-block col-8 col-md-7"
+                            [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
+                            Revoke daycare group assignment</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<ng-template #loadingUser>
+    <div class="text-center my-5 mx-auto">
+        <h2 class="heading-darkblue">Loading user data...</h2>
+    </div>
+</ng-template>
+
+<ng-template #yourProfile>
+    <span>Your profile</span>
+</ng-template>
+
+<ng-template #groupSupervisor>
+    <span>Group supervisor</span>
+</ng-template>
+
+<ng-template #notAssigned>
+    <span>Not assigned</span>
+</ng-template>

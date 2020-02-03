@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { AppUser } from './appUser';
+import { User } from './user';
 import { API_URL } from '../const';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AppUserDataService {
+export class UserDataService {
 
   constructor(
     private httpClient: HttpClient
   ) { }
 
-  createNewAppUserAccount(appUser: AppUser) {
-    return this.httpClient.post<AppUser>(`${API_URL}/appUsers`, appUser)
+  createNewUserAccount(user: User) {
+    return this.httpClient.post<User>(`${API_URL}/appUsers`, user)
   }
 
-  getAppUserByUsername(username: string) {
+  getUserByUsername(username: string) {
     let params = new HttpParams()
       .set('username', username)
-    return this.httpClient.get<AppUser>(`${API_URL}/appUsers`, { params: params })
+    return this.httpClient.get<User>(`${API_URL}/appUsers`, { params: params })
   }
 
 }

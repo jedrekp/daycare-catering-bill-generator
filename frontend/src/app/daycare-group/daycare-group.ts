@@ -1,11 +1,12 @@
 import { IChild } from '../child/child';
-import { IAppUser } from '../app-users/appUser';
+import { IUser } from '../user/user';
+
 
 export interface IDaycareGroup {
     id: number
     groupName: string
     children: IChild[]
-    groupSupervisor: IAppUser
+    groupSupervisor: IUser
 }
 
 export class DaycareGroup implements IDaycareGroup{
@@ -14,7 +15,7 @@ export class DaycareGroup implements IDaycareGroup{
         public id: number,
         public groupName: string,
         public children: IChild[] = [],
-        public groupSupervisor: IAppUser = null
+        public groupSupervisor: IUser = null
     ) { }
 
 }
