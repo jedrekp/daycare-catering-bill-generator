@@ -60,12 +60,23 @@
                             class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2">
                             Change password
                         </button>
-                        <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
-                            [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
-                            Assign to daycare group</button>
-                        <button class="btn btn-outline-darkblue btn-block col-8 col-md-7"
-                            [disabled]="!authenticationService.isUserAuthorized(['HEADMASTER'])">
-                            Revoke daycare group assignment</button>
+                        <button *ngIf="user.daycareRole == 'GROUP_SUPERVISOR' && !user.daycareGroup
+                         && authenticationService.isUserAuthorized(['HEADMASTER'])"
+                            class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                            (click)="openAssignDaycareGroupToUserModal()">
+                            Assign daycare group
+                        </button>
+                        <button *ngIf="user.daycareGroup && authenticationService.isUserAuthorized(['HEADMASTER'])"
+                            class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                            (click)="revokeDaycareGroupAssignment()">
+                            Revoke group assignment
+                        </button>
+                        <button *ngIf="user.daycareRole == 'GROUP_SUPERVISOR'
+                         && authenticationService.isUserAuthorized(['HEADMASTER'])"
+                            class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
+                            (click)="deleteUserAccount()">
+                            Delete user account
+                        </button>
                     </div>
                 </div>
 

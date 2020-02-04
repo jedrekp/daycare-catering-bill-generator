@@ -17,12 +17,14 @@ public interface DaycareGroupRepository extends JpaRepository<DaycareGroup, Long
 
     boolean existsByIdAndGroupSupervisorUsername(Long daycareGroupId, String groupSupervisorUsername);
 
-    Optional<DaycareGroup> findByIdAndGroupSupervisor_Id(Long daycareGroupId, Long groupSupervisorId);
+    Optional<DaycareGroup> findByIdAndGroupSupervisorId(Long daycareGroupId, Long groupSupervisorId);
 
     @Query("SELECT dg FROM DaycareGroup dg LEFT JOIN FETCH dg.children " +
             "LEFT JOIN FETCH dg.groupSupervisor " +
             "WHERE dg.id = :daycareGroupId")
     Optional<DaycareGroup> findByIdWithAllDetails(Long daycareGroupId);
+
+    List<DaycareGroup> findAllByGroupSupervisorIdOrderByGroupNameAsc(Long groupSupervisorId);
 
     List<DaycareGroup> findAllByOrderByGroupNameAsc();
 }

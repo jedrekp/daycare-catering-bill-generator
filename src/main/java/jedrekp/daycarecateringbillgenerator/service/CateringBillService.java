@@ -62,7 +62,7 @@ public class CateringBillService {
 
         CateringBillResponse cateringBillResponse = new CateringBillResponse(0L, childId, month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), year);
         cateringBillResponse.setChildFullName(childService.getFullNameOfChild(child));
-        cateringBillResponse.setCorrection(cateringBillRepository.existsByMonthAndYearAndChild_Id(month, year, childId));
+        cateringBillResponse.setCorrection(cateringBillRepository.existsByMonthAndYearAndChildId(month, year, childId));
 
         List<AttendanceSheet> attendanceSheets = attendanceSheetRepository
                 .findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue());

@@ -22,4 +22,12 @@ export class UserDataService {
     return this.httpClient.get<User>(`${API_URL}/appUsers`, { params: params })
   }
 
+  assignDaycareGroupToUser(userId, daycareGroupId) {
+    return this.httpClient.put<User>(`${API_URL}/appUsers/${userId}/daycareGroups/${daycareGroupId}`, null)
+  }
+
+  removeDaycareGroupFromUser(userId: number, daycareGroupId: number) {
+    return this.httpClient.delete<any>(`${API_URL}/appUsers/${userId}/daycareGroups/${daycareGroupId}`)
+  }
+
 }

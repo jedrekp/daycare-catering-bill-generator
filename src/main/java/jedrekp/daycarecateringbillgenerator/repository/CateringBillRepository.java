@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface CateringBillRepository extends JpaRepository<CateringBill, Long> {
 
 
-    boolean existsByMonthAndYearAndChild_Id(Month month, Year year, Long childId);
+    boolean existsByMonthAndYearAndChildId(Month month, Year year, Long childId);
 
     Optional<CateringBill> findByMonthAndYearAndChildId(Month month, Year year, Long childId);
 

@@ -32,6 +32,14 @@ public class DaycareGroupService {
     }
 
     @Transactional(readOnly = true)
+    public Collection<DaycareGroup> findAllByGroupSupervisorId(long groupSupervisorId) {
+        if (groupSupervisorId == 0L) {
+            return daycareGroupRepository.findAllByGroupSupervisorIdOrderByGroupNameAsc(null);
+        }
+        return daycareGroupRepository.findAllByGroupSupervisorIdOrderByGroupNameAsc(groupSupervisorId);
+    }
+
+    @Transactional(readOnly = true)
     public boolean verifyIfDaycareGroupIsSupervisedByUser(long daycareGroupId, String groupSupervisorUsername) {
         return daycareGroupRepository.existsByIdAndGroupSupervisorUsername(daycareGroupId, groupSupervisorUsername);
     }
@@ -79,7 +87,7 @@ public class DaycareGroupService {
     }
 
     DaycareGroup findSingleGroupByIdAndGroupSupervisorId(long daycareGroupId, long groupSupervisorId) {
-        return daycareGroupRepository.findByIdAndGroupSupervisor_Id(daycareGroupId, groupSupervisorId).orElseThrow(() -> new EntityNotFoundException(
+        return daycareGroupRepository.findByIdAndGroupSupervisorId(daycareGroupId, groupSupervisorId).orElseThrow(() -> new EntityNotFoundException(
                 MessageFormat.format("Daycare group #{0} is not assigned to user #{1}.", daycareGroupId, groupSupervisorId)));
     }
 

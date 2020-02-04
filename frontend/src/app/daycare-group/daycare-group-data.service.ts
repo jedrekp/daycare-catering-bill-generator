@@ -18,6 +18,12 @@ export class DaycareGroupDataService {
     return this.httpClient.get<DaycareGroup[]>(`${API_URL}/daycareGroups`)
   }
 
+  retrieveDaycareGroupsByGroupSupervisorId(groupSupervisorId: number) {
+    let params = new HttpParams()
+      .set("groupSupervisorId", groupSupervisorId.toString())
+    return this.httpClient.get<DaycareGroup[]>(`${API_URL}/daycareGroups`, { params: params })
+  }
+
   retrieveSingleDaycareGroup(daycareGroupId: number) {
     return this.httpClient.get<DaycareGroup>(`${API_URL}/daycareGroups/${daycareGroupId}`)
   }

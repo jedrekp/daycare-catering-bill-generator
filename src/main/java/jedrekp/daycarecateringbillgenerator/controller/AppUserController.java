@@ -61,18 +61,18 @@ public class AppUserController {
         return new ResponseEntity<>(appUserService.createNewGroupSupervisorAccount(appUser), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("{appUserId}/daycareGroups/{daycareGroupId}")
-    @PreAuthorize("hasAuthority('HEADMASTER')")
-    public ResponseEntity removeDaycareGroupFromGroupSupervisor(@PathVariable long appUserId, @PathVariable long daycareGroupId) {
-        appUserService.removeAssignedGroupFromGroupSupervisor(appUserId, daycareGroupId);
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("{appUserId}/daycareGroups/{daycareGroupId}")
     @PreAuthorize("hasAuthority('HEADMASTER')")
     public ResponseEntity<AppUser> assignDaycareGroupToGroupSupervisor(
             @PathVariable long appUserId, @PathVariable long daycareGroupId) {
         return new ResponseEntity<>(appUserService.assignDaycareGroupToGroupSupervisor(appUserId, daycareGroupId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{appUserId}/daycareGroups/{daycareGroupId}")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
+    public ResponseEntity removeDaycareGroupFromGroupSupervisor(@PathVariable long appUserId, @PathVariable long daycareGroupId) {
+        appUserService.removeAssignedGroupFromGroupSupervisor(appUserId, daycareGroupId);
+        return ResponseEntity.noContent().build();
     }
 
 }

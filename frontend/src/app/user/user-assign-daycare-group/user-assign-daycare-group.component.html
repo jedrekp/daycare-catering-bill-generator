@@ -1,0 +1,25 @@
+<div class="modal-header bg-purple text-center">
+    <h4 class="modal-title mx-auto">Assign daycare group to group supervisor</h4>
+</div>
+
+<form novalidate [formGroup]="assignDaycareGroupToUserForm" (ngSubmit)="onSubmit()">
+
+    <div class="modal-body">
+
+        <div class="form-group">
+            <label>Daycare group</label>
+            <select class="custom-select" formControlName="daycareGroup">
+                <option *ngFor="let daycareGroup of daycareGroups" [ngValue]="daycareGroup">
+                    {{daycareGroup.groupName}}
+                </option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" [disabled]="!assignDaycareGroupToUserForm.valid" class="btn btn-outline-purple">Save</button>
+        <button type="button" class="btn btn-outline-purple" (click)="onCancel()">Cancel</button>
+    </div>
+
+</form>

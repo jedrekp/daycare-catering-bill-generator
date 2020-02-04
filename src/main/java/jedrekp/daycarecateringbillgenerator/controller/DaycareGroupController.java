@@ -42,6 +42,12 @@ public class DaycareGroupController {
         return new ResponseEntity<>(daycareGroupService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping(params = "groupSupervisorId")
+    @JsonView(JsonViewFilter.BasicInfo.class)
+    public ResponseEntity<Collection<DaycareGroup>> getAllDaycareGroupsByGroupSupervisorId(@RequestParam long groupSupervisorId) {
+        return new ResponseEntity<>(daycareGroupService.findAllByGroupSupervisorId(groupSupervisorId), HttpStatus.OK);
+    }
+
     @PostMapping
     @PreAuthorize("hasAuthority('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
