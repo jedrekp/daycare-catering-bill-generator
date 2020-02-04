@@ -2,6 +2,7 @@ package jedrekp.daycarecateringbillgenerator.security;
 
 import jedrekp.daycarecateringbillgenerator.entity.AppUser;
 import jedrekp.daycarecateringbillgenerator.repository.AppUserRepository;
+import jedrekp.daycarecateringbillgenerator.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,12 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService {
 
-    private final AppUserRepository appUserRepository;
+    private final AppUserService appUserService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser appUser = appUserRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found."));
+        AppUser appUser = appUserService.findSingleAppUserByUsername(username);
         return buildUserForAuthentication(appUser);
     }
 

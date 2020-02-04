@@ -32,7 +32,7 @@ public class AppUserService {
     @Transactional(readOnly = true)
     public AppUser findSingleAppUserByUsername(String username) {
         return appUserRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(
-                MessageFormat.format("User with username - {0} does not exist.", username)));
+                MessageFormat.format("Username not found.", username)));
     }
 
     @Transactional(readOnly = true)
@@ -53,6 +53,18 @@ public class AppUserService {
         checkUsernameAvailability(appUser.getUsername());
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
         return appUserRepository.save(appUser);
+    }
+
+    @Transactional
+    public void deleteGroupSupervisorAccount(long appUserId) {
+        AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
+        if (appUser.getDaycareRole() != DaycareRole.GROUP_SUPERVISOR) {
+            throw new IllegalArgumentException("You can only delete group supervisor accounts.");
+        }
+        if (appUser.getDaycareGroup() != null) {
+            appUser.getDaycareGroup().setGroupSupervisor(null);
+        }
+        appUserRepository.deleteById(appUserId);
     }
 
     @Transactional

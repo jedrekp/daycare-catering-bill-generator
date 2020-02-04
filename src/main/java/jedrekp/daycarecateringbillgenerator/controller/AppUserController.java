@@ -29,13 +29,9 @@ public class AppUserController {
     public void dataBinding(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(preEncodedPasswordValidator);
     }
-
-    @GetMapping("/{appUserId}")
-    public ResponseEntity<AppUser> getSingleAppUser(@PathVariable long appUserId) {
-        return new ResponseEntity<>(appUserService.findSingleAppUserByIdWithAllDetails(appUserId), HttpStatus.OK);
-    }
-
+    
     @GetMapping(params = "username")
+    @PreAuthorize("hasAuthority('HEADMASTER') or authentication.name == #username")
     public ResponseEntity<AppUser> getSingleAppUserByUsername(@RequestParam String username) {
         return new ResponseEntity<>(appUserService.findSingleAppUserByUsername(username), HttpStatus.OK);
     }
@@ -59,6 +55,13 @@ public class AppUserController {
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<AppUser> addNewGroupSupervisor(@RequestBody @Valid AppUser appUser) {
         return new ResponseEntity<>(appUserService.createNewGroupSupervisorAccount(appUser), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{appUserId}")
+    @PreAuthorize("hasAuthority('HEADMASTER')")
+    public ResponseEntity deleteGroupSupervisorAccount(@PathVariable long appUserId) {
+        appUserService.deleteGroupSupervisorAccount(appUserId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{appUserId}/daycareGroups/{daycareGroupId}")

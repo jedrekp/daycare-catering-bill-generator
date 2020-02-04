@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
 import { UserDataService } from '../user-data.service';
 import { ErrorHandlerService } from 'src/app/error/error-handler.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { UserAssignDaycareGroupComponent } from '../user-assign-daycare-group/user-assign-daycare-group.component';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
-import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
+import { ACTION_COMPLETED_HEADER, ERROR_HEADER, CONFIRMATION_HEADER } from 'src/app/const';
 
 
 @Component({
@@ -22,6 +22,7 @@ export class UserPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private userDataService: UserDataService,
     private authenticationService: JwtAuthenticationService,
     private bsModalService: BsModalService,
@@ -77,6 +78,28 @@ export class UserPageComponent implements OnInit {
       },
       err => {
         this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+      })
+  }
+
+  deleteUserAccount() {
+    this.modalRef = this.dialogModalService.openConfirmationModal(CONFIRMATION_HEADER,
+      `You are about to delete the account of user #${this.user.id} (${this.user.firstName} ${this.user.lastName}).`)
+    this.modalRef.content.onClose.subscribe(
+      onClose => {
+        if (onClose) {
+          this.userDataService.deleteUserAccount(this.user.id).subscribe(
+            response => {
+              this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+                `The account of user #${this.user.id} (${this.user.firstName} ${this.user.lastName}) has been succesfully deleted.`)
+              this.modalRef.content.onClose.subscribe(
+                onClose => {
+                  this.router.navigate(['daycare-group-list'])
+                })
+            },
+            err => {
+              this.dialogModalService.openInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+            })
+        }
       })
   }
 
