@@ -8,6 +8,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { UserAssignDaycareGroupComponent } from '../user-assign-daycare-group/user-assign-daycare-group.component';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ACTION_COMPLETED_HEADER, ERROR_HEADER, CONFIRMATION_HEADER } from 'src/app/const';
+import { UserChangePasswordComponent } from '../user-change-password/user-change-password.component';
 
 
 @Component({
@@ -65,6 +66,23 @@ export class UserPageComponent implements OnInit {
       })
   }
 
+  openChangePasswordModal() {
+    let initialState = { username: this.user.username }
+    this.modalRef = this.bsModalService.show(UserChangePasswordComponent,
+      { class: 'modal-top-10 modal-sm', initialState, ignoreBackdropClick: true })
+    this.modalRef.content.onClose.subscribe(
+      onClose => {
+        if (onClose) {
+          this.modalRef = this.dialogModalService.openInformationModal(ACTION_COMPLETED_HEADER,
+            'Your password has been succesfuly changed.')
+          this.modalRef.content.onClose.subscribe(
+            onClose => {
+              this.retrieveAppUser(this.user.username)
+            })
+        }
+      })
+  }
+
   revokeDaycareGroupAssignment() {
     this.userDataService.removeDaycareGroupFromUser(this.user.id, this.user.daycareGroup.id).subscribe(
       response => {
@@ -93,7 +111,7 @@ export class UserPageComponent implements OnInit {
                 `The account of user #${this.user.id} (${this.user.firstName} ${this.user.lastName}) has been succesfully deleted.`)
               this.modalRef.content.onClose.subscribe(
                 onClose => {
-                  this.router.navigate(['daycare-group-list'])
+                  this.router.navigate(['group-supervisors-list'])
                 })
             },
             err => {

@@ -19,15 +19,12 @@ export class JwtAuthenticationService {
       {
         username,
         password
-      }
-    ).pipe(
-      map(
-        data => {
-          sessionStorage.setItem(TOKEN, data.jwtToken)
-          return data;
-        }
-      )
-    )
+      }).pipe(
+        map(
+          data => {
+            sessionStorage.setItem(TOKEN, data.jwtToken)
+            return data;
+          }))
   }
 
   getToken() {

@@ -1,5 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.service;
 
+import jedrekp.daycarecateringbillgenerator.DTO.request.AppUserNewPasswordRequest;
 import jedrekp.daycarecateringbillgenerator.entity.AppUser;
 import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
 import jedrekp.daycarecateringbillgenerator.repository.AppUserRepository;
@@ -80,12 +81,22 @@ public class AppUserService {
     @Transactional
     public void removeAssignedGroupFromGroupSupervisor(long appUserId, long daycareGroupId) {
         DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdAndGroupSupervisorId(daycareGroupId, appUserId);
-        AppUser appUser = findSingleUserById(appUserId);
+        AppUser appUser = findSingleAppUserById(appUserId);
         daycareGroup.setGroupSupervisor(null);
         appUser.setDaycareGroup(null);
     }
 
-    private AppUser findSingleUserById(long appUserId) {
+    @Transactional
+    public void changeUserPassword(String username, AppUserNewPasswordRequest newPasswordRequest) {
+        AppUser appUser = findSingleAppUserByUsername(username);
+        if (passwordEncoder.matches(newPasswordRequest.getCurrentPassword(), appUser.getPassword())) {
+            appUser.setPassword(passwordEncoder.encode(newPasswordRequest.getNewPassword()));
+        } else {
+            throw new IllegalArgumentException("Your current password is missing or incorrect.");
+        }
+    }
+
+    private AppUser findSingleAppUserById(long appUserId) {
         return appUserRepository.findById(appUserId).orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
                 "User #{0} does not exists.", appUserId)));
     }

@@ -43,6 +43,8 @@ import { DaycareGroupChildrenListComponent } from './daycare-group/daycare-group
 import { UserCreateAccountComponent } from './user/user-create-account/user-create-account.component';
 import { UserPageComponent } from './user/user-page/user-page.component';
 import { UserAssignDaycareGroupComponent } from './user/user-assign-daycare-group/user-assign-daycare-group.component';
+import { GroupSupervisorsListComponent } from './user/group-supervisors-list/group-supervisors-list.component';
+import { UserChangePasswordComponent } from './user/user-change-password/user-change-password.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +79,9 @@ import { UserAssignDaycareGroupComponent } from './user/user-assign-daycare-grou
     DaycareGroupChildrenListComponent,
     UserCreateAccountComponent,
     UserPageComponent,
-    UserAssignDaycareGroupComponent
+    UserAssignDaycareGroupComponent,
+    GroupSupervisorsListComponent,
+    UserChangePasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +106,8 @@ import { UserAssignDaycareGroupComponent } from './user/user-assign-daycare-grou
     BillPreviewComponent,
     BillDisplayComponent,
     UserCreateAccountComponent,
-    UserAssignDaycareGroupComponent
+    UserAssignDaycareGroupComponent,
+    UserChangePasswordComponent
   ],
   providers: [
     DatePipe,

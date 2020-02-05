@@ -5,21 +5,6 @@ import { API_URL } from '../const';
 import { DailyCateringOrder } from '../catering-bill/catering-bill';
 
 
-class AssignOptionToChildDTO {
-  constructor(
-    private effectiveDate: string,
-    private cateringOptionId: number
-  ) { }
-}
-
-class CateringBillDTO {
-  constructor(
-    private month: string,
-    private year: number,
-    private dailyCateringOrders: DailyCateringOrder[]
-  ) { }
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -52,7 +37,7 @@ export class ChildDataService {
 
   assignNewOptionToChild(childId: number, assignedOptionId: number, effectiveDate: string) {
     return this.httpClient.post(`${API_URL}/children/${childId}/assignedOptions`,
-      new AssignOptionToChildDTO(effectiveDate, assignedOptionId))
+      new AssignOptionToChildRequest(effectiveDate, assignedOptionId))
   }
 
   removeAssignedOptionFromChild(childId: number, effectiveDate: string) {
@@ -61,9 +46,23 @@ export class ChildDataService {
   }
 
   saveCateringBill(childId: number, month: string, year: number, dailyCateringOrders: DailyCateringOrder[]) {
-    return this.httpClient.post<any>(`${API_URL}/children/${childId}/cateringBills`, new CateringBillDTO(month, year, dailyCateringOrders))
+    return this.httpClient.post<any>(`${API_URL}/children/${childId}/cateringBills`, new CateringBillRequest(month, year, dailyCateringOrders))
   }
 
 }
 
+class AssignOptionToChildRequest {
+  constructor(
+    private effectiveDate: string,
+    private cateringOptionId: number
+  ) { }
+}
+
+class CateringBillRequest {
+  constructor(
+    private month: string,
+    private year: number,
+    private dailyCateringOrders: DailyCateringOrder[]
+  ) { }
+}
 

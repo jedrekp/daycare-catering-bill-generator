@@ -4,20 +4,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { MonthlyChildAttendance } from './monthly-child-attandance';
 import { API_URL } from '../const';
 
-class TrackDailyGroupAttendanceDTO {
-  constructor(
-    private date: String,
-    private idsOfChildrenToMarkAsPresent: number[],
-    private idsOfChildrenToMarkAsAbsent: number[]
-  ) { }
-}
-
-class UpdateMonthlyAttendanceForChildDTO {
-  constructor(
-    private datesToMarkAsPresent: string[],
-    private datesToMarkAsAbsent: string[]
-  ) { }
-}
 
 @Injectable({
   providedIn: 'root'
@@ -36,10 +22,10 @@ export class AttendanceDataService {
   }
 
   submitDailyGroupAttendance(daycareGroupId: number, attendance: DailyGroupAttendance) {
-    let attendanceDTO = new TrackDailyGroupAttendanceDTO(attendance.date.toString(), attendance.presentChildrenIds, attendance.absentChildrenIds)
+    let attendanceRequest = new TrackDailyGroupAttendanceRequest(attendance.date.toString(), attendance.presentChildrenIds, attendance.absentChildrenIds)
     let params = new HttpParams()
       .set('daycareGroupId', daycareGroupId.toString())
-    return this.httpClient.put(`${API_URL}/attendanceSheets`, attendanceDTO, { params: params })
+    return this.httpClient.put(`${API_URL}/attendanceSheets`, attendanceRequest, { params: params })
   }
 
   retrieveMonthlyAttendanceForChild(childId: number, month: string, year: number) {
@@ -51,12 +37,27 @@ export class AttendanceDataService {
   }
 
   submitMonthlyAttendanceForChild(childId: number, month: string, year: number, attendance: MonthlyChildAttendance) {
-    let attendanceDTO = new UpdateMonthlyAttendanceForChildDTO(attendance.datesWhenPresent, attendance.datesWhenAbsent)
+    let attendanceRequest = new UpdateMonthlyAttendanceForChildRequest(attendance.datesWhenPresent, attendance.datesWhenAbsent)
     let params = new HttpParams()
       .set('childId', childId.toString())
       .set('month', month)
       .set('year', year.toString())
-    return this.httpClient.put(`${API_URL}/attendanceSheets`, attendanceDTO, { params: params })
+    return this.httpClient.put(`${API_URL}/attendanceSheets`, attendanceRequest, { params: params })
   }
 
+}
+
+class TrackDailyGroupAttendanceRequest {
+  constructor(
+    private date: String,
+    private idsOfChildrenToMarkAsPresent: number[],
+    private idsOfChildrenToMarkAsAbsent: number[]
+  ) { }
+}
+
+class UpdateMonthlyAttendanceForChildRequest {
+  constructor(
+    private datesToMarkAsPresent: string[],
+    private datesToMarkAsAbsent: string[]
+  ) { }
 }

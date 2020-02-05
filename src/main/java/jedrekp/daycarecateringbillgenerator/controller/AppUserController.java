@@ -1,6 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import jedrekp.daycarecateringbillgenerator.DTO.request.AppUserNewPasswordRequest;
 import jedrekp.daycarecateringbillgenerator.entity.AppUser;
 import jedrekp.daycarecateringbillgenerator.service.AppUserService;
 import jedrekp.daycarecateringbillgenerator.utility.DaycareRole;
@@ -29,7 +30,7 @@ public class AppUserController {
     public void dataBinding(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(preEncodedPasswordValidator);
     }
-    
+
     @GetMapping(params = "username")
     @PreAuthorize("hasAuthority('HEADMASTER') or authentication.name == #username")
     public ResponseEntity<AppUser> getSingleAppUserByUsername(@RequestParam String username) {
@@ -78,4 +79,10 @@ public class AppUserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping(params = "username")
+    @PreAuthorize("authentication.name == #username")
+    public ResponseEntity changeUserPassword(@RequestParam String username, @RequestBody @Valid AppUserNewPasswordRequest newPasswordRequest) {
+        appUserService.changeUserPassword(username, newPasswordRequest);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -22,10 +22,11 @@
                 <div class="dropdown-menu" *dropdownMenu>
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
                         (click)="openCreateChildModal()">
-                        New child</a>
+                        New child profile</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/unassigned-children-list')">
                         View unassigned children</a>
-                    <a class="dropdown-item" (click)="navigateFromMenu('/children-archive')">View children archive</a>
+                    <a class="dropdown-item" (click)="navigateFromMenu('/children-archive')">View children in
+                        archive</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/track-attendance')">Track attendance</a>
                 </div>
             </li>
@@ -38,9 +39,12 @@
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
                         (click)="openCreateDaycareGroupModal()">New daycare group</a>
                     <a class="dropdown-item" (click)="navigateFromMenu('/daycare-group-list')">
-                        Display list of groups</a>
+                        Display list of daycare groups</a>
                     <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
                         (click)="openCreateGroupSupervisorAccountModal()">New group supervisor account </a>
+                    <a *ngIf="authenticationService.isUserAuthorized(['HEADMASTER'])" class="dropdown-item"
+                        (click)="navigateFromMenu('/group-supervisors-list')">
+                        Display list of group supervisors</a>
                 </div>
             </li>
 
@@ -61,6 +65,10 @@
 
         </ul>
 
+        <ul *ngIf="!authenticationService.isUserLoggedIn()" class="navbar-nav">
+            <li><a class="nav-link" (click)="navigateFromMenu('/login')">Login</a></li>
+        </ul>
+
         <div *ngIf="authenticationService.isUserLoggedIn()" class="col-8 col-sm-5 col-md-4 col-lg-3 pl-0">
             <form (ngSubmit)="findChildren()" class="navbar-form" role="search">
                 <div class="input-group">
@@ -75,12 +83,18 @@
             </form>
         </div>
 
-        <ul *ngIf="!authenticationService.isUserLoggedIn()" class="navbar-nav">
-            <li><a class="nav-link" (click)="navigateFromMenu('/login')">Login</a></li>
-        </ul>
-
         <ul *ngIf="authenticationService.isUserLoggedIn()" class="navbar-nav">
-            <li><a class="nav-link" (click)="logout()">Logout</a></li>
+            <li *ngIf="authenticationService.isUserLoggedIn()" class="btn-group mr-1" dropdown container="body">
+                <a class="dropdown-toggle nav-link" data-toggle="dropdown" dropdownToggle>
+                    {{authenticationService.getUsername()}}
+                </a>
+                <div class="dropdown-menu" *dropdownMenu>
+                    <a class="dropdown-item"
+                        (click)="navigateFromMenu('/user-page/' + authenticationService.getUsername())">
+                        View profile</a>
+                    <a class="dropdown-item" (click)="logout()">Logout</a>
+                </div>
+            </li>
         </ul>
 
     </div>

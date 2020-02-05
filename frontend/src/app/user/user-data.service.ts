@@ -22,6 +22,12 @@ export class UserDataService {
     return this.httpClient.get<User>(`${API_URL}/appUsers`, { params: params })
   }
 
+  getUsersByDaycareRole(daycareRole: string) {
+    let params = new HttpParams()
+      .set('daycareRole', daycareRole)
+    return this.httpClient.get<User[]>(`${API_URL}/appUsers`, { params: params })
+  }
+
   deleteUserAccount(userId: number) {
     return this.httpClient.delete<any>(`${API_URL}/appUsers/${userId}`)
   }
@@ -34,4 +40,18 @@ export class UserDataService {
     return this.httpClient.delete<any>(`${API_URL}/appUsers/${userId}/daycareGroups/${daycareGroupId}`)
   }
 
+  changeUserPassword(username: string, currentPassword: string, newPassword: string) {
+    let params = new HttpParams()
+      .set('username', username)
+    let changeUserPasswordRequest = new ChangeUserPasswordRequest(currentPassword, newPassword)
+    return this.httpClient.put<any>(`${API_URL}/appUsers`, changeUserPasswordRequest, { params: params })
+  }
+
+}
+
+class ChangeUserPasswordRequest {
+  constructor(
+    private currentPassword: string,
+    private newPassword: string
+  ) { }
 }
