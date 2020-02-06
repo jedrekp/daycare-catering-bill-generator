@@ -44,14 +44,14 @@ public class CateringBillService {
                 .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
                         "{0} {1} catering bill has not been generated yet for child with id : {2}",
                         month, year, childId)));
-        return mapCateringBillToResponse(cateringBill);
+        return mapExistingCateringBillToResponse(cateringBill);
     }
 
     @Transactional(readOnly = true)
     public Set<CateringBillResponse> getCateringBillsByMonthAndDaycareGroupId(long daycareGroupId, Month month, Year year) {
         Collection<CateringBill> cateringBills = cateringBillRepository.findAllByMonthAndYearAndDaycareGroupId(month, year, daycareGroupId);
         Set<CateringBillResponse> cateringBillResponses = new HashSet<>();
-        cateringBills.forEach(cateringBill -> cateringBillResponses.add(mapCateringBillToResponse(cateringBill)));
+        cateringBills.forEach(cateringBill -> cateringBillResponses.add(mapExistingCateringBillToResponse(cateringBill)));
         return cateringBillResponses;
     }
 
@@ -59,15 +59,18 @@ public class CateringBillService {
     public CateringBillResponse generateCateringBillPreview(long childId, Month month, Year year) {
 
         Child child = childService.findSingleNotArchivedChildById(childId);
-
-        CateringBillResponse cateringBillResponse = new CateringBillResponse(0L, childId, month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), year);
-        cateringBillResponse.setChildFullName(childService.getFullNameOfChild(child));
-        cateringBillResponse.setCorrection(cateringBillRepository.existsByMonthAndYearAndChildId(month, year, childId));
-
         List<AttendanceSheet> attendanceSheets = attendanceSheetRepository
                 .findByPresentChildIdForSpecificMonth(childId, month.getValue(), year.getValue());
-        insertDailyOrdersIntoNewCateringBill(attendanceSheets, cateringBillResponse, childId);
 
+        CateringBillResponse cateringBillResponse = new CateringBillResponse(
+                0L,
+                childId,
+                month.getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+                year);
+
+        cateringBillResponse.setChildFullName(childService.getFullNameOfChild(child));
+        cateringBillResponse.setCorrection(cateringBillRepository.existsByMonthAndYearAndChildId(month, year, childId));
+        insertDailyOrdersIntoCateringBillPreview(attendanceSheets, cateringBillResponse, childId);
         cateringBillResponse.setTotalDue(calculateTotalDueFromDailyOrders(cateringBillResponse.getDailyCateringOrders()));
 
         return cateringBillResponse;
@@ -105,7 +108,7 @@ public class CateringBillService {
                 MessageFormat.format("Catering bill #{0} does not exist.", cateringBillId)));
     }
 
-    private void insertDailyOrdersIntoNewCateringBill(List<AttendanceSheet> attendanceSheets, CateringBillResponse cateringBillResponse, long childId) {
+    private void insertDailyOrdersIntoCateringBillPreview(List<AttendanceSheet> attendanceSheets, CateringBillResponse cateringBillResponse, long childId) {
         for (AttendanceSheet attendanceSheet : attendanceSheets) {
             CateringOption optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, attendanceSheet.getDate());
             cateringBillResponse.getDailyCateringOrders()
@@ -115,28 +118,43 @@ public class CateringBillService {
     }
 
     private CateringBill mapRequestToCateringBill(CreateCateringBillRequest cateringBillRequest) {
-        CateringBill cateringBill = new CateringBill(cateringBillRequest.getMonth(), cateringBillRequest.getYear());
+        CateringBill cateringBill = new CateringBill(
+                cateringBillRequest.getMonth(),
+                cateringBillRequest.getYear());
+
         cateringBillRequest.getDailyCateringOrders().forEach(dailyCateringOrder -> dailyCateringOrder.setCateringBill(cateringBill));
         cateringBill.setDailyCateringOrders(cateringBillRequest.getDailyCateringOrders());
         return cateringBill;
     }
 
-    private CateringBillResponse mapCateringBillToResponse(CateringBill cateringBill) {
-        CateringBillResponse cateringBillResponse = new CateringBillResponse(cateringBill.getId(), cateringBill.getChild().getId(),
-                cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH), cateringBill.getYear());
-        cateringBillResponse.setCorrection(cateringBill.isCorrection());
+    private CateringBillResponse mapExistingCateringBillToResponse(CateringBill cateringBill) {
+        CateringBillResponse cateringBillResponse = new CateringBillResponse(
+                cateringBill.getId(),
+                cateringBill.getChild().getId(),
+                cateringBill.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH),
+                cateringBill.getYear());
+
         cateringBillResponse.setChildFullName(childService.getFullNameOfChild(cateringBill.getChild()));
         cateringBillResponse.setDailyCateringOrders(new ArrayList<>(cateringBill.getDailyCateringOrders()));
         cateringBillResponse.setTotalDue(calculateTotalDueFromDailyOrders(cateringBillResponse.getDailyCateringOrders()));
+
         cateringBillResponse.getDailyCateringOrders().sort(Comparator.comparing(DailyCateringOrder::getOrderDate));
+
         return cateringBillResponse;
     }
 
     private void deletePreviousVersionOfCateringBillAndMarkNewVersionAsCorrection(
             CateringBill previousCateringBill, CateringBill newCateringBill, Child child) {
+
         child.getCateringBills().remove(previousCateringBill);
         previousCateringBill.setChild(null);
+
+        /*
+        flush session to make sure old bill is deleted via orphan removal before an attempt to save the new bill,
+        as only one bill can exist for given child and month
+        */
         entityManager.unwrap(Session.class).flush();
+
         newCateringBill.setCorrection(true);
     }
 

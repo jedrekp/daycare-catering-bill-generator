@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.MessageFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -68,6 +70,7 @@ public class AttendanceService {
         if (!Collections.disjoint(attendanceRequest.getIdsOfChildrenToMarkAsPresent(), attendanceRequest.getIdsOfChildrenToMarkAsAbsent())) {
             throw new IllegalArgumentException("One or more children are marked as both present and absent.");
         }
+        verifyIfDateIsWeekday(attendanceRequest.getDate());
 
         AttendanceSheet attendanceSheet = findByDateOrElseCreateNew(attendanceRequest.getDate());
         addPresentChildrenToAttendanceSheet(attendanceSheet, attendanceRequest.getIdsOfChildrenToMarkAsPresent(), daycareGroupId);
@@ -77,17 +80,18 @@ public class AttendanceService {
 
     @Transactional
     public List<AttendanceSheet> submitMonthlyAttendanceChangesForChild(
-            long childId, Month month, Year year, UpdateMonthlyAttendanceForChildRequest request) {
+            long childId, Month month, Year year, UpdateMonthlyAttendanceForChildRequest attendanceRequest) {
 
-        if (!Collections.disjoint(request.getDatesToMarkAsPresent(), request.getDatesToMarkAsAbsent())) {
+        if (!Collections.disjoint(attendanceRequest.getDatesToMarkAsPresent(), attendanceRequest.getDatesToMarkAsAbsent())) {
             throw new IllegalArgumentException("Attendance update consists of dates for which child is marked as both present and absent");
         }
-        verifyIfAllDatesAreWithinTheSelectedMonth(request, month, year);
+        verifyIfAllDatesAreWithinTheSelectedMonth(attendanceRequest, month, year);
+        verifyIfAllDatesAreWeekdays(attendanceRequest);
 
         Child child = childService.findSingleNotArchivedChildById(childId);
         List<AttendanceSheet> attendanceSheets = new ArrayList<>();
-        markSingleChildAsPresentForGivenDates(request.getDatesToMarkAsPresent(), attendanceSheets, child);
-        markSingleChildAsAbsentForGivenDates(request.getDatesToMarkAsAbsent(), attendanceSheets, child);
+        markSingleChildAsPresentForGivenDates(attendanceRequest.getDatesToMarkAsPresent(), attendanceSheets, child);
+        markSingleChildAsAbsentForGivenDates(attendanceRequest.getDatesToMarkAsAbsent(), attendanceSheets, child);
 
         attendanceSheets.sort(Comparator.comparing(AttendanceSheet::getDate));
         return attendanceSheets;
@@ -167,10 +171,14 @@ public class AttendanceService {
         }
     }
 
-   /* private void verifyIfUserIsAssignedToDaycareGroup(long daycareGroupId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.getAuthorities().contains("ROLE_HEADMASTER")) {
-
+    private void verifyIfDateIsWeekday(LocalDate date) {
+        if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            throw new IllegalArgumentException(MessageFormat.format("{0} is not a weekday.", date.toString()));
         }
-    }*/
+    }
+
+    private void verifyIfAllDatesAreWeekdays(UpdateMonthlyAttendanceForChildRequest attendanceRequest) {
+        attendanceRequest.getDatesToMarkAsPresent().forEach(this::verifyIfDateIsWeekday);
+        attendanceRequest.getDatesToMarkAsAbsent().forEach(this::verifyIfDateIsWeekday);
+    }
 }
