@@ -32,48 +32,48 @@ public class AppUserController {
     }
 
     @GetMapping(params = "username")
-    @PreAuthorize("hasAuthority('HEADMASTER') or authentication.name == #username")
+    @PreAuthorize("hasRole('HEADMASTER') or authentication.name == #username")
     public ResponseEntity<AppUser> getSingleAppUserByUsername(@RequestParam String username) {
         return new ResponseEntity<>(appUserService.findSingleAppUserByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasRole('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Collection<AppUser>> getAllAppUsers() {
         return new ResponseEntity<>(appUserService.findAllAppUsers(), HttpStatus.OK);
     }
 
     @GetMapping(params = "daycareRole")
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasRole('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<Collection<AppUser>> getAppUsersWithSpecificRole(@RequestParam DaycareRole daycareRole) {
         return new ResponseEntity<>(appUserService.findAllAppUsersByDaycareRole(daycareRole), HttpStatus.OK);
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasRole('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
     public ResponseEntity<AppUser> addNewGroupSupervisor(@RequestBody @Valid AppUser appUser) {
         return new ResponseEntity<>(appUserService.createNewGroupSupervisorAccount(appUser), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{appUserId}")
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasRole('HEADMASTER')")
     public ResponseEntity deleteGroupSupervisorAccount(@PathVariable long appUserId) {
         appUserService.deleteGroupSupervisorAccount(appUserId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{appUserId}/daycareGroups/{daycareGroupId}")
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasRole('HEADMASTER')")
     public ResponseEntity<AppUser> assignDaycareGroupToGroupSupervisor(
             @PathVariable long appUserId, @PathVariable long daycareGroupId) {
         return new ResponseEntity<>(appUserService.assignDaycareGroupToGroupSupervisor(appUserId, daycareGroupId), HttpStatus.OK);
     }
 
     @DeleteMapping("{appUserId}/daycareGroups/{daycareGroupId}")
-    @PreAuthorize("hasAuthority('HEADMASTER')")
+    @PreAuthorize("hasRole('HEADMASTER')")
     public ResponseEntity removeDaycareGroupFromGroupSupervisor(@PathVariable long appUserId, @PathVariable long daycareGroupId) {
         appUserService.removeAssignedGroupFromGroupSupervisor(appUserId, daycareGroupId);
         return ResponseEntity.noContent().build();

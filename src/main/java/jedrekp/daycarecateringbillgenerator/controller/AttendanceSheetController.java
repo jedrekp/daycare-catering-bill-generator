@@ -35,7 +35,7 @@ public class AttendanceSheetController {
     }
 
     @PutMapping(params = "daycareGroupId")
-    @PreAuthorize("hasAuthority('HEADMASTER') or @attendanceTrackingPermissionEvaluator.canMarkAttendanceForDaycareGroup(#daycareGroupId,authentication)")
+    @PreAuthorize("hasRole('HEADMASTER') or @attendanceTrackingPermissionEvaluator.canMarkAttendanceForDaycareGroup(#daycareGroupId,authentication)")
     public ResponseEntity<AttendanceSheet> submitAttendanceForGroup(
             @RequestParam long daycareGroupId, @RequestBody @Valid TrackDailyGroupAttendanceRequest attendanceRequest) {
         return new ResponseEntity<>(attendanceService.submitDailyAttendanceForGroup(attendanceRequest, daycareGroupId), HttpStatus.OK);
@@ -48,7 +48,7 @@ public class AttendanceSheetController {
     }
 
     @PutMapping(params = {"childId", "month", "year"})
-    @PreAuthorize("hasAuthority('HEADMASTER') or @attendanceTrackingPermissionEvaluator.canMarkAttendanceForChild(#childId,authentication)")
+    @PreAuthorize("hasRole('HEADMASTER') or @attendanceTrackingPermissionEvaluator.canMarkAttendanceForChild(#childId,authentication)")
     public ResponseEntity<Collection<AttendanceSheet>> submitMonthlyAttendanceChangesForSingleChild(
             @RequestParam long childId, @RequestParam Month month, @RequestParam Year year,
             @RequestBody @Valid UpdateMonthlyAttendanceForChildRequest attendanceRequest) {

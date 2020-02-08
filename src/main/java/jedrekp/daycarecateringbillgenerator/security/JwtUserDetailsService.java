@@ -1,7 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.security;
 
 import jedrekp.daycarecateringbillgenerator.entity.AppUser;
-import jedrekp.daycarecateringbillgenerator.repository.AppUserRepository;
 import jedrekp.daycarecateringbillgenerator.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,16 +26,11 @@ public class JwtUserDetailsService implements UserDetailsService {
         return buildUserForAuthentication(appUser);
     }
 
-    private User buildUserForAuthentication(AppUser appUser) {
-        List<GrantedAuthority> grantedAuthorities = Collections.singletonList(
-                new SimpleGrantedAuthority(appUser.getDaycareRole().toString()));
-        return new User(
-                appUser.getUsername(),
-                appUser.getPassword(),
-                true,
-                true,
-                true,
-                true,
-                grantedAuthorities);
+    private UserDetails buildUserForAuthentication(AppUser appUser) {
+        return User.builder()
+                .username(appUser.getUsername())
+                .password(appUser.getPassword())
+                .roles(appUser.getDaycareRole().toString())
+                .build();
     }
 }

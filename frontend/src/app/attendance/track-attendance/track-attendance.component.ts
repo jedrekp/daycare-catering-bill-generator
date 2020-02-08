@@ -8,7 +8,6 @@ import { DatePipe } from '@angular/common';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { ACTION_COMPLETED_HEADER, ERROR_HEADER } from 'src/app/const';
 import { Child } from 'src/app/child/child';
-import { Router } from '@angular/router';
 import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
 
@@ -27,7 +26,6 @@ export class TrackAttendanceComponent implements OnInit {
 
   constructor(
     private datePipe: DatePipe,
-    private router: Router,
     private daycareGroupDataService: DaycareGroupDataService,
     private attendanceDataService: AttendanceDataService,
     private authenticationService: JwtAuthenticationService,
