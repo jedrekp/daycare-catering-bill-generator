@@ -15,8 +15,13 @@
             type="danger" class="mt-1">
             Option name <strong>cannot</strong> be empty.
         </alert>
+        <alert
+            *ngIf="cateringOptionForm.get('optionName').hasError('minlength') && cateringOptionForm.get('optionName').touched"
+            type="danger" class="mt-1">
+            Option name must be at least <strong>3</strong> characters long.
+        </alert>
         <alert *ngIf="cateringOptionForm.get('optionName').hasError('maxlength')" type="danger" class="mt-1">
-            Option name <strong>cannot</strong> exceed <strong>15</strong> characters.
+            Option name <strong>cannot</strong> exceed <strong>20</strong> characters.
         </alert>
 
         <div class="form-group">

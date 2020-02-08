@@ -24,13 +24,13 @@ public class CateringOption {
 
     @Column(name = "option_name", unique = true)
     @NotNull
-    @Length(min = 3, max = 15)
+    @Length(min = 3, max = 20)
     private String optionName;
 
     @Column(name = "daily_cost")
     @NotNull
     @Min(0)
-    @Max(25)
+    @Max(30)
     private BigDecimal dailyCost;
 
     @NotNull

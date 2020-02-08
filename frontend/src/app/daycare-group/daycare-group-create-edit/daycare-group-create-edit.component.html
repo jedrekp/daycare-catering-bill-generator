@@ -15,6 +15,11 @@
             type="danger" class="mt-1">
             Group name <strong>cannot</strong> be empty.
         </alert>
+        <alert
+            *ngIf="daycareGroupForm.get('groupName').hasError('minlength') && daycareGroupForm.get('groupName').touched"
+            type="danger" class="mt-1">
+            Group name must be at least <strong>3</strong> characters long.
+        </alert>
         <alert *ngIf="daycareGroupForm.get('groupName').hasError('maxlength')" type="danger" class="mt-1">
             Group name <strong>cannot</strong> exceed <strong>20</strong> characters.
         </alert>

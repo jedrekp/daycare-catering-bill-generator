@@ -15,6 +15,11 @@
       type="danger" class="mt-1">
       First name <strong>cannot</strong> be empty.
     </alert>
+    <alert
+      *ngIf="childBasicInfoForm.get('firstName').hasError('minlength') && childBasicInfoForm.get('firstName').touched"
+      type="danger" class="mt-1">
+      First name must be at least <strong>2</strong> characters long.
+    </alert>
     <alert *ngIf="childBasicInfoForm.get('firstName').hasError('maxlength')" type="danger" class="mt-1">
       First name <strong>cannot</strong> exceed <strong>20</strong> characters.
     </alert>
@@ -26,6 +31,11 @@
     <alert *ngIf="childBasicInfoForm.get('lastName').hasError('required') && childBasicInfoForm.get('lastName').touched"
       type="danger" class="mt-1">
       Last name <strong>cannot</strong> be empty.
+    </alert>
+    <alert
+      *ngIf="childBasicInfoForm.get('lastName').hasError('minlength') && childBasicInfoForm.get('lastName').touched"
+      type="danger" class="mt-1">
+      Last name must be at least <strong>2</strong> characters long.
     </alert>
     <alert *ngIf="childBasicInfoForm.get('lastName').hasError('maxlength')" type="danger" class="mt-1">
       Last name <strong>cannot</strong> exceed <strong>20</strong> characters.
@@ -40,7 +50,9 @@
       type="danger" class="mt-1">
       Parent email <strong>cannot</strong> be empty.
     </alert>
-    <alert *ngIf="childBasicInfoForm.get('parentEmail').hasError('email')" type="danger" class="mt-1">
+    <alert
+      *ngIf="childBasicInfoForm.get('parentEmail').hasError('email') && childBasicInfoForm.get('parentEmail').touched"
+      type="danger" class="mt-1">
       <strong>Invalid</strong> email format.
     </alert>
 

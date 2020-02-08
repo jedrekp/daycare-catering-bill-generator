@@ -10,7 +10,7 @@ import { TrackAttendanceComponent } from './attendance/track-attendance/track-at
 import { ArchivedChildrenListComponent } from './child/archived-children-list/archived-children-list.component';
 import { GenerateCateringBillsComponent } from './catering-bill/generate-catering-bills/generate-catering-bills.component';
 import { LoginComponent } from './authentication/login/login.component';
-import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { WelcomePageComponent } from './user/welcome-page/welcome-page.component';
 import { RouteGuardService } from './authentication/route-guard.service';
 import { ErrorComponent } from './error/error.component';
 import { UserPageComponent } from './user/user-page/user-page.component';

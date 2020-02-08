@@ -16,7 +16,7 @@
         </alert>
         <alert *ngIf="userForm.get('firstName').hasError('minlength') && userForm.get('firstName').touched"
             type="danger" class="mt-1">
-            First name <strong>must</strong> have <strong>at least 2</strong> characters.
+            First name must be at least <strong>2</strong> characters long.
         </alert>
         <alert *ngIf="userForm.get('firstName').hasError('maxlength')" type="danger" class="mt-1">
             First name <strong>cannot</strong> exceed <strong>20</strong> characters.
@@ -32,7 +32,7 @@
         </alert>
         <alert *ngIf="userForm.get('lastName').hasError('minlength') && userForm.get('username').touched"
             type="danger" class="mt-1">
-            Last name <strong>must</strong> have <strong>at least 2</strong> characters.
+            Last name must be at least <strong>2</strong> characters long.
         </alert>
         <alert *ngIf="userForm.get('lastName').hasError('maxlength')" type="danger" class="mt-1">
             Last name <strong>cannot</strong> exceed <strong>20</strong> characters.
@@ -48,7 +48,7 @@
         </alert>
         <alert *ngIf="userForm.get('username').hasError('minlength') && userForm.get('username').touched"
             type="danger" class="mt-1">
-            Username <strong>must</strong> have <strong>at least 5</strong> characters.
+            Username must be at least <strong>5</strong> characters long.
         </alert>
         <alert *ngIf="userForm.get('username').hasError('maxlength')" type="danger" class="mt-1">
             Username <strong>cannot</strong> exceed <strong>20</strong> characters.
@@ -64,7 +64,7 @@
         </alert>
         <alert *ngIf="userForm.get('password').hasError('minlength') && userForm.get('password').touched"
             type="danger" class="mt-1">
-            Password <strong>must</strong> have <strong>at least 5</strong> characters.
+            Password must be at least <strong>5</strong> characters long.
         </alert>
         <alert *ngIf="userForm.get('password').hasError('maxlength')" type="danger" class="mt-1">
             Password <strong>cannot</strong> exceed <strong>20</strong> characters.

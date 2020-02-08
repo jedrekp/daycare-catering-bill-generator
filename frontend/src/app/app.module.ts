@@ -31,7 +31,7 @@ import { GenerateCateringBillsComponent } from './catering-bill/generate-caterin
 import { BillPreviewComponent } from './catering-bill/bill-preview/bill-preview.component';
 import { BillDisplayComponent } from './catering-bill/bill-display/bill-display.component';
 import { LoginComponent } from './authentication/login/login.component';
-import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { WelcomePageComponent } from './user/welcome-page/welcome-page.component';
 import { ErrorComponent } from './error/error.component';
 import { HttpInterceptorService } from './authentication/http-interceptor.service';
 import { SingleChildAttendanceComponent } from './attendance/single-child-attendance/single-child-attendance.component';

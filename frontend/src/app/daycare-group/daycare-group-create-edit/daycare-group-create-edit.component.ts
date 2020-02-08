@@ -36,7 +36,7 @@ export class DaycareGroupCreateEditComponent implements OnInit {
       this.header = `Edit Daycare Group#${this.daycareGroup.id}`
     }
     this.daycareGroupForm = new FormGroup({
-      groupName: new FormControl('', [Validators.required, Validators.maxLength(15)])
+      groupName: new FormControl('', [Validators.required,Validators.minLength(3), Validators.maxLength(20)])
     })
     this.daycareGroupForm.patchValue({
       groupName: this.daycareGroup.groupName
