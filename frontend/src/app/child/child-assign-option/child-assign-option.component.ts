@@ -25,7 +25,8 @@ export class ChildAssignOptionComponent implements OnInit {
   private minDate: Date
 
   constructor(
-    private bsModalRef: BsModalRef,
+    private modalRef: BsModalRef,
+    private nestedModalRef: BsModalRef,
     private datePipe: DatePipe,
     private dialogModalService: DialogModalService,
     private childDataService: ChildDataService,
@@ -53,7 +54,12 @@ export class ChildAssignOptionComponent implements OnInit {
         }
       },
       err => {
-        this.errorHandlerService.redirectToErrorPage(err)
+        this.nestedModalRef = this.dialogModalService.openNestedInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+        this.nestedModalRef.content.onClose.subscribe(
+          onClose => {
+            this.modalRef.hide()
+            this.onClose.next(null)
+          })
       })
   }
 
@@ -75,7 +81,7 @@ export class ChildAssignOptionComponent implements OnInit {
         this.datePipe.transform(this.assignCateringOptionForm.get('effectiveDate').value, 'yyyy-MM-dd'))
         .subscribe(
           response => {
-            this.bsModalRef.hide()
+            this.modalRef.hide()
             this.onClose.next(this.assignCateringOptionForm.get('cateringOption').value)
           },
           err => {
@@ -85,7 +91,7 @@ export class ChildAssignOptionComponent implements OnInit {
   }
 
   onCancel() {
-    this.bsModalRef.hide()
+    this.modalRef.hide()
     this.onClose.next(null)
   }
 }

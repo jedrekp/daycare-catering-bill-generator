@@ -58,7 +58,7 @@ public class CateringOptionService {
     CateringOption findOptionInEffectForChild(long childId, LocalDate date) {
         return cateringOptionRepository.findOptionInEffectByChildIdAndDate(childId, date)
                 .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format("There is no catering option " +
-                        "in effect on {0} for child #{1}", date, childId)));
+                        "in effect for {0} for child #{1}", date, childId)));
     }
 
     private void checkOptionNameAvailability(String cateringOptionName, Long cateringOptionId) {

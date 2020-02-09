@@ -22,6 +22,7 @@ export class AssignToGroupComponent implements OnInit {
 
   constructor(
     private modalRef: BsModalRef,
+    private nestedModalRef: BsModalRef,
     private dialogModalService: DialogModalService,
     private daycareGroupDataService: DaycareGroupDataService,
     private errorHandlerService: ErrorHandlerService
@@ -44,7 +45,11 @@ export class AssignToGroupComponent implements OnInit {
         }
       },
       err => {
-        this.errorHandlerService.redirectToErrorPage(err)
+        this.nestedModalRef.content.onClose.subscribe(
+          onClose => {
+            this.modalRef.hide()
+            this.onClose.next(null)
+          })
       })
   }
 

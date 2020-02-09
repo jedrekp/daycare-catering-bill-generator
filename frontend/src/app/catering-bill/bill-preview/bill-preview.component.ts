@@ -24,7 +24,6 @@ export class BillPreviewComponent implements OnInit {
   private cateringBill: CateringBill
 
   constructor(
-    private router: Router,
     private modalRef: BsModalRef,
     private nestedModalRef: BsModalRef,
     private dialogModalService: DialogModalService,
@@ -44,9 +43,12 @@ export class BillPreviewComponent implements OnInit {
         this.cateringBill = cateringBill
       },
       err => {
-        this.modalRef.hide()
-        this.onClose.next(false)
-        this.errorHandlerService.redirectToErrorPage(err)
+        this.nestedModalRef = this.dialogModalService.openNestedInformationModal(ERROR_HEADER, this.errorHandlerService.getErrorMessage(err))
+        this.nestedModalRef.content.onClose.subscribe(
+          onClose => {
+            this.modalRef.hide()
+            this.onClose.next(false)
+          })
       })
   }
 

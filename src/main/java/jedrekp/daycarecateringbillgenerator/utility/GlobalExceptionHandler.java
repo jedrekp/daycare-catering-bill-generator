@@ -92,6 +92,14 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseBody
+    public String handleIllegalStateException(IllegalStateException e) {
+        log.warn("Illegal state exception : {}", e.getMessage());
+        return e.getMessage();
+    }
+
     private String createCustomErrorMessageForMethodArgumentNotValidException(BindingResult result) {
         String errorMessage = "Following properties have incorrect values :";
         for (FieldError fieldError : result.getFieldErrors()) {

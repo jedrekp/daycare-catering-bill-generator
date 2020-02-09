@@ -1,44 +1,25 @@
 <div *ngIf="user else loadingUser">
 
-    <div class="text-center mx-auto my-4">
-        <h2 class="heading-darkblue">
-            Hello, {{user.firstName}} {{user.lastName}} !
-        </h2>
-    </div>
-
     <div class="row justify-content-center">
 
-        <div class="col-10 col-md-8 col-lg-7 col-xl-6">
+        <div class="col-10 col-md-8 col-lg-7 col-xl-6 mt-5">
 
             <div class="card px-0 border-darkblue text-center">
 
                 <div class="card-header bg-darkblue">
-                    <h5 class="card-title my-0">Welcome to Daycare Catering Bill Generator</h5>
+                    <h5 class="card-title my-0">Hello, {{user.firstName}} {{user.lastName}} !</h5>
                 </div>
 
                 <div class="card-body">
-                    <p>
-                        Some placeholder text until I figure out what to put in welcome page.
-                    </p>
-                    <p>
-                        Some placeholder text until I figure out what to put in welcome page.
-                    </p>
-                    <p>
-                        Some placeholder text until I figure out what to put in welcome page.
-                    </p>
-                    <p>
-                        Some placeholder text until I figure out what to put in welcome page.
-                    </p>
-                </div>
 
-                <div class="card-footer">
-
-                    <div class="row justify-content-center mt-2">
-                        <button class="btn btn-outline-darkblue btn-block col-8 col-md-7 mb-2"
-                            [routerLink]="['/user-page',user.username]">
-                            View your profile
-                        </button>
-                    </div>
+                    <h5 class="subheader-purple">Welcome to Daycare Catering Bill Generator.</h5>
+                    <div class="subheader-underline"></div>
+                    <p class="text-left mt-3">Below is some placeholder text until I figure out what to put in welcome page: <br>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae nisl vitae eros
+                        vehicula mollis nec id mauris. Nulla mattis sapien metus, eu maximus diam eleifend euismod.
+                        Suspendisse potenti. Vivamus tempor nisl eget cursus posuere. Vivamus placerat, tellus sit amet
+                        mollis cursus, erat erat posuere lectus, in vestibulum tortor augue.
+                    </p>
                 </div>
 
             </div>

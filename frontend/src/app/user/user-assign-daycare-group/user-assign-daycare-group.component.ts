@@ -24,6 +24,7 @@ export class UserAssignDaycareGroupComponent implements OnInit {
 
   constructor(
     private modalRef: BsModalRef,
+    private nestedModalRef: BsModalRef,
     private dialogModalService: DialogModalService,
     private daycareGroupDataService: DaycareGroupDataService,
     private userDataService: UserDataService,
@@ -45,7 +46,11 @@ export class UserAssignDaycareGroupComponent implements OnInit {
         this.assignDaycareGroupToUserForm.patchValue({ daycareGroup: daycareGroups[0] })
       },
       err => {
-        this.errorHandlerService.redirectToErrorPage(err)
+        this.nestedModalRef.content.onClose.subscribe(
+          onClose => {
+            this.modalRef.hide()
+            this.onClose.next(null)
+          })
       })
   }
 

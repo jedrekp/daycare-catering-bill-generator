@@ -110,7 +110,13 @@ public class CateringBillService {
 
     private void insertDailyOrdersIntoCateringBillPreview(List<AttendanceSheet> attendanceSheets, CateringBillResponse cateringBillResponse, long childId) {
         for (AttendanceSheet attendanceSheet : attendanceSheets) {
-            CateringOption optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, attendanceSheet.getDate());
+            CateringOption optionInEffect;
+            try {
+                optionInEffect = cateringOptionService.findOptionInEffectForChild(childId, attendanceSheet.getDate());
+            } catch (EntityNotFoundException ex) {
+                throw new IllegalStateException(MessageFormat.format("Cannot generate catering order for {0}. Child has no catering option in effect for that date.",
+                        attendanceSheet.getDate()));
+            }
             cateringBillResponse.getDailyCateringOrders()
                     .add(new DailyCateringOrder(attendanceSheet.getDate(), optionInEffect.getOptionName(), optionInEffect.getDailyCost()));
             cateringBillResponse.getDailyCateringOrders().sort(Comparator.comparing(DailyCateringOrder::getOrderDate));

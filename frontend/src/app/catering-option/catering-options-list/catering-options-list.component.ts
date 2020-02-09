@@ -5,7 +5,6 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CateringOptionCreateEditComponent } from '../catering-option-create-edit/catering-option-create-edit.component';
 import { DialogModalService } from 'src/app/dialog/dialog-modal.service';
 import { JwtAuthenticationService } from 'src/app/authentication/jwt-authentication.service';
-import { ERROR_HEADER } from 'src/app/const';
 import { ErrorHandlerService } from 'src/app/error/error-handler.service';
 
 @Component({
