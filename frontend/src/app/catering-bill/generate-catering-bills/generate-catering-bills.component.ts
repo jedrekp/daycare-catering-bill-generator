@@ -96,7 +96,7 @@ export class GenerateCateringBillsComponent implements OnInit {
       year: this.dateFromSelectedMonth.getFullYear()
     }
     this.modalRef = this.bsModalService.show(BillPreviewComponent,
-      { class: 'modal-md', initialState, ignoreBackdropClick: true, keyboard: false })
+      { class: 'modal-top-10 modal-md', initialState, ignoreBackdropClick: true, keyboard: false })
 
     this.modalRef.content.onClose.subscribe(
       onClose => {
@@ -111,7 +111,7 @@ export class GenerateCateringBillsComponent implements OnInit {
       cateringBill: this.cateringBills.filter(cateringBill => cateringBill.childId == childId)[0]
     }
     this.modalRef = this.bsModalService.show(BillDisplayComponent,
-      { class: 'modal-md', initialState, ignoreBackdropClick: true, keyboard: false })
+      { class: 'modal-top-10 modal-md', initialState, ignoreBackdropClick: true, keyboard: false })
   }
 
 }
