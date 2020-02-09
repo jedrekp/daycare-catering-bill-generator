@@ -45,9 +45,9 @@ export class TrackAttendanceComponent implements OnInit {
 
   setCurrentDateOrFridayIfWeekend(): Date {
     let date = new Date();
-    if (date.getDay() === 0) {
-      date.setDate(date.getDate() + 5)
-    } else if (date.getDay() === 6) {
+    if (date.getDay() == 0) {
+      date.setDate(date.getDate() -2)
+    } else if (date.getDay() == 6) {
       date.setDate(date.getDate() - 1)
     }
     return date
