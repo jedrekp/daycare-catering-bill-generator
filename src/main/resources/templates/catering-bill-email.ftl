@@ -50,7 +50,7 @@
 
 <p>
     <#if correction == false>
-        This is ${month} catering bill for ${childName}. <br>
+        This is the ${month} catering bill for ${childName}. <br>
     <#else>
         This is a correction for the ${month} catering bill for ${childName}. <br>
         Please disregard any previous versions of this month's catering bill. <br>
