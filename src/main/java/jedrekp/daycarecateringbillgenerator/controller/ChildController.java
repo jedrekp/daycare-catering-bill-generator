@@ -66,7 +66,7 @@ public class ChildController {
     @PutMapping("/{childId}")
     @PreAuthorize("hasRole('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Child> EditChild(@PathVariable long childId, @RequestBody @Valid Child child) {
+    public ResponseEntity<Child> editChild(@PathVariable long childId, @RequestBody @Valid Child child) {
         return new ResponseEntity<>(childService.editChild(childId, child), HttpStatus.OK);
     }
 
