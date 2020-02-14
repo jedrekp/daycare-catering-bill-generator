@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "app_user")
 public class AppUser {
@@ -57,4 +56,18 @@ public class AppUser {
     @JsonIgnoreProperties({"children", "groupSupervisor"})
     private DaycareGroup daycareGroup;
 
+
+    public AppUser(
+            @NotNull @Length(min = 2, max = 20) String firstName,
+            @NotNull @Length(min = 2, max = 20) String lastName,
+            @NotNull @Length(min = 5, max = 20) String username,
+            @NotNull String password,
+            @NotNull DaycareRole daycareRole
+    ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.daycareRole = daycareRole;
+    }
 }

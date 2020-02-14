@@ -57,18 +57,6 @@ public class AppUserService {
     }
 
     @Transactional
-    public void deleteGroupSupervisorAccount(long appUserId) {
-        AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
-        if (appUser.getDaycareRole() != DaycareRole.GROUP_SUPERVISOR) {
-            throw new IllegalArgumentException("You can only delete group supervisor accounts.");
-        }
-        if (appUser.getDaycareGroup() != null) {
-            appUser.getDaycareGroup().setGroupSupervisor(null);
-        }
-        appUserRepository.deleteById(appUserId);
-    }
-
-    @Transactional
     public AppUser assignDaycareGroupToGroupSupervisor(long appUserId, long daycareGroupId) {
         AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
         DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdWithAllDetails(daycareGroupId);
@@ -84,6 +72,18 @@ public class AppUserService {
         AppUser appUser = findSingleAppUserById(appUserId);
         daycareGroup.setGroupSupervisor(null);
         appUser.setDaycareGroup(null);
+    }
+
+    @Transactional
+    public void deleteGroupSupervisorAccount(long appUserId) {
+        AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
+        if (appUser.getDaycareRole() != DaycareRole.GROUP_SUPERVISOR) {
+            throw new IllegalArgumentException("You can only delete group supervisor accounts.");
+        }
+        if (appUser.getDaycareGroup() != null) {
+            appUser.getDaycareGroup().setGroupSupervisor(null);
+        }
+        appUserRepository.deleteById(appUserId);
     }
 
     @Transactional
