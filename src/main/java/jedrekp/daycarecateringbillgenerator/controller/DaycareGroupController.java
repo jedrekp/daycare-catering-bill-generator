@@ -44,8 +44,8 @@ public class DaycareGroupController {
 
     @GetMapping(params = "groupSupervisorId")
     @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Collection<DaycareGroup>> getAllDaycareGroupsByGroupSupervisorId(@RequestParam long groupSupervisorId) {
-        return new ResponseEntity<>(daycareGroupService.findAllByGroupSupervisorId(groupSupervisorId), HttpStatus.OK);
+    public ResponseEntity<Collection<DaycareGroup>> getDaycareGroupsByGroupSupervisorId(@RequestParam long groupSupervisorId) {
+        return new ResponseEntity<>(daycareGroupService.findByGroupSupervisorId(groupSupervisorId), HttpStatus.OK);
     }
 
     @PostMapping

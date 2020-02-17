@@ -32,7 +32,7 @@ public class DaycareGroupService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<DaycareGroup> findAllByGroupSupervisorId(long groupSupervisorId) {
+    public Collection<DaycareGroup> findByGroupSupervisorId(long groupSupervisorId) {
         if (groupSupervisorId == 0L) {
             return daycareGroupRepository.findAllByGroupSupervisorIdOrderByGroupNameAsc(null);
         }

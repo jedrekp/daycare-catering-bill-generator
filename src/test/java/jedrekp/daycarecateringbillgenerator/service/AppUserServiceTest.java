@@ -1,6 +1,7 @@
 package jedrekp.daycarecateringbillgenerator.service;
 
 import jedrekp.daycarecateringbillgenerator.entity.AppUser;
+import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
 import jedrekp.daycarecateringbillgenerator.repository.AppUserRepository;
 import jedrekp.daycarecateringbillgenerator.utility.DaycareRole;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -34,50 +36,48 @@ class AppUserServiceTest {
     @InjectMocks
     private AppUserService appUserService;
 
-    private AppUser testHeadmaster;
     private AppUser testGroupSupervisor1;
-    private AppUser getTestGroupSupervisor2;
+    private AppUser testGroupSupervisor2;
+    private AppUser testHeadmaster;
+    private DaycareGroup testDaycareGroup1;
+    private DaycareGroup testDaycareGroup2;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @BeforeEach
     void setUp() {
         buildAppUsersForTesting();
+        buildDaycareGroupsForTesting();
 
         when(appUserRepository.findByIdWithAllDetails(anyLong())).thenReturn(Optional.empty());
-        when(appUserRepository.findByIdWithAllDetails(1L)).thenReturn(Optional.of(testHeadmaster));
-        when(appUserRepository.findByIdWithAllDetails(2L)).thenReturn(Optional.of(testGroupSupervisor1));
-        when(appUserRepository.findByUsername(anyString())).thenReturn(Optional.empty());
-        when(appUserRepository.findByUsername("jlocke")).thenReturn(Optional.of(testHeadmaster));
-        when(appUserRepository.findByUsername("mfarcik")).thenReturn(Optional.of(testGroupSupervisor1));
+        when(appUserRepository.findByIdWithAllDetails(1L)).thenReturn(Optional.of(testGroupSupervisor1));
+        when(appUserRepository.findByIdWithAllDetails(2L)).thenReturn(Optional.of(testGroupSupervisor2));
+        when(appUserRepository.findByIdWithAllDetails(3L)).thenReturn(Optional.of(testHeadmaster));
+
+        when(daycareGroupService.findSingleGroupByIdWithAllDetails(1L)).thenReturn(testDaycareGroup1);
+        when(daycareGroupService.findSingleGroupByIdWithAllDetails(not(eq(1L)))).thenThrow(EntityNotFoundException.class);
     }
 
     @Test
-    void test_findSingleAppUserByIdWithAllDetails_whenAppUserExists() {
-        assertEquals(testHeadmaster, appUserService.findSingleAppUserByIdWithAllDetails(1L));
+    void test_findSingleAppUserByIdWithAllDetails_whenAppUserNotFound() {
+        assertThrows(EntityNotFoundException.class, () -> appUserService.findSingleAppUserByIdWithAllDetails(4L));
+
+        verify(appUserRepository, times(1)).findByIdWithAllDetails(4L);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void test_findSingleAppUserByIdWithAllDetails_whenAppUserFound() {
+        assertEquals(testGroupSupervisor1, appUserService.findSingleAppUserByIdWithAllDetails(1L));
 
         verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
         verifyNoMoreInteractions(appUserRepository);
     }
 
     @Test
-    void test_findSingleAppUserByIdWithAllDetails_whenAppUserNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> appUserService.findSingleAppUserByIdWithAllDetails(3L));
-
-        verify(appUserRepository, times(1)).findByIdWithAllDetails(3L);
-        verifyNoMoreInteractions(appUserRepository);
-    }
-
-    @Test
-    void test_findSingleAppUserByUsername_whenAppUserExists() {
-        assertEquals(testGroupSupervisor1, appUserService.findSingleAppUserByUsername("mfarcik"));
-
-        verify(appUserRepository, times(1)).findByUsername("mfarcik");
-        verifyNoMoreInteractions(appUserRepository);
-    }
-
-    @Test
     void test_findSingleAppUserByUsername_whenAppUserNotFound() {
+        when(appUserRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+
         assertThrows(EntityNotFoundException.class, () -> appUserService.findSingleAppUserByUsername("someUsername"));
 
         verify(appUserRepository, times(1)).findByUsername("someUsername");
@@ -85,8 +85,19 @@ class AppUserServiceTest {
     }
 
     @Test
+    void test_findSingleAppUserByUsername_whenAppUserFound() {
+        when(appUserRepository.findByUsername("mfarcik")).thenReturn(Optional.of(testGroupSupervisor1));
+
+        assertEquals(testGroupSupervisor1, appUserService.findSingleAppUserByUsername("mfarcik"));
+
+        verify(appUserRepository, times(1)).findByUsername("mfarcik");
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
     void test_findAllAppUsers() {
-        List<AppUser> appUsers = Arrays.asList(testHeadmaster, testGroupSupervisor1);
+        List<AppUser> appUsers = Arrays.asList(testHeadmaster, testGroupSupervisor1, testGroupSupervisor2);
+
         when(appUserRepository.findAll()).thenReturn(appUsers);
 
         assertEquals(appUsers, appUserService.findAllAppUsers());
@@ -97,17 +108,18 @@ class AppUserServiceTest {
 
     @Test
     void test_findAllAppUsersByDaycareRole() {
-        List<AppUser> groupSupervisors = Collections.singletonList(testGroupSupervisor1);
-        when(appUserRepository.findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(DaycareRole.GROUP_SUPERVISOR)).thenReturn(groupSupervisors);
+        List<AppUser> groupSupervisors = Collections.singletonList(testHeadmaster);
 
-        assertEquals(groupSupervisors, appUserService.findAllAppUsersByDaycareRole(DaycareRole.GROUP_SUPERVISOR));
+        when(appUserRepository.findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(DaycareRole.HEADMASTER)).thenReturn(groupSupervisors);
 
-        verify(appUserRepository, times(1)).findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(DaycareRole.GROUP_SUPERVISOR);
+        assertEquals(groupSupervisors, appUserService.findAllAppUsersByDaycareRole(DaycareRole.HEADMASTER));
+
+        verify(appUserRepository, times(1)).findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(DaycareRole.HEADMASTER);
         verifyNoMoreInteractions(appUserRepository);
     }
 
     @Test
-    void test_createNewGroupSupervisorAccount_whenUserWithInvalidDaycareRolePassedAsArgument() {
+    void test_createNewGroupSupervisorAccount_whenAppUserNotGroupSupervisor() {
         AppUser appUserToSave = new AppUser(
                 "Tom",
                 "Brown",
@@ -122,7 +134,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void test_createNewGroupSupervisorAccount_whenUserWithValidDaycareRolePassedAsArgumentButUsernameIsTaken() {
+    void test_createNewGroupSupervisorAccount_whenAppUserIsGroupSupervisortButUsernameTaken() {
         AppUser appUserToSave = new AppUser(
                 "Tom",
                 "Brown",
@@ -130,6 +142,7 @@ class AppUserServiceTest {
                 "testPassword",
                 DaycareRole.GROUP_SUPERVISOR
         );
+
         when(appUserRepository.existsByUsernameIgnoreCase("tbrown")).thenReturn(true);
 
         assertThrows(EntityExistsException.class, () -> appUserService.createNewGroupSupervisorAccount(appUserToSave));
@@ -139,7 +152,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void test_createNewGroupSupervisorAccount_whenUserWithValidDaycareRolePassedAsArgumentAndUsernameNotTaken() {
+    void test_createNewGroupSupervisorAccount_whenAppUserIsGroupSupervisorAndUsernameNotTaken() {
         AppUser appUserToSave = new AppUser(
                 "Tom",
                 "Brown",
@@ -169,7 +182,83 @@ class AppUserServiceTest {
 
     }
 
+    @Test
+    void test_assignDaycareGroupToGroupSupervisor_whenDaycareGroupNotFound() {
+        assertThrows(EntityNotFoundException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(2L, 1L));
+
+        verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(2L);
+        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
+    }
+
+    @Test
+    void test_assignDaycareGroupToGroupSupervisor_whenDaycareGroupFoundButAppUserNotFound() {
+        assertThrows(EntityNotFoundException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 4L));
+
+        verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).findByIdWithAllDetails(4L);
+        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
+    }
+
+    @Test
+    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundButAppUserNotGroupSupervisor() {
+        assertThrows(IllegalArgumentException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 3L));
+
+        verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).findByIdWithAllDetails(3L);
+        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
+    }
+
+    @Test
+    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundButGroupAlreadyAssignedToSomeUser() {
+        testDaycareGroup1.setGroupSupervisor(testGroupSupervisor2);
+
+        assertThrows(IllegalArgumentException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 1L));
+
+        verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
+        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
+    }
+
+    @Test
+    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundButAppUserAlreadyHasSomeGroupAssigned() {
+        testGroupSupervisor1.setDaycareGroup(testDaycareGroup2);
+
+        assertThrows(IllegalArgumentException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 1L));
+
+        verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
+        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
+    }
+
+    @Test
+    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundAndValid() {
+        appUserService.assignDaycareGroupToGroupSupervisor(1, 1);
+
+        assertAll(
+                () -> assertEquals(testDaycareGroup1, testGroupSupervisor1.getDaycareGroup()),
+                () -> assertEquals(testGroupSupervisor1, testDaycareGroup1.getGroupSupervisor())
+        );
+
+        verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
+        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
+    }
+
     private void buildAppUsersForTesting() {
+        testGroupSupervisor1 = new AppUser(
+                "Marcin",
+                "Farcik",
+                "mfarcik",
+                passwordEncoder.encode("supervisor1"),
+                DaycareRole.GROUP_SUPERVISOR);
+
+        testGroupSupervisor2 = new AppUser(
+                "Jackie",
+                "Chan",
+                "jchan",
+                passwordEncoder.encode("supervisor2"),
+                DaycareRole.GROUP_SUPERVISOR);
+
         testHeadmaster = new AppUser(
                 "John",
                 "Locke",
@@ -177,12 +266,11 @@ class AppUserServiceTest {
                 passwordEncoder.encode("headmaster1"),
                 DaycareRole.HEADMASTER);
 
-        testGroupSupervisor1 = new AppUser(
-                "Marcin",
-                "Farcik",
-                "mfarcik",
-                passwordEncoder.encode("supervisor1"),
-                DaycareRole.GROUP_SUPERVISOR);
+    }
+
+    private void buildDaycareGroupsForTesting() {
+        testDaycareGroup1 = new DaycareGroup("Hippos");
+        testDaycareGroup2 = new DaycareGroup("Seals");
     }
 
 }

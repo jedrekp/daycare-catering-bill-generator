@@ -57,9 +57,9 @@ public class AppUserService {
     }
 
     @Transactional
-    public AppUser assignDaycareGroupToGroupSupervisor(long appUserId, long daycareGroupId) {
-        AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
+    public AppUser assignDaycareGroupToGroupSupervisor(long daycareGroupId, long appUserId) {
         DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdWithAllDetails(daycareGroupId);
+        AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
         verifyIfDaycareGroupCanBeAssignedToUser(appUser, daycareGroup);
         daycareGroup.setGroupSupervisor(appUser);
         appUser.setDaycareGroup(daycareGroup);
@@ -67,9 +67,9 @@ public class AppUserService {
     }
 
     @Transactional
-    public void removeAssignedGroupFromGroupSupervisor(long appUserId, long daycareGroupId) {
+    public void removeAssignedGroupFromGroupSupervisor(long daycareGroupId, long appUserId) {
         DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdAndGroupSupervisorId(daycareGroupId, appUserId);
-        AppUser appUser = findSingleAppUserById(appUserId);
+        AppUser appUser = daycareGroup.getGroupSupervisor();
         daycareGroup.setGroupSupervisor(null);
         appUser.setDaycareGroup(null);
     }
@@ -94,11 +94,6 @@ public class AppUserService {
         } else {
             throw new IllegalArgumentException("Your current password is missing or incorrect.");
         }
-    }
-
-    private AppUser findSingleAppUserById(long appUserId) {
-        return appUserRepository.findById(appUserId).orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
-                "User #{0} does not exists.", appUserId)));
     }
 
     private void checkUsernameAvailability(String username) {

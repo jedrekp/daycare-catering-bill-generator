@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 @Table(name = "daycare_group")
 @Getter
 @Setter
+@NoArgsConstructor
 public class DaycareGroup {
 
     @Id
@@ -41,4 +43,8 @@ public class DaycareGroup {
     @JoinColumn(name = "group_supervisor_id")
     @JsonIgnoreProperties("daycareGroup")
     private AppUser groupSupervisor;
+
+    public DaycareGroup(String groupName) {
+        this.groupName = groupName;
+    }
 }
