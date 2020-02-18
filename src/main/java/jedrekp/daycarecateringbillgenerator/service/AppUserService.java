@@ -59,7 +59,7 @@ public class AppUserService {
     @Transactional
     public AppUser assignDaycareGroupToGroupSupervisor(long daycareGroupId, long appUserId) {
         DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdWithAllDetails(daycareGroupId);
-        AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
+        AppUser appUser = findSingleGroupSupervisorById(appUserId);
         verifyIfDaycareGroupCanBeAssignedToUser(appUser, daycareGroup);
         daycareGroup.setGroupSupervisor(appUser);
         appUser.setDaycareGroup(daycareGroup);
@@ -76,10 +76,7 @@ public class AppUserService {
 
     @Transactional
     public void deleteGroupSupervisorAccount(long appUserId) {
-        AppUser appUser = findSingleAppUserByIdWithAllDetails(appUserId);
-        if (appUser.getDaycareRole() != DaycareRole.GROUP_SUPERVISOR) {
-            throw new IllegalArgumentException("You can only delete group supervisor accounts.");
-        }
+        AppUser appUser = findSingleGroupSupervisorById(appUserId);
         if (appUser.getDaycareGroup() != null) {
             appUser.getDaycareGroup().setGroupSupervisor(null);
         }
@@ -96,6 +93,11 @@ public class AppUserService {
         }
     }
 
+    private AppUser findSingleGroupSupervisorById(long appUserId) {
+        return appUserRepository.findByIdAndDaycareRole(appUserId, DaycareRole.GROUP_SUPERVISOR).orElseThrow(
+                () -> new EntityNotFoundException(MessageFormat.format("User with id #{0} does not exists or is not a group supervisor.", appUserId)));
+    }
+
     private void checkUsernameAvailability(String username) {
         if (appUserRepository.existsByUsernameIgnoreCase(username)) {
             throw new EntityExistsException("This username is already taken.");
@@ -103,9 +105,6 @@ public class AppUserService {
     }
 
     private void verifyIfDaycareGroupCanBeAssignedToUser(AppUser appUser, DaycareGroup daycareGroup) {
-        if (appUser.getDaycareRole() != DaycareRole.GROUP_SUPERVISOR) {
-            throw new IllegalArgumentException("Daycare group can only be assigned to group supervisors.");
-        }
         if (appUser.getDaycareGroup() != null) {
             throw new IllegalArgumentException(MessageFormat.format(
                     "Another daycare group is already assigned to user #{0}. It must be removed first", appUser.getId()));

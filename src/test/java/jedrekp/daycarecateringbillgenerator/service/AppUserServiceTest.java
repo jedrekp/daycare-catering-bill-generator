@@ -48,7 +48,39 @@ class AppUserServiceTest {
     void setUp() {
         buildAppUsersForTesting();
         buildDaycareGroupsForTesting();
+        setBehaviorOfMockMethodsUsedAcrossMultipleTestCases();
+    }
 
+    private void buildAppUsersForTesting() {
+        testGroupSupervisor1 = new AppUser(
+                "Marcin",
+                "Farcik",
+                "mfarcik",
+                passwordEncoder.encode("supervisor1"),
+                DaycareRole.GROUP_SUPERVISOR);
+
+        testGroupSupervisor2 = new AppUser(
+                "Jackie",
+                "Chan",
+                "jchan",
+                passwordEncoder.encode("supervisor2"),
+                DaycareRole.GROUP_SUPERVISOR);
+
+        testHeadmaster = new AppUser(
+                "John",
+                "Locke",
+                "jlocke",
+                passwordEncoder.encode("headmaster1"),
+                DaycareRole.HEADMASTER);
+
+    }
+
+    private void buildDaycareGroupsForTesting() {
+        testDaycareGroup1 = new DaycareGroup("Hippos");
+        testDaycareGroup2 = new DaycareGroup("Ducks");
+    }
+
+    private void setBehaviorOfMockMethodsUsedAcrossMultipleTestCases() {
         when(appUserRepository.findByIdWithAllDetails(anyLong())).thenReturn(Optional.empty());
         when(appUserRepository.findByIdWithAllDetails(1L)).thenReturn(Optional.of(testGroupSupervisor1));
         when(appUserRepository.findByIdWithAllDetails(2L)).thenReturn(Optional.of(testGroupSupervisor2));
@@ -165,7 +197,6 @@ class AppUserServiceTest {
         when(appUserRepository.save(any(AppUser.class))).thenAnswer(save -> save.getArguments()[0]);
 
         AppUser newGroupSupervisor = appUserService.createNewGroupSupervisorAccount(appUserToSave);
-
         assertAll(
                 "Created appUser must have the same properties as method argument, except for password, which has been encoded.",
                 () -> assertEquals("Tom", newGroupSupervisor.getFirstName()),
@@ -191,7 +222,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void test_assignDaycareGroupToGroupSupervisor_whenDaycareGroupFoundButAppUserNotFound() {
+    void test_assignDaycareGroupToGroupSupervisor_whenDaycareGroupFoundButGroupSupervisorNotFound() {
         assertThrows(EntityNotFoundException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 4L));
 
         verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
@@ -200,16 +231,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundButAppUserNotGroupSupervisor() {
-        assertThrows(IllegalArgumentException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 3L));
-
-        verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
-        verify(appUserRepository, times(1)).findByIdWithAllDetails(3L);
-        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
-    }
-
-    @Test
-    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundButGroupAlreadyAssignedToSomeUser() {
+    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundButGroupAlreadyAssignedToSomeGroupSupervisor() {
         testDaycareGroup1.setGroupSupervisor(testGroupSupervisor2);
 
         assertThrows(IllegalArgumentException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 1L));
@@ -220,7 +242,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundButAppUserAlreadyHasSomeGroupAssigned() {
+    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundButGroupSupervisorAlreadyHasSomeGroupAssigned() {
         testGroupSupervisor1.setDaycareGroup(testDaycareGroup2);
 
         assertThrows(IllegalArgumentException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 1L));
@@ -231,12 +253,12 @@ class AppUserServiceTest {
     }
 
     @Test
-    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundAndValid() {
+    void test_assignDaycareGroupToGroupSupervisor_whenBothFoundAndFreeToBeAssigned() {
         appUserService.assignDaycareGroupToGroupSupervisor(1, 1);
-
-        assertAll(
+        assertAll("Daycare group has been assigned to user with group supervisor role.",
                 () -> assertEquals(testDaycareGroup1, testGroupSupervisor1.getDaycareGroup()),
-                () -> assertEquals(testGroupSupervisor1, testDaycareGroup1.getGroupSupervisor())
+                () -> assertEquals(testGroupSupervisor1, testDaycareGroup1.getGroupSupervisor()),
+                () -> assertEquals(DaycareRole.GROUP_SUPERVISOR, testGroupSupervisor1.getDaycareRole())
         );
 
         verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
@@ -244,33 +266,51 @@ class AppUserServiceTest {
         verifyNoMoreInteractions(daycareGroupService, appUserRepository);
     }
 
-    private void buildAppUsersForTesting() {
-        testGroupSupervisor1 = new AppUser(
-                "Marcin",
-                "Farcik",
-                "mfarcik",
-                passwordEncoder.encode("supervisor1"),
-                DaycareRole.GROUP_SUPERVISOR);
+    @Test
+    void test_removeAssignedGroupFromGroupSupervisor_whenDaycareGroupNotFoundOrNotAssignedToThisGroupSupervisor() {
+        when(daycareGroupService.findSingleGroupByIdAndGroupSupervisorId(1L, 1L)).thenThrow(EntityNotFoundException.class);
 
-        testGroupSupervisor2 = new AppUser(
-                "Jackie",
-                "Chan",
-                "jchan",
-                passwordEncoder.encode("supervisor2"),
-                DaycareRole.GROUP_SUPERVISOR);
+        assertThrows(EntityNotFoundException.class, () -> appUserService.removeAssignedGroupFromGroupSupervisor(1L, 1L));
 
-        testHeadmaster = new AppUser(
-                "John",
-                "Locke",
-                "jlocke",
-                passwordEncoder.encode("headmaster1"),
-                DaycareRole.HEADMASTER);
-
+        verify(daycareGroupService, times(1)).findSingleGroupByIdAndGroupSupervisorId(1L, 1L);
+        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
     }
 
-    private void buildDaycareGroupsForTesting() {
-        testDaycareGroup1 = new DaycareGroup("Hippos");
-        testDaycareGroup2 = new DaycareGroup("Seals");
+    @Test
+    void test_removeAssignedGroupFromGroupSupervisor_whenDaycareGroupFoundAndIsAssignedToThisSupervisor() {
+        testGroupSupervisor1.setDaycareGroup(testDaycareGroup1);
+        testDaycareGroup1.setGroupSupervisor(testGroupSupervisor1);
+
+        when(daycareGroupService.findSingleGroupByIdAndGroupSupervisorId(1L, 1L)).thenReturn(testDaycareGroup1);
+
+        appUserService.removeAssignedGroupFromGroupSupervisor(1L, 1L);
+        assertAll("Daycare group assignment has been revoked from group supervisor.",
+                () -> assertNull(testDaycareGroup1.getGroupSupervisor()),
+                () -> assertNull(testGroupSupervisor1.getDaycareGroup())
+        );
+
+        verify(daycareGroupService, times(1)).findSingleGroupByIdAndGroupSupervisorId(1L, 1L);
+        verifyNoMoreInteractions(daycareGroupService, appUserRepository);
+    }
+
+    @Test
+    void test_deleteGroupSupervisorAccount_whenGroupSupervisorNotFound() {
+        assertThrows(EntityNotFoundException.class, () -> appUserService.deleteGroupSupervisorAccount(4L));
+
+        verify(appUserRepository, times(1)).findByIdWithAllDetails(4L);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void test_deleteGroupSupervisorAccount_whenGroupSupervisorFound_andConfirmGroupSupervisorAssociationIsRemovedFromDaycareGroup() {
+        testGroupSupervisor1.setDaycareGroup(testDaycareGroup1);
+
+        appUserService.deleteGroupSupervisorAccount(1L);
+        assertNull(testDaycareGroup1.getGroupSupervisor());
+
+        verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).delete(testGroupSupervisor1);
+        verifyNoMoreInteractions(appUserRepository);
     }
 
 }
