@@ -84,7 +84,7 @@ public class AppUserService {
     }
 
     @Transactional
-    public void changeUserPassword(String username, AppUserNewPasswordRequest newPasswordRequest) {
+    public void changeAppUserPassword(String username, AppUserNewPasswordRequest newPasswordRequest) {
         AppUser appUser = findSingleAppUserByUsername(username);
         if (passwordEncoder.matches(newPasswordRequest.getCurrentPassword(), appUser.getPassword())) {
             appUser.setPassword(passwordEncoder.encode(newPasswordRequest.getNewPassword()));

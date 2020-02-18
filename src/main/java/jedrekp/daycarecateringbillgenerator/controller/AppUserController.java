@@ -82,7 +82,7 @@ public class AppUserController {
     @PutMapping(params = "username")
     @PreAuthorize("authentication.name == #username")
     public ResponseEntity changeUserPassword(@RequestParam String username, @RequestBody @Valid AppUserNewPasswordRequest newPasswordRequest) {
-        appUserService.changeUserPassword(username, newPasswordRequest);
+        appUserService.changeAppUserPassword(username, newPasswordRequest);
         return ResponseEntity.noContent().build();
     }
 }

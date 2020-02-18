@@ -1,5 +1,6 @@
 package jedrekp.daycarecateringbillgenerator.service;
 
+import jedrekp.daycarecateringbillgenerator.DTO.request.AppUserNewPasswordRequest;
 import jedrekp.daycarecateringbillgenerator.entity.AppUser;
 import jedrekp.daycarecateringbillgenerator.entity.DaycareGroup;
 import jedrekp.daycarecateringbillgenerator.repository.AppUserRepository;
@@ -22,7 +23,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -48,7 +48,7 @@ class AppUserServiceTest {
     void setUp() {
         buildAppUsersForTesting();
         buildDaycareGroupsForTesting();
-        setBehaviorOfMockMethodsUsedAcrossMultipleTestCases();
+        setBehaviorForMockMethodsUsedAcrossMultipleTestCases();
     }
 
     private void buildAppUsersForTesting() {
@@ -80,11 +80,20 @@ class AppUserServiceTest {
         testDaycareGroup2 = new DaycareGroup("Ducks");
     }
 
-    private void setBehaviorOfMockMethodsUsedAcrossMultipleTestCases() {
+    private void setBehaviorForMockMethodsUsedAcrossMultipleTestCases() {
         when(appUserRepository.findByIdWithAllDetails(anyLong())).thenReturn(Optional.empty());
         when(appUserRepository.findByIdWithAllDetails(1L)).thenReturn(Optional.of(testGroupSupervisor1));
         when(appUserRepository.findByIdWithAllDetails(2L)).thenReturn(Optional.of(testGroupSupervisor2));
         when(appUserRepository.findByIdWithAllDetails(3L)).thenReturn(Optional.of(testHeadmaster));
+
+        when(appUserRepository.findByIdAndDaycareRole(anyLong(), any())).thenReturn(Optional.empty());
+        when(appUserRepository.findByIdAndDaycareRole(1L, DaycareRole.GROUP_SUPERVISOR)).thenReturn(Optional.of(testGroupSupervisor1));
+        when(appUserRepository.findByIdAndDaycareRole(2L, DaycareRole.GROUP_SUPERVISOR)).thenReturn(Optional.of(testGroupSupervisor2));
+
+        when(appUserRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+        when(appUserRepository.findByUsername("mfarcik")).thenReturn(Optional.of(testGroupSupervisor1));
+        when(appUserRepository.findByUsername("jchan")).thenReturn(Optional.of(testGroupSupervisor2));
+        when(appUserRepository.findByUsername("jlocke")).thenReturn(Optional.of(testHeadmaster));
 
         when(daycareGroupService.findSingleGroupByIdWithAllDetails(1L)).thenReturn(testDaycareGroup1);
         when(daycareGroupService.findSingleGroupByIdWithAllDetails(not(eq(1L)))).thenThrow(EntityNotFoundException.class);
@@ -108,7 +117,7 @@ class AppUserServiceTest {
 
     @Test
     void test_findSingleAppUserByUsername_whenAppUserNotFound() {
-        when(appUserRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+        when(appUserRepository.findByUsername("someUsername")).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> appUserService.findSingleAppUserByUsername("someUsername"));
 
@@ -198,7 +207,7 @@ class AppUserServiceTest {
 
         AppUser newGroupSupervisor = appUserService.createNewGroupSupervisorAccount(appUserToSave);
         assertAll(
-                "Created appUser must have the same properties as method argument, except for password, which has been encoded.",
+                "Created appUser must have the same properties as method parameter, except for password, which has been encoded.",
                 () -> assertEquals("Tom", newGroupSupervisor.getFirstName()),
                 () -> assertEquals("Brown", newGroupSupervisor.getLastName()),
                 () -> assertEquals("tbrown", newGroupSupervisor.getUsername()),
@@ -223,10 +232,10 @@ class AppUserServiceTest {
 
     @Test
     void test_assignDaycareGroupToGroupSupervisor_whenDaycareGroupFoundButGroupSupervisorNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 4L));
+        assertThrows(EntityNotFoundException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 3L));
 
         verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
-        verify(appUserRepository, times(1)).findByIdWithAllDetails(4L);
+        verify(appUserRepository, times(1)).findByIdAndDaycareRole(3L, DaycareRole.GROUP_SUPERVISOR);
         verifyNoMoreInteractions(daycareGroupService, appUserRepository);
     }
 
@@ -237,7 +246,7 @@ class AppUserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 1L));
 
         verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
-        verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).findByIdAndDaycareRole(1L, DaycareRole.GROUP_SUPERVISOR);
         verifyNoMoreInteractions(daycareGroupService, appUserRepository);
     }
 
@@ -248,7 +257,7 @@ class AppUserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> appUserService.assignDaycareGroupToGroupSupervisor(1L, 1L));
 
         verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
-        verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).findByIdAndDaycareRole(1L, DaycareRole.GROUP_SUPERVISOR);
         verifyNoMoreInteractions(daycareGroupService, appUserRepository);
     }
 
@@ -262,7 +271,7 @@ class AppUserServiceTest {
         );
 
         verify(daycareGroupService, times(1)).findSingleGroupByIdWithAllDetails(1L);
-        verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
+        verify(appUserRepository, times(1)).findByIdAndDaycareRole(1L, DaycareRole.GROUP_SUPERVISOR);
         verifyNoMoreInteractions(daycareGroupService, appUserRepository);
     }
 
@@ -295,21 +304,59 @@ class AppUserServiceTest {
 
     @Test
     void test_deleteGroupSupervisorAccount_whenGroupSupervisorNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> appUserService.deleteGroupSupervisorAccount(4L));
+        assertThrows(EntityNotFoundException.class, () -> appUserService.deleteGroupSupervisorAccount(3L));
 
-        verify(appUserRepository, times(1)).findByIdWithAllDetails(4L);
+        verify(appUserRepository, times(1)).findByIdAndDaycareRole(3L, DaycareRole.GROUP_SUPERVISOR);
         verifyNoMoreInteractions(appUserRepository);
     }
 
     @Test
     void test_deleteGroupSupervisorAccount_whenGroupSupervisorFound_andConfirmGroupSupervisorAssociationIsRemovedFromDaycareGroup() {
         testGroupSupervisor1.setDaycareGroup(testDaycareGroup1);
+        testDaycareGroup1.setGroupSupervisor(testGroupSupervisor1);
 
         appUserService.deleteGroupSupervisorAccount(1L);
         assertNull(testDaycareGroup1.getGroupSupervisor());
 
-        verify(appUserRepository, times(1)).findByIdWithAllDetails(1L);
-        verify(appUserRepository, times(1)).delete(testGroupSupervisor1);
+        verify(appUserRepository, times(1)).findByIdAndDaycareRole(1L, DaycareRole.GROUP_SUPERVISOR);
+        verify(appUserRepository, times(1)).deleteById(1L);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void test_changAppUserPassword_whenAppUserNotFound() {
+        AppUserNewPasswordRequest newPasswordRequest = new AppUserNewPasswordRequest(
+                "currentPassword",
+                "newPassword");
+
+        assertThrows(EntityNotFoundException.class, () -> appUserService.changeAppUserPassword("someUsername", newPasswordRequest));
+
+        verify(appUserRepository, times(1)).findByUsername("someUsername");
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void test_changeAppUserPassword_whenAppUserFoundButCurrentPasswordNotMatched() {
+        AppUserNewPasswordRequest newPasswordRequest = new AppUserNewPasswordRequest(
+                "currentPassword",
+                "newPassword");
+
+        assertThrows(IllegalArgumentException.class, () -> appUserService.changeAppUserPassword("jlocke", newPasswordRequest));
+
+        verify(appUserRepository, times(1)).findByUsername("jlocke");
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void test_changeAppUserPassword_whenAppUserFoundAndCurrentPasswordMatched() {
+        AppUserNewPasswordRequest newPasswordRequest = new AppUserNewPasswordRequest(
+                "headmaster1",
+                "newPassword");
+
+        appUserService.changeAppUserPassword("jlocke", newPasswordRequest);
+        assertTrue(passwordEncoder.matches("newPassword", testHeadmaster.getPassword()));
+
+        verify(appUserRepository, times(1)).findByUsername("jlocke");
         verifyNoMoreInteractions(appUserRepository);
     }
 
