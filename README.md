@@ -1,6 +1,6 @@
 # Daycare catering bill generator (work in progress)
 
-### Web application for generating monthly daycare catering bills, and sending them to parents via email. (Java , Maven, Spring boot, Hibernate, Junit5, frontend in Angular 8)
+### Web application for generating monthly daycare catering bills, and sending them to parents via email. (Java , Maven, Spring boot, Hibernate, JWT, Junit5, frontend in Angular 8)
 
 
 ### How to install (Maven and node.js required):
@@ -12,7 +12,7 @@
 *	Run the main method from **DaycareCateringBillGeneratorApplication** class located in **src\main\java\jedrekp\daycarecateringbillgenerator**
 *	Go to http://localhost:4200/  in your browser.
 
-### Some notes
+### Some additional notes
 In the current state, app runs on H2 in memory database and is populated with some example data on start.
 You may login using one of the following credentials:
 
