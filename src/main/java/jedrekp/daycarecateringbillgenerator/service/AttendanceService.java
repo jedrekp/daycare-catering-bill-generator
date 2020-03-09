@@ -29,7 +29,7 @@ public class AttendanceService {
     private final ChildService childService;
 
     @Transactional(readOnly = true)
-    public DailyGroupAttendanceResponse getDailyAttendanceForDaycareGroup(long daycareGroupId, LocalDate date) {
+    public DailyGroupAttendanceResponse getDailyAttendanceForDaycareGroup(LocalDate date,long daycareGroupId) {
 
         DailyGroupAttendanceResponse dailyGroupAttendanceResponse = new DailyGroupAttendanceResponse(daycareGroupId, date);
 

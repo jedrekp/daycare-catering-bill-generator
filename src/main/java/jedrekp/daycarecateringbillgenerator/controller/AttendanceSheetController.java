@@ -31,7 +31,7 @@ public class AttendanceSheetController {
     public ResponseEntity<DailyGroupAttendanceResponse> getDailyAttendanceForDaycareGroup(
             @RequestParam long daycareGroupId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return new ResponseEntity<>(attendanceService.getDailyAttendanceForDaycareGroup(daycareGroupId, date), HttpStatus.OK);
+        return new ResponseEntity<>(attendanceService.getDailyAttendanceForDaycareGroup(date,daycareGroupId), HttpStatus.OK);
     }
 
     @PutMapping(params = "daycareGroupId")

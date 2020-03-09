@@ -65,4 +65,14 @@ public class Child {
     @OrderBy(value = "year DESC, month DESC")
     private Set<CateringBill> cateringBills = new HashSet<>();
 
+    public Child(
+            @NotNull @Length(min = 2, max = 20) String firstName,
+            @NotNull @Length(min = 2, max = 20) String lastName,
+            @NotNull @Email String parentEmail,
+            @NotNull boolean archived) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.parentEmail = parentEmail;
+        this.archived = archived;
+    }
 }
