@@ -86,7 +86,7 @@ class AttendanceServiceTest {
                 testedDate,2L);
 
         assertAll(
-                "Daily group attendance response object has all values as expected, both presentChildrenIds and absentChildrenIds sets are empty",
+                "Date and groupId fields in attendanceResponse same as method arguments, both presentChildrenIds and absentChildrenIds sets are empty",
                 () -> assertEquals(2L, attendanceResponse.getDaycareGroupId()),
                 () -> assertEquals(testedDate, attendanceResponse.getDate()),
                 () -> assertEquals(Collections.emptySet(), attendanceResponse.getPresentChildrenIds()),
