@@ -33,7 +33,7 @@ public class AppUserService {
     @Transactional(readOnly = true)
     public AppUser findSingleAppUserByUsername(String username) {
         return appUserRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(
-                MessageFormat.format("Username not found.", username)));
+                MessageFormat.format("User ''{0}'' does not exist.", username)));
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +67,7 @@ public class AppUserService {
     }
 
     @Transactional
-    public void removeAssignedGroupFromGroupSupervisor(long daycareGroupId, long appUserId) {
+    public void revokeDaycareGroupAssignmentFromGroupSupervisor(long daycareGroupId, long appUserId) {
         DaycareGroup daycareGroup = daycareGroupService.findSingleGroupByIdAndGroupSupervisorId(daycareGroupId, appUserId);
         AppUser appUser = daycareGroup.getGroupSupervisor();
         daycareGroup.setGroupSupervisor(null);
@@ -107,7 +107,7 @@ public class AppUserService {
     private void verifyIfDaycareGroupCanBeAssignedToUser(AppUser appUser, DaycareGroup daycareGroup) {
         if (appUser.getDaycareGroup() != null) {
             throw new IllegalArgumentException(MessageFormat.format(
-                    "Another daycare group is already assigned to user #{0}. It must be removed first", appUser.getId()));
+                    "Another daycare group is already assigned to user #{0}. Assignment needs to be revoked first.", appUser.getId()));
         }
         if (daycareGroup.getGroupSupervisor() != null) {
             throw new IllegalArgumentException(MessageFormat.format("Daycare group #{0} is already assigned to another group supervisor.",

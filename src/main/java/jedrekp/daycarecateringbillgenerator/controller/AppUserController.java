@@ -74,8 +74,8 @@ public class AppUserController {
 
     @DeleteMapping("{appUserId}/daycareGroups/{daycareGroupId}")
     @PreAuthorize("hasRole('HEADMASTER')")
-    public ResponseEntity removeDaycareGroupFromGroupSupervisor(@PathVariable long appUserId, @PathVariable long daycareGroupId) {
-        appUserService.removeAssignedGroupFromGroupSupervisor(daycareGroupId, appUserId);
+    public ResponseEntity revokeDaycareGroupAssignmentFromGroupSupervisor(@PathVariable long appUserId, @PathVariable long daycareGroupId) {
+        appUserService.revokeDaycareGroupAssignmentFromGroupSupervisor(daycareGroupId, appUserId);
         return ResponseEntity.noContent().build();
     }
 
