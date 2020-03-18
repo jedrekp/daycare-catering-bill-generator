@@ -196,7 +196,7 @@ class AppUserServiceTest {
 
         //then
         assertAll(
-                "Created appUser should have the same properties as appUser passed as method parameter, except for password, which should be encoded.",
+                "Created appUser should have the same properties as appUser passed as method argument, except for password, which should be encoded.",
                 () -> assertEquals("Tom", createdGroupSupervisor.getFirstName()),
                 () -> assertEquals("Brown", createdGroupSupervisor.getLastName()),
                 () -> assertEquals("tbrown", createdGroupSupervisor.getUsername()),
@@ -378,6 +378,7 @@ class AppUserServiceTest {
     }
 
 
+
     //revokeDaycareGroupAssignmentFromGroupSupervisor
 
     @Test
@@ -472,6 +473,7 @@ class AppUserServiceTest {
         verify(appUserRepository, times(1)).findByIdAndDaycareRole(1L, DaycareRole.GROUP_SUPERVISOR);
         verifyNoMoreInteractions(appUserRepository, daycareGroupService);
     }
+
 
 
     //changeAppUserPassword

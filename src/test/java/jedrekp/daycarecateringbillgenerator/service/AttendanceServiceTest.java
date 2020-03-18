@@ -60,7 +60,7 @@ class AttendanceServiceTest {
 
         //then
         assertAll(
-                "Date and groupId fields in attendanceResponse same as method parameters, both presentChildrenIds and absentChildrenIds sets populated with correct child ids.",
+                "Date and groupId fields in attendanceResponse same as method arguments, both presentChildrenIds and absentChildrenIds sets populated with correct child ids.",
                 () -> assertEquals(1L, attendanceResponse.getDaycareGroupId()),
                 () -> assertEquals(testDate, attendanceResponse.getDate()),
                 () -> assertEquals(Set.of(1L, 2L), attendanceResponse.getPresentChildrenIds()),
@@ -88,7 +88,7 @@ class AttendanceServiceTest {
 
         //then
         assertAll(
-                "Date and groupId fields in attendanceResponse same as method parameters, both presentChildrenIds and absentChildrenIds sets are empty",
+                "Date and groupId fields in attendanceResponse same as method arguments, both presentChildrenIds and absentChildrenIds sets are empty",
                 () -> assertEquals(1L, attendanceResponse.getDaycareGroupId()),
                 () -> assertEquals(testDate, attendanceResponse.getDate()),
                 () -> assertEquals(Collections.emptySet(), attendanceResponse.getPresentChildrenIds()),
@@ -101,5 +101,68 @@ class AttendanceServiceTest {
     }
 
 
+    //getMonthlyAttendanceForChild
+
+    @Test
+    void shouldReturnChildMonthlyAttendanceResponseObjectWithDatesWhenPresentAndDatesWhenAbsentSetsPopulatedWithCorrectDates() {
+        //given
+        Child testChild = new Child("Son", "Gohan", "songoku@fake.fake", false);
+        ReflectionTestUtils.setField(testChild, "id", 1L);
+
+        LocalDate testDate1 = LocalDate.of(2020, 4, 12);
+        LocalDate testDate2 = LocalDate.of(2020, 4, 13);
+        LocalDate testDate3 = LocalDate.of(2020, 4, 14);
+
+        AttendanceSheet testAttendanceSheet1 = new AttendanceSheet(testDate1);
+        testAttendanceSheet1.getPresentChildren().add(testChild);
+        AttendanceSheet testAttendanceSheet2 = new AttendanceSheet(testDate2);
+        testAttendanceSheet2.getPresentChildren().add(testChild);
+        AttendanceSheet testAttendanceSheet3 = new AttendanceSheet(testDate3);
+        testAttendanceSheet3.getAbsentChildren().add(testChild);
+
+        when(attendanceSheetRepository.findByPresentChildIdForSpecificMonth(1L, 4, 2020))
+                .thenReturn(Arrays.asList(testAttendanceSheet1, testAttendanceSheet2));
+        when(attendanceSheetRepository.findByAbsentChildIdForSpecificMonth(1L, 4, 2020))
+                .thenReturn(Collections.singletonList(testAttendanceSheet3));
+
+        //when
+        ChildMonthlyAttendanceResponse attendanceResponse = attendanceService.getMonthlyAttendanceForChild(1L, Month.APRIL, Year.of(2020));
+
+        //then
+        assertAll(
+                "ChildId field same as method argument, datesWhenPresent and datesWhenAbsent sets populated with correct dates",
+                () -> assertEquals(1L, attendanceResponse.getChildId()),
+                () -> assertEquals(Set.of(testDate1, testDate2), attendanceResponse.getDatesWhenPresent()),
+                () -> assertEquals(Collections.singleton(testDate3), attendanceResponse.getDatesWhenAbsent())
+        );
+
+        verify(attendanceSheetRepository, times(1)).findByPresentChildIdForSpecificMonth(1L, 4, 2020);
+        verify(attendanceSheetRepository, times(1)).findByAbsentChildIdForSpecificMonth(1L, 4, 2020);
+        verifyNoMoreInteractions(attendanceSheetRepository, childService);
+    }
+
+    @Test
+    void shouldReturnChildMonthlyAttendanceResponseObjectWithEmptyDatesWhenPresentAndDatesWhenAbsentSetes() {
+        //given
+        when(attendanceSheetRepository.findByPresentChildIdForSpecificMonth(1L, 4, 2020))
+                .thenReturn(Collections.emptyList());
+        when(attendanceSheetRepository.findByAbsentChildIdForSpecificMonth(1L, 4, 2020))
+                .thenReturn(Collections.emptyList());
+
+        //when
+        ChildMonthlyAttendanceResponse attendanceResponse = attendanceService.getMonthlyAttendanceForChild(1L, Month.APRIL, Year.of(2020));
+
+        //then
+        assertAll(
+                "ChildId field same as method argument, datesWhenPresent and datesWhenAbsent sets both empty",
+                () -> assertEquals(1L, attendanceResponse.getChildId()),
+                () -> assertEquals(Collections.emptySet(), attendanceResponse.getDatesWhenPresent()),
+                () -> assertEquals(Collections.emptySet(), attendanceResponse.getDatesWhenAbsent())
+        );
+
+        verify(attendanceSheetRepository, times(1)).findByPresentChildIdForSpecificMonth(1L, 4, 2020);
+        verify(attendanceSheetRepository, times(1)).findByAbsentChildIdForSpecificMonth(1L, 4, 2020);
+        verifyNoMoreInteractions(attendanceSheetRepository, childService);
+    }
 
 }
