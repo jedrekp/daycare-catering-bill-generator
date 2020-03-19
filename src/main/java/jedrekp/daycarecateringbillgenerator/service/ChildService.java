@@ -130,7 +130,7 @@ public class ChildService {
     Child findSingleChildByIdAndDaycareGroupId(long childId, long daycareGroupId) {
         return childRepository.findByIdAndDaycareGroupId(childId, daycareGroupId).orElseThrow(
                 () -> new EntityNotFoundException(MessageFormat.format(
-                        "Child #{0} is not assigned to daycare group #{1}.", childId, daycareGroupId)));
+                        "Child #{0} does not exist or is not assigned to daycare group #{1}.", childId, daycareGroupId)));
     }
 
     List<Child> findPresentChildrenByDateAndDaycareGroupId(LocalDate date, long daycareGroupId) {

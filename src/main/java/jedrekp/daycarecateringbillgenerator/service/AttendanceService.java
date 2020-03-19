@@ -29,7 +29,7 @@ public class AttendanceService {
     private final ChildService childService;
 
     @Transactional(readOnly = true)
-    public DailyGroupAttendanceResponse getDailyAttendanceForDaycareGroup(LocalDate date,long daycareGroupId) {
+    public DailyGroupAttendanceResponse getDailyAttendanceForDaycareGroup(LocalDate date, long daycareGroupId) {
 
         DailyGroupAttendanceResponse dailyGroupAttendanceResponse = new DailyGroupAttendanceResponse(daycareGroupId, date);
 
@@ -67,9 +67,7 @@ public class AttendanceService {
     @Transactional
     public AttendanceSheet submitDailyAttendanceForGroup(TrackDailyGroupAttendanceRequest attendanceRequest, long daycareGroupId) {
 
-        if (!Collections.disjoint(attendanceRequest.getIdsOfChildrenToMarkAsPresent(), attendanceRequest.getIdsOfChildrenToMarkAsAbsent())) {
-            throw new IllegalArgumentException("One or more children are marked as both present and absent.");
-        }
+        verifyNoChildMarkedAsBothPresentAndAbsent(attendanceRequest);
         verifyIfDateIsWeekday(attendanceRequest.getDate());
 
         AttendanceSheet attendanceSheet = findByDateOrElseCreateNew(attendanceRequest.getDate());
@@ -82,9 +80,7 @@ public class AttendanceService {
     public List<AttendanceSheet> submitMonthlyAttendanceChangesForChild(
             long childId, Month month, Year year, UpdateMonthlyAttendanceForChildRequest attendanceRequest) {
 
-        if (!Collections.disjoint(attendanceRequest.getDatesToMarkAsPresent(), attendanceRequest.getDatesToMarkAsAbsent())) {
-            throw new IllegalArgumentException("Attendance update consists of dates for which child is marked as both present and absent");
-        }
+        verifyChildNotMarkedBothPresentAndAbsentForSameDate(attendanceRequest);
         verifyIfAllDatesAreWithinTheSelectedMonth(attendanceRequest, month, year);
         verifyIfAllDatesAreWeekdays(attendanceRequest);
 
@@ -104,29 +100,37 @@ public class AttendanceService {
     }
 
     private void addPresentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> presentChildrenIds, long daycareGroupId) {
-        if (!attendanceSheet.getAbsentChildren().isEmpty())
-            attendanceSheet.getAbsentChildren().removeAll(
-                    attendanceSheet.getAbsentChildren()
-                            .stream()
-                            .filter(child -> presentChildrenIds.contains(child.getId()))
-                            .collect(Collectors.toSet())
-            );
-
+        if (!attendanceSheet.getAbsentChildren().isEmpty()) {
+            removeChildrenMarkedPresentFromAbsentChildrenSet(attendanceSheet, presentChildrenIds);
+        }
         presentChildrenIds.forEach(childId -> attendanceSheet.getPresentChildren()
                 .add(childService.findSingleChildByIdAndDaycareGroupId(childId, daycareGroupId)));
     }
 
-    private void addAbsentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> absentChildrenIds, long daycareGroupId) {
-        if (!attendanceSheet.getPresentChildren().isEmpty())
-            attendanceSheet.getPresentChildren().removeAll(
-                    attendanceSheet.getPresentChildren()
-                            .stream()
-                            .filter(child -> absentChildrenIds.contains(child.getId()))
-                            .collect(Collectors.toSet())
-            );
+    private void removeChildrenMarkedPresentFromAbsentChildrenSet(AttendanceSheet attendanceSheet, Set<Long> presentChildrenIds) {
+        attendanceSheet.getAbsentChildren().removeAll(
+                attendanceSheet.getAbsentChildren()
+                        .stream()
+                        .filter(child -> presentChildrenIds.contains(child.getId()))
+                        .collect(Collectors.toSet())
+        );
+    }
 
+    private void addAbsentChildrenToAttendanceSheet(AttendanceSheet attendanceSheet, Set<Long> absentChildrenIds, long daycareGroupId) {
+        if (!attendanceSheet.getPresentChildren().isEmpty()) {
+            removeChildrenMarkedAbsentFromPresentChildrenSet(attendanceSheet, absentChildrenIds);
+        }
         absentChildrenIds.forEach(childId -> attendanceSheet.getAbsentChildren()
                 .add(childService.findSingleChildByIdAndDaycareGroupId(childId, daycareGroupId)));
+    }
+
+    private void removeChildrenMarkedAbsentFromPresentChildrenSet(AttendanceSheet attendanceSheet, Set<Long> absentChildrenIds) {
+        attendanceSheet.getPresentChildren().removeAll(
+                attendanceSheet.getPresentChildren()
+                        .stream()
+                        .filter(child -> absentChildrenIds.contains(child.getId()))
+                        .collect(Collectors.toSet())
+        );
     }
 
     private void markSingleChildAsPresentForGivenDates(
@@ -160,6 +164,18 @@ public class AttendanceService {
                         attendanceSheet.getAbsentChildren().add(child);
                         attendanceSheets.add(attendanceSheetRepository.save(attendanceSheet));
                     });
+        }
+    }
+
+    private void verifyNoChildMarkedAsBothPresentAndAbsent(TrackDailyGroupAttendanceRequest attendanceRequest) {
+        if (!Collections.disjoint(attendanceRequest.getIdsOfChildrenToMarkAsPresent(), attendanceRequest.getIdsOfChildrenToMarkAsAbsent())) {
+            throw new IllegalArgumentException("One or more children are marked as both present and absent.");
+        }
+    }
+
+    private void verifyChildNotMarkedBothPresentAndAbsentForSameDate(UpdateMonthlyAttendanceForChildRequest attendanceRequest) {
+        if (!Collections.disjoint(attendanceRequest.getDatesToMarkAsPresent(), attendanceRequest.getDatesToMarkAsAbsent())) {
+            throw new IllegalArgumentException("Attendance update consists of dates for which child is marked as both present and absent");
         }
     }
 
