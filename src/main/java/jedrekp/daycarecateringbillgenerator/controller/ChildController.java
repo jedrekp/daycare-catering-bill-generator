@@ -90,7 +90,7 @@ public class ChildController {
     @PreAuthorize("hasRole('HEADMASTER')")
     public ResponseEntity<CateringBillResponse> getCateringBillForSpecificMonth(
             @PathVariable long childId, @RequestParam Month month, @RequestParam Year year) {
-        return new ResponseEntity<>(cateringBillService.getSpecificBillForChild(childId, month, year), HttpStatus.OK);
+        return new ResponseEntity<>(cateringBillService.getCateringBillByChildIdAndMonth(childId, month, year), HttpStatus.OK);
     }
 
     @PostMapping("/{childId}/cateringBills")

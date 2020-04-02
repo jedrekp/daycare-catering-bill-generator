@@ -51,7 +51,7 @@ public class CateringBill {
     @OrderBy(value = "orderDate ASC")
     private Set<DailyCateringOrder> dailyCateringOrders = new HashSet<>();
 
-    public CateringBill(Month month, Year year) {
+    public CateringBill(@NotNull Month month, @NotNull Year year) {
         this.month = month;
         this.year = year;
     }

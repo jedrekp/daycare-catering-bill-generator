@@ -95,7 +95,7 @@ public class DaycareGroupController {
     public ResponseEntity<Collection<CateringBillResponse>> getBillsForSpecificMonthForAllChildrenInGroup(
             @PathVariable long daycareGroupId, @RequestParam Month month, @RequestParam Year year) {
         return new ResponseEntity<>(
-                cateringBillService.getCateringBillsByMonthAndDaycareGroupId(daycareGroupId, month, year), HttpStatus.OK);
+                cateringBillService.getAllCateringBillsByDaycareGroupIdAndMonth(daycareGroupId, month, year), HttpStatus.OK);
 
     }
 }

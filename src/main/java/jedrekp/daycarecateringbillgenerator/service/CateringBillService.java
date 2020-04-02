@@ -26,9 +26,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CateringBillService {
 
-    private final AttendanceSheetRepository attendanceSheetRepository;
-
     private final CateringBillRepository cateringBillRepository;
+
+    private final AttendanceSheetRepository attendanceSheetRepository;
 
     private final ChildService childService;
 
@@ -39,16 +39,16 @@ public class CateringBillService {
     private final EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public CateringBillResponse getSpecificBillForChild(long childId, Month month, Year year) {
+    public CateringBillResponse getCateringBillByChildIdAndMonth(long childId, Month month, Year year) {
         CateringBill cateringBill = cateringBillRepository.findByMonthAndYearAndChildIdWithAllDetails(month, year, childId)
                 .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format(
-                        "{0} {1} catering bill has not been generated yet for child with id : {2}",
-                        month, year, childId)));
+                        "{0} {1} catering bill has not been generated yet for child#{2}",
+                        month.getDisplayName(TextStyle.FULL,Locale.ENGLISH), year, childId)));
         return mapExistingCateringBillToResponse(cateringBill);
     }
 
     @Transactional(readOnly = true)
-    public Set<CateringBillResponse> getCateringBillsByMonthAndDaycareGroupId(long daycareGroupId, Month month, Year year) {
+    public Set<CateringBillResponse> getAllCateringBillsByDaycareGroupIdAndMonth(long daycareGroupId, Month month, Year year) {
         Collection<CateringBill> cateringBills = cateringBillRepository.findAllByMonthAndYearAndDaycareGroupId(month, year, daycareGroupId);
         Set<CateringBillResponse> cateringBillResponses = new HashSet<>();
         cateringBills.forEach(cateringBill -> cateringBillResponses.add(mapExistingCateringBillToResponse(cateringBill)));
