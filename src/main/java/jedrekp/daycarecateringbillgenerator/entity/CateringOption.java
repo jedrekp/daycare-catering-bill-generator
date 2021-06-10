@@ -2,6 +2,7 @@ package jedrekp.daycarecateringbillgenerator.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @Table(name = "catering_option")
 @Getter
 @Setter
+@NoArgsConstructor
 public class CateringOption {
 
     @Id

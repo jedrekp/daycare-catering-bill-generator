@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jedrekp.daycarecateringbillgenerator.utility.JsonViewFilter;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
@@ -20,6 +21,7 @@ import java.util.Set;
         uniqueConstraints = @UniqueConstraint(columnNames = {"first_name", "last_name"}))
 @Getter
 @Setter
+@NoArgsConstructor
 public class Child {
 
     @Id
