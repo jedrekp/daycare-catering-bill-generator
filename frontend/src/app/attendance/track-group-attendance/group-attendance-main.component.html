@@ -1,0 +1,37 @@
+<div class="col-sm-11 mx-auto text-center">
+
+    <mat-card class="mat-elevation-z7 text-center mx-auto">
+
+        <mat-card-title>
+            <h3>Attendance</h3>
+        </mat-card-title>
+
+        <mat-card-content>
+
+            <mat-accordion>
+                <mat-expansion-panel #select [expanded]=true [hideToggle]="select.expanded" class="mat-elevation-z3">
+                    <mat-expansion-panel-header [class.avoid-clicks]=select.expanded>
+                        <mat-panel-title>
+                            Select date and group
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-select-date-and-group (dataSelected)="dataSelected($event)"></app-select-date-and-group>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel #track [hideToggle]="track.expanded" class="mat-elevation-z3"
+                    [disabled]="!selectedDateAndGroup">
+                    <mat-expansion-panel-header [class.avoid-clicks]="track.expanded">
+                        <mat-panel-title>
+                            Track attendance
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-daycare-group-daily-attendance [selectedDateAndGroup]="selectedDateAndGroup">
+                    </app-daycare-group-daily-attendance>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </mat-card-content>
+
+    </mat-card>
+
+</div>

@@ -1,0 +1,32 @@
+<div *ngIf="allSupervisors && unassignedSupervisors; else loadingSupervisors">
+
+    <div class="d-flex justify-content-end">
+        <mat-form-field color="accent" class="mx-3 mt-3">
+            <mat-label>Search by name</mat-label>
+            <input matInput #query (keyup)="applyFilters(query.value)">
+        </mat-form-field>
+    </div>
+
+    <mat-tab-group mat-align-tabs="start" color="accent" dynamicHeight>
+
+        <mat-tab label="All profiles">
+            <app-group-supervisors-all-profiles [supervisors]="allSupervisors" [filter]="supervisorFilter">
+            </app-group-supervisors-all-profiles>
+        </mat-tab>
+
+        <mat-tab label="Unassigned to group">
+            <app-group-supervisors-unassigned-profiles [supervisors]="unassignedSupervisors"
+                [filter]="supervisorFilter" (groupAssigned)="retrieveGroupSupervisors()">
+            </app-group-supervisors-unassigned-profiles>
+        </mat-tab>
+
+    </mat-tab-group>
+
+</div>
+
+<ng-template #loadingSupervisors>
+    <div class="text-center loading-data">
+        <h2>Loading group supervisor profiles...</h2>
+        <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </div>
+</ng-template>

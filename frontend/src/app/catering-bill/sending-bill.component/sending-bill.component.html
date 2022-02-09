@@ -1,0 +1,22 @@
+<mat-card class="mat-elevation-z7" [ngClass]="{'failed-email' : title == 'Email Not Delivered'}">
+    
+    <mat-card-title>
+        <h3 class="text-center">{{title}}</h3>
+    </mat-card-title>
+
+    <mat-card-content *ngIf="inProgress">
+                <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </mat-card-content>
+
+    <div *ngIf="!inProgress && userMessage" class="text-center">
+        <mat-card-content>
+            <span [innerHTML]="userMessage"></span>
+        </mat-card-content>
+    </div>
+
+    <mat-card-actions class="text-center">
+        <button [disabled]="inProgress" mat-raised-button mat-dialog-close class="mb-2">OK</button>
+    </mat-card-actions>
+    
+</mat-card>
+

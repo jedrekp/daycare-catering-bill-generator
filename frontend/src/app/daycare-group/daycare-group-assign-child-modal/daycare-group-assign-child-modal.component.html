@@ -1,0 +1,28 @@
+<mat-card *ngIf="unassignedChildren" class="mat-elevation-z7">
+
+    <mat-card-title>
+        <h3 class="text-center">Assign Child to Daycare Group</h3>
+    </mat-card-title>
+
+    <mat-card-content>
+        <mat-form-field appearance="outline" color="accent">
+            <mat-label>Unassigned children</mat-label>
+            <mat-select [(ngModel)]="selectedChild">
+                <mat-option>None</mat-option>
+                <mat-option *ngFor="let child of unassignedChildren" [value]="child">
+                    {{child.firstName}} {{child.lastName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions class="text-end">
+        <button mat-raised-button color="accent" class="m-1" (click)="assignToGroup()">
+            Submit
+        </button>
+        <button type="button" mat-raised-button color="accent" class="m-1" mat-dialog-close>
+            Cancel
+        </button>
+    </mat-card-actions>
+
+</mat-card>

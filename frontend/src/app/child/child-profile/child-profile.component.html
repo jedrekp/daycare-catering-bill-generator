@@ -1,0 +1,24 @@
+<div *ngIf="child; then childProfile else loadingChild"></div>
+
+<ng-template #childProfile>
+
+    <div class="row">
+        <div class="col-xl-4 mx-auto">
+            <app-child-basic-info (childProfileChanged)="retrieveChild($event)" [child]="child"></app-child-basic-info>
+            <app-child-daycare-group-info [child]="child" (daycareGroupChanged)="retrieveChild($event)">
+            </app-child-daycare-group-info>
+        </div>
+        <div class="col-xl-7 mx-auto">
+            <app-child-assigned-options [child]="child" (assignedOptionsChanged)="retrieveChild($event)"></app-child-assigned-options>
+            <app-single-child-attendance [child]="child"></app-single-child-attendance>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #loadingChild>
+    <div class="text-center loading-data">
+        <h2>Loading child profile ...</h2>
+        <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </div>
+</ng-template>

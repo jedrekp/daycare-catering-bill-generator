@@ -1,0 +1,27 @@
+<div class="col col-sm-10 col-md-7 col-lg-5 col-xl-4 mx-auto">
+
+    <mat-form-field appearance="outline" color="accent" class="m-1 d-block">
+        <mat-label>Selected date</mat-label>
+        <input matInput [matDatepickerFilter]="weekDayFilter" readonly [min]="minDate" [matDatepicker]="dp"
+            [ngModel]="selectedDate" (dateChange)="onDateChange($event.value)">
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" color="accent" class="m-1 d-block">
+        <mat-label>Daycare group</mat-label>
+        <mat-select [(ngModel)]="selectedDaycareGroup">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let group of daycareGroups" [value]="group"
+                [disabled]="!authService.isAuthorized(['HEADMASTER']) && group.groupSupervisor?.username != authService.getUsername()">
+                {{group.groupName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" [disabled]="!selectedDate || !selectedDaycareGroup" class="m-1"
+        (click)="onSelect()">
+        Select
+    </button>
+
+</div>

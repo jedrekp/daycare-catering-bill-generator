@@ -1,0 +1,63 @@
+@import "../../../theme_variables.scss";
+
+.mat-raised-button {
+    min-width: 200px;
+}
+
+.mat-divider{
+    border-color: $accent-color;
+}
+
+.title{
+    margin: -25px 0 0 -25px;
+    height: 60px;
+    width: calc(100% + 50px);
+    background-color: $accent-darkest-color;
+    text-align: center;
+    h2{
+        margin-left: -13px;
+        padding-top: 15px;
+        color: white !important;
+    }
+  }
+
+.mat-dialog-content{
+    padding: 25px 25px 0px 25px;
+}
+
+.sub-header{
+    font-size: 1.1rem;
+    display: inline-block;
+    font-weight: 500;
+    color: $accent-darker-color;
+    letter-spacing: 0.05rem;
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.mat-dialog-actions{
+    padding-top: 15px;
+    justify-content: flex-end;
+}
+
+.table-responsive{
+    max-width: 600px;
+    margin: auto;
+}
+
+.mat-column-orderDate, .mat-column-optionName, .mat-column-price, .no-orders td{
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+  }
+
+.mat-header-cell{
+    font-size: 0.9rem;
+    letter-spacing: 0.1rem;
+}
+
+.mat-footer-cell{
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.05rem;
+}

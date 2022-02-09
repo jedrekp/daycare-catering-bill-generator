@@ -1,0 +1,97 @@
+<div *ngIf="selectedMonthAndGroup?.group" class="text-center mb-4">
+
+    <p class="selected-group">
+        Daycare group: {{selectedMonthAndGroup.group.groupName}}
+    </p>
+
+    <p>
+        <button mat-button color="accent" (click)="previousMonth()">
+            <mat-icon>navigate_before</mat-icon>
+        </button>
+        <span class="full-month">
+            {{selectedMonthAndGroup.month}} {{selectedMonthAndGroup.year}}
+        </span>
+        <span class="short-month">
+            {{monthNamesArray.indexOf(selectedMonthAndGroup.month)+1}}/{{selectedMonthAndGroup.year}}
+        </span>
+        <button mat-button color="accent" (click)="nextMonth()">
+            <mat-icon>navigate_next</mat-icon>
+        </button>
+    </p>
+
+</div>
+
+<div *ngIf="children && cateringBills else loadingBills">
+
+    <div class="table-responsive" *ngIf="children.length > 0; else noChildren">
+
+        <table mat-table [dataSource]="tableDataSource" class="w-100">
+
+            <ng-container matColumnDef="childId">
+                <th mat-header-cell *matHeaderCellDef>Child Id</th>
+                <td mat-cell *matCellDef="let child">
+                    #{{child.id}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef>First Name</th>
+                <td mat-cell *matCellDef="let child">
+                    {{child.firstName}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef>Last Name</th>
+                <td mat-cell *matCellDef="let child">
+                    {{child.lastName}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="generateBill">
+                <th mat-header-cell *matHeaderCellDef>
+                    Generate Bill
+                </th>
+                <td mat-cell *matCellDef="let child">
+                    <button mat-button (click)="openBillPreview(child.id)" color="accent">
+                        <span *ngIf="!checkIfBillExists(child.id); else correction">
+                            New bill
+                        </span>
+                        <ng-template #correction>
+                            Correction
+                        </ng-template>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="displayBill">
+                <th mat-header-cell *matHeaderCellDef>
+                    Display Bill
+                </th>
+                <td mat-cell *matCellDef="let child">
+                    <button mat-button [disabled]="!checkIfBillExists(child.id)" (click)="displayCateringBill(child.id)"
+                        color="accent">
+                        Display
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+
+    </div>
+
+</div>
+
+<ng-template #loadingBills>
+    <div class="text-center loading-data">
+        <h2>Loading catering bills ...</h2>
+        <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </div>
+</ng-template>
+
+<ng-template #noChildren>
+    <h2 class="no-children-message">No child is currently assigned to this daycare group.</h2>
+</ng-template>

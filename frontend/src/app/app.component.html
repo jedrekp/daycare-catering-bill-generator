@@ -1,0 +1,17 @@
+<div class="mat-elevation-z7">
+  <app-top-nav [inputSidenav]="sidenav" (sidenavToggled)="toggleSidenav()"></app-top-nav>
+</div>
+
+<mat-sidenav-container class="app-container" autosize>
+
+  <mat-sidenav class="app-sidenav mat-elevation-z20">
+    <app-side-nav (sidenavToggled)="toggleSidenav()"></app-side-nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="app-main-content mat-elevation-z20">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

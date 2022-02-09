@@ -1,0 +1,38 @@
+<mat-card class="mat-elevation-z7">
+
+    <mat-card-title>
+        <h3 class="text-center">Edit Child Profile #{{data.child.id}}</h3>
+    </mat-card-title>
+
+    <form novalidate [formGroup]="editChildForm" (ngSubmit)="onSubmit()">
+
+        <mat-card-content>
+
+            <mat-form-field color="accent" appearance="outline" class="mb-3">
+                <mat-label>First name</mat-label>
+                <input type="text" matInput formControlName='firstName'>
+                <mat-error>{{firstNameErrorMessage}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline" class="mb-3">
+                <mat-label>Last name</mat-label>
+                <input type="text" matInput formControlName='lastName'>
+                <mat-error>{{lastNameErrorMessage}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline" class="mb-3">
+                <mat-label>Parent email</mat-label>
+                <input type="email" matInput formControlName='parentEmail'>
+                <mat-error>{{parentEmailErrorMessage}}</mat-error>
+            </mat-form-field>
+
+        </mat-card-content>
+
+        <mat-card-actions class="text-end">
+            <button mat-raised-button color="accent" class="m-1" [disabled]="editChildForm.invalid">Submit</button>
+            <button type="button" mat-raised-button color="accent" class="m-1" mat-dialog-close>Cancel</button>
+        </mat-card-actions>
+
+    </form>
+
+</mat-card>

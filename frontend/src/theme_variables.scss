@@ -1,0 +1,24 @@
+@import '~@angular/material/theming';
+
+$dcbg-primary: mat-palette($mat-teal,900);
+$dcbg-accent: mat-palette($mat-teal, 300);
+$dcbg-accent-darker: mat-palette($mat-teal,400);
+$dcbg-accent-darkest: mat-palette($mat-teal,500);
+$dcbg-accent-green: mat-palette($mat-green,300);
+$dcbg-warn: mat-palette($mat-red,A200);
+$dcbg-warn-darker: mat-palette($mat-red,800);
+
+
+$primary-color: mat-color($dcbg-primary);
+$accent-color: mat-color($dcbg-accent);
+$accent-darker-color: mat-color($dcbg-accent-darker);
+$accent-darkest-color: mat-color($dcbg-accent-darkest);
+$accent-green-color: mat-color($dcbg-accent-green);
+$warn-color: mat-color($dcbg-warn);
+$warn-darker-color: mat-color($dcbg-warn-darker);
+
+$dcbg-typography: mat-typography-config(
+    $font-family: 'Roboto',
+    $headline: mat-typography-level(24px, 32px, 400,'Lato', sans-serif),
+    $title: mat-typography-level(20px, 32px, 500, 'Lato', sans-serif)
+);

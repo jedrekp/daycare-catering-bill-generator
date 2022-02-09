@@ -1,0 +1,52 @@
+<mat-card class="mat-elevation-z7 text-center mx-sm-5 mx-xl-2">
+    <mat-card-title>
+        <h3 class="text-center">Daycare Group</h3>
+    </mat-card-title>
+    <mat-card-content>
+
+        <table class="table table-borderless text-start">
+            <tbody>
+                <tr>
+                    <td class="font-weight-bold">Group Name:</td>
+                    <td>
+                        <span *ngIf="child.daycareGroup else none">
+                            {{child.daycareGroup.groupName}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Group Supervisor:</td>
+                    <td>
+                        <span *ngIf="child.daycareGroup && child.daycareGroup.groupSupervisor else none">
+                            {{child.daycareGroup.groupSupervisor.firstName}}
+                            {{child.daycareGroup.groupSupervisor.lastName}}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </mat-card-content>
+
+    <mat-card-actions>
+
+        <a [routerLink]="['/daycare-groups',child.daycareGroup?.id]" [class.avoid-clicks]="!child.daycareGroup">
+            <button mat-raised-button color="accent" class="mb-1" [disabled]="!child.daycareGroup">
+                View group page
+            </button>
+        </a>
+        <button mat-raised-button color="accent" class="mb-1" *ngIf="!child.daycareGroup"
+            (click)="openAssignToGroupDialog()"
+            [disabled]="child.archived || !authService.isAuthorized(['HEADMASTER'])">
+            Assign to group
+        </button>
+        <button mat-raised-button color="accent" class="mb-1" *ngIf="child.daycareGroup" (click)="removeFromGroup()"
+            [disabled]="!authService.isAuthorized(['HEADMASTER'])">
+            Remove from group
+        </button>
+    </mat-card-actions>
+</mat-card>
+
+<ng-template #none>
+    <span>None</span>
+</ng-template>

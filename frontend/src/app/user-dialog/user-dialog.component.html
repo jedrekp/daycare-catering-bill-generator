@@ -1,0 +1,17 @@
+<mat-card class="mat-elevation-z7">
+
+    <mat-card-title>
+        <h3 class="text-center">Confirm your action</h3>
+    </mat-card-title>
+
+    <mat-card-content>
+        <p class="text-center" [innerHTML]="data.message"></p>
+    </mat-card-content>
+
+    <mat-card-actions class="text-center">
+        <button mat-raised-button color="accent" class="m-1" [mat-dialog-close]="true">Proceed</button>
+        <button mat-raised-button color="accent" class="m-1" mat-dialog-close cdkFocusInitial>Cancel</button>
+    </mat-card-actions>
+
+
+</mat-card>

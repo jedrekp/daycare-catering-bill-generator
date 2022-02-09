@@ -1,0 +1,70 @@
+<mat-card class="mat-elevation-z7 text-center mx-sm-5 mx-xl-2">
+    <mat-card-title>
+        <h3 class="text-center">Assigned children</h3>
+    </mat-card-title>
+    <mat-card-content>
+
+        <div class="table-responsive">
+
+            <table mat-table [dataSource]="tableDataSource" class="w-100">
+
+                <ng-container matColumnDef="childId">
+                    <th mat-header-cell *matHeaderCellDef>Child Id</th>
+                    <td mat-cell *matCellDef="let child">
+                        #{{child.id}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="firstName">
+                    <th mat-header-cell *matHeaderCellDef>First Name</th>
+                    <td mat-cell *matCellDef="let child">
+                        {{child.firstName}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="lastName">
+                    <th mat-header-cell *matHeaderCellDef>Last Name</th>
+                    <td mat-cell *matCellDef="let child">
+                        {{child.lastName}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="childPage">
+                    <th mat-header-cell *matHeaderCellDef>Child Page</th>
+                    <td mat-cell *matCellDef="let child">
+                        <a [routerLink]="['/child-profiles',child.id]">
+                            <button mat-button color="accent">
+                                Open
+                            </button>
+                        </a>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="removeChild">
+                    <th mat-header-cell *matHeaderCellDef>Remove <br> From Group</th>
+                    <td mat-cell *matCellDef="let child">
+                        <button mat-button color="warn" (click)="removeChild(child)">
+                            Remove
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            </table>
+
+        </div>
+
+    </mat-card-content>
+
+    <mat-card-actions>
+
+        <button mat-raised-button color="accent" class="mb-1" [disabled]="!authService.isAuthorized(['HEADMASTER'])"
+            (click)="openAssignToGroupDialog()">
+            Assign new child
+        </button>
+
+    </mat-card-actions>
+
+</mat-card>

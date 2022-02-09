@@ -1,0 +1,110 @@
+@import "./theme_variables.scss";
+
+html, body { height: 100%; };
+body { margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+   width: 100%;
+   position: fixed;
+  };
+
+
+input[type='number'] {
+  -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: "color 9999s ease-out, background-color 9999s ease-out";
+  -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+  transition-delay: 9999s;
+  -webkit-transition-delay: 9999s;
+}
+
+.mat-card{
+  padding: 0px !important;
+}
+
+.mat-card-title, .mat-card-content, .mat-card-actions{
+  padding: 15px !important;
+}
+
+.mat-card-title{
+  background-color: $accent-darkest-color !important;
+  color: white;
+  h3{
+      font-size: 1.2rem !important;
+      margin: 0 !important;
+  }
+}
+
+.mat-raised-button:enabled{
+  background-color: $accent-darkest-color !important;
+  color: white !important;
+}
+
+.mat-raised-button:hover:enabled{
+  background-color: $accent-darker-color !important;
+}
+
+mat-panel-title {
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+}
+
+.avoid-clicks {
+  pointer-events: none;
+}
+
+.dcbg-snackbar{
+  background-color: $primary-color !important;
+}
+
+.dcbg-error-snackbar{
+  background-color: $warn-darker-color !important;
+}
+
+.dcbg-snackbar, .dcbg-error-snackbar {
+  color: white !important;
+  span{
+    margin:auto;
+    text-align: center;
+  }
+}
+
+.dcbg-dialog .mat-dialog-container{
+  width: 300px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+.catering-bill-dialog{
+  max-width: 95vw !important;
+  .mat-dialog-container{
+    width: 700px;
+    overflow: hidden;
+  }
+}
+
+.month-picker .mat-calendar-period-button {
+  pointer-events: none;
+}
+
+.month-picker .mat-calendar-arrow {
+  display: none;
+}
+
+.month-picker mat-month-view{
+  display: none;
+}
+
+.mat-tab-label.mat-tab-label-active{
+  opacity: 1 !important;
+  color: $accent-color !important;
+}

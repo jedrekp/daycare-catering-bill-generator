@@ -1,0 +1,51 @@
+<mat-card class="mat-elevation-z7 text-center mx-sm-5 mx-xl-2">
+    <mat-card-title>
+        <h3>Basic Information</h3>
+    </mat-card-title>
+    <mat-card-content>
+
+        <table class="table table-borderless text-start">
+            <tbody>
+                <tr>
+                    <td class="font-weight-bold">Daycare Group Id:</td>
+                    <td>#{{daycareGroup.id}} </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Daycare Group Name:</td>
+                    <td>{{daycareGroup.groupName}} </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Population:</td>
+                    <td>{{daycareGroup.children.length}}
+                        <span *ngIf="daycareGroup.children.length==1"> child</span>
+                        <span *ngIf="daycareGroup.children.length!=1"> children</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Group Supervisor:</td>
+                    <td>
+                        <span *ngIf="daycareGroup.groupSupervisor else notAssigned">
+                            {{daycareGroup.groupSupervisor.firstName}} {{daycareGroup.groupSupervisor.lastName}}
+                        </span>
+                        <ng-template #notAssigned>Not assigned</ng-template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </mat-card-content>
+
+    <mat-card-actions>
+
+        <button mat-raised-button color="accent" class="mb-1" [disabled]="!authService.isAuthorized(['HEADMASTER'])"
+            (click)="changeGroupName()">
+            Change group name
+        </button>
+
+        <button mat-raised-button color="accent" class="mb-1" [disabled]="!authService.isAuthorized(['HEADMASTER'])"
+            (click)="deleteGroup()">
+            Delete group
+        </button>
+
+    </mat-card-actions>
+</mat-card>

@@ -1,0 +1,42 @@
+<div class="col col-sm-10 col-md-7 col-lg-5 col-xl-4 mx-auto">
+
+    <form novalidate [formGroup]="createSupervisorForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field color="accent" class="mb-3">
+            <mat-label>First name</mat-label>
+            <input type="text" matInput formControlName='firstName'>
+            <mat-error>{{firstNameErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="mb-3">
+            <mat-label>Last name</mat-label>
+            <input type="text" matInput formControlName='lastName'>
+            <mat-error>{{lastNameErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="mb-3">
+            <mat-label>Username</mat-label>
+            <input type="text" matInput formControlName='username' autocomplete="off">
+            <mat-error>{{usernameErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="mb-3">
+            <mat-label>Password</mat-label>
+            <input type="password" matInput formControlName='password' autocomplete="off">
+            <mat-error>{{passwordErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="mb-4">
+            <mat-label>Confirm password</mat-label>
+            <input type="password" matInput formControlName='confirmPassword' autocomplete="off" [errorStateMatcher]="confirmEqualPasswordsMatcher">
+            <mat-error>{{confirmPasswordErrorMessage}}</mat-error>
+        </mat-form-field>
+
+
+        <div class="text-center my-3">
+            <button mat-raised-button color="accent" [disabled]="createSupervisorForm.invalid">Create</button>
+        </div>
+
+    </form>
+
+</div>

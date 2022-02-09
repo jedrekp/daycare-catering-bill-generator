@@ -1,0 +1,35 @@
+.top-bar{
+    height: 70px;
+    font-size: 0.9rem;
+    z-index: 1;
+    position: fixed;
+}
+
+.toolbar-spacer{
+    flex: 1 1 auto;
+}
+
+.brand{
+    font-size: 1rem;
+    margin: 12px;
+    line-height: 135%;
+    letter-spacing: 0.1rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.brand:hover{
+    cursor: pointer;
+}
+
+
+@media (max-width: 400px){
+    .brand-full{
+        display: none;
+    }
+}
+
+@media(min-width: 401px){
+    .brand-short{
+        display: none;
+    }
+}

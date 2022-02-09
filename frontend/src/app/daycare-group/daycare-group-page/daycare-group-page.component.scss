@@ -1,0 +1,14 @@
+@import "../../../theme_variables.scss";
+
+
+.loading-data{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    h2{
+        color: $accent-darker-color;
+        letter-spacing: 0.1rem;
+    }
+}

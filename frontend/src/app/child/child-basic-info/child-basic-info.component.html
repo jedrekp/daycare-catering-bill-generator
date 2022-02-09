@@ -1,0 +1,55 @@
+<mat-card class="mat-elevation-z7 text-center mx-sm-5 mx-xl-2">
+    <mat-card-title>
+        <h3>Basic Information</h3>
+    </mat-card-title>
+    <mat-card-subtitle *ngIf=child.archived class="mt-4">
+        <h3>Archived profile</h3>
+        <mat-divider></mat-divider>
+    </mat-card-subtitle>
+    <mat-card-content>
+
+        <table class="table table-borderless text-start">
+            <tbody>
+                <tr>
+                    <td class="font-weight-bold">Child Profile Id:</td>
+                    <td>#{{child.id}} </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">First Name:</td>
+                    <td>{{child.firstName}} </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Last Name:</td>
+                    <td>{{child.lastName}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Parent Email:</td>
+                    <td>{{child.parentEmail}} </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </mat-card-content>
+    
+    <mat-card-actions>
+        
+        <button mat-raised-button color="accent" class="mb-1" (click)="openChildFormDialog()"
+            [disabled]="!authService.isAuthorized(['HEADMASTER'])">
+            Edit information
+        </button>
+        <div *ngIf="child.archived then restoreButton; else moveButton"></div>
+        <ng-template #restoreButton>
+            <button mat-raised-button color="accent" class="mb-1" *ngIf="child.archived" (click)="restoreFromArchive()"
+                [disabled]="!authService.isAuthorized(['HEADMASTER'])">
+                Restore from archive
+            </button>
+        </ng-template>
+        <ng-template #moveButton>
+            <button mat-raised-button color="accent" class="mb-1" *ngIf="!child.archived" (click)="moveToArchive()"
+                [disabled]="!authService.isAuthorized(['HEADMASTER'])">
+                Move to archive
+            </button>
+        </ng-template>
+    </mat-card-actions>
+
+</mat-card>

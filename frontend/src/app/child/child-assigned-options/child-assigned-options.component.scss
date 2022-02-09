@@ -1,0 +1,28 @@
+@import "../../../theme_variables.scss";
+
+.mat-card{
+    margin-bottom: 50px;
+}
+
+.mat-card-content{
+    padding-bottom: 0 !important;
+}
+
+.mat-card-actions{
+    padding-top: 0px !important;
+}
+
+.mat-raised-button {
+    min-width: 160px;
+}
+
+.mat-column-effectiveFrom, .mat-column-optionName, .mat-column-action {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+}
+
+.mat-header-cell{
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+}

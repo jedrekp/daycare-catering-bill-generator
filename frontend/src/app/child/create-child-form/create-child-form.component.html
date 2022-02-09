@@ -1,0 +1,30 @@
+<div class="col col-sm-10 col-md-7 col-lg-5 col-xl-4 mx-auto">
+
+    <form novalidate [formGroup]="createChildForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field color="accent" class="mb-3">
+            <mat-label>First name</mat-label>
+            <input type="text" matInput formControlName='firstName'>
+            <mat-error>{{firstNameErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="mb-3">
+            <mat-label>Last name</mat-label>
+            <input type="text" matInput formControlName='lastName'>
+            <mat-error>{{lastNameErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="mb-4">
+            <mat-label>Parent email</mat-label>
+            <input type="email" matInput formControlName='parentEmail'>
+            <mat-error>{{parentEmailErrorMessage}}</mat-error>
+        </mat-form-field>
+
+
+        <div class="text-center my-3">
+            <button mat-raised-button color="accent" [disabled]="createChildForm.invalid">Create</button>
+        </div>
+
+    </form>
+
+</div>

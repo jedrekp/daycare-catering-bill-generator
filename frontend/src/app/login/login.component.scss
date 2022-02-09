@@ -1,0 +1,22 @@
+@import "../../theme_variables.scss";
+
+.mat-card{
+    max-width: 300px;
+    margin-top: 10vh;
+}
+
+.mat-card-content{
+    padding-bottom: 0 !important;
+}
+
+.mat-card-actions{
+    margin:0;
+}
+
+.mat-form-field{
+    display: block;
+}
+
+.mat-raised-button {
+    min-width: 100px;
+}

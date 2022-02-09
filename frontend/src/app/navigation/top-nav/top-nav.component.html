@@ -1,0 +1,26 @@
+<mat-toolbar color='primary' class="top-bar mat-elevation-z7">
+    <button mat-icon-button *ngIf="sidenav?.mode === 'over'" (click)="toggleSidenav()">
+        <mat-icon *ngIf="!sidenav.opened">
+            menu
+        </mat-icon>
+        <mat-icon *ngIf="sidenav.opened">
+            close
+        </mat-icon>
+    </button>
+
+    <span class="brand" routerLink='child-profiles/1'>
+        <span class="brand-full">
+            Daycare Catering<br>
+            Bill Generator
+        </span>
+        <span class="brand-short">
+            DCBG
+        </span>
+    </span>
+
+    <span class="toolbar-spacer"></span>
+
+    <mat-slide-toggle [(ngModel)]="darkModeOn" (change)="toggleDarkMode()" color='secondary'>Dark mode
+    </mat-slide-toggle>
+
+</mat-toolbar>

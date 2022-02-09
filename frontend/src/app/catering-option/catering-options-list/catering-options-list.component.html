@@ -1,0 +1,31 @@
+<div *ngIf="activeOptions && disabledOptions; else loadingOptions">
+
+    <div class="d-flex justify-content-end">
+        <mat-form-field color="accent" class="mx-3 mt-3">
+            <mat-label>Search by name</mat-label>
+            <input matInput #query (keyup)="applyFilters(query.value)">
+        </mat-form-field>
+    </div>
+
+    <mat-tab-group mat-align-tabs="start" color="accent" dynamicHeight>
+
+        <mat-tab label="Active">
+            <app-active-catering-options [options]="activeOptions" [filter]="cateringOptionFilter" (optionChanged)="retrieveCateringOptions()">
+            </app-active-catering-options>
+        </mat-tab>
+
+        <mat-tab label="Disabled">
+            <app-disabled-catering-options [options]="disabledOptions" [filter]="cateringOptionFilter" (optionChanged)="retrieveCateringOptions()">
+            </app-disabled-catering-options>
+        </mat-tab>
+
+    </mat-tab-group>
+
+</div>
+
+<ng-template #loadingOptions>
+    <div class="text-center loading-data">
+        <h2>Loading catering options...</h2>
+        <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </div>
+</ng-template>

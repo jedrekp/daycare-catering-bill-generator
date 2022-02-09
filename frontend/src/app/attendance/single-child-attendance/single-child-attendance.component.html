@@ -1,0 +1,83 @@
+<mat-card class="mat-elevation-z7 text-center mx-sm-5 mx-xl-2">
+    <mat-card-title>
+        <h3 class="text-center">Attendance</h3>
+    </mat-card-title>
+
+    <mat-card-content>
+
+        <mat-form-field color="accent" appearance="outline">
+            <mat-label>Selected month</mat-label>
+            <input matInput readonly [min]="minDate" [matDatepicker]="dp" [ngModel]="firstDayOfMonth">
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp startView="year" (monthSelected)="onMonthSelected($event, dp)"
+                panelClass="month-picker">
+            </mat-datepicker>
+        </mat-form-field>
+
+        <div class="table-responsive" *ngIf="attendance; else loadingAttendance">
+            <table mat-table [dataSource]="tableDataSource" class="w-100">
+
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef>Date</th>
+                    <td mat-cell *matCellDef="let date">
+                        {{date | date:'EE'}}
+                        {{date | date:'d/MM'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="present">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <button mat-button (click)="setAttendanceForAllDates(true)" color="accent"
+                            [disabled]="child.archived || (!authService.isAuthorized(['HEADMASTER']) && child.daycareGroup?.groupSupervisor?.username != authService.getUsername())">
+                            <mat-icon>check</mat-icon> Check all
+                        </button>
+
+                    </th>
+                    <td mat-cell *matCellDef="let date">
+                        <mat-radio-button [name]="date" [checked]="isPresent(date)"
+                            (change)="setAttendanceStatus(date,true)"
+                            [disabled]="child.archived || (!authService.isAuthorized(['HEADMASTER']) && child.daycareGroup?.groupSupervisor?.username != authService.getUsername())">
+                            Present
+                        </mat-radio-button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="absent">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <button mat-button (click)="setAttendanceForAllDates(false)" color="accent"
+                            [disabled]="child.archived || (!authService.isAuthorized(['HEADMASTER']) && child.daycareGroup?.groupSupervisor?.username != authService.getUsername())">
+                            <mat-icon>check</mat-icon> Check all
+                        </button>
+                    </th>
+                    <td mat-cell *matCellDef="let date">
+                        <mat-radio-button [name]="date" [checked]="isAbsent(date)"
+                            (change)="setAttendanceStatus(date,false)"
+                            [disabled]="child.archived || (!authService.isAuthorized(['HEADMASTER']) && child.daycareGroup?.groupSupervisor?.username != authService.getUsername())">
+                            Absent
+                        </mat-radio-button>
+                    </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            </table>
+        </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+        <button *ngIf="attendance" mat-raised-button color="accent" (click)="submitAttendanceChanges()"
+            [disabled]="child.archived || (!authService.isAuthorized(['HEADMASTER']) && child.daycareGroup?.groupSupervisor?.username != authService.getUsername())">
+            Submit changes
+        </button>
+    </mat-card-actions>
+
+</mat-card>
+
+<ng-template #loadingAttendance>
+    <div class="text-center loading-data">
+        <h2>Loading attendance data ...</h2>
+        <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </div>
+</ng-template>

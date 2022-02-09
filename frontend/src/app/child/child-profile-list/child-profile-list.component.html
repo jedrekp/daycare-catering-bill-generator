@@ -1,0 +1,37 @@
+<div *ngIf="activeChildren && unassignedChildren && archivedChildren; else loadingChildren">
+
+<div class="d-flex justify-content-end">
+    <mat-form-field color="accent" class="mx-3 mt-3">
+        <mat-label>Search by name</mat-label>
+        <input matInput #query (keyup)="applyFilters(query.value)">
+    </mat-form-field>
+</div>
+
+<mat-tab-group mat-align-tabs="start" color="accent" dynamicHeight>
+
+    <mat-tab label="All active">
+        <app-child-active-profiles [children]="activeChildren" [filter]="childProfileFilter">
+        </app-child-active-profiles>
+    </mat-tab>
+
+    <mat-tab label="Unassigned to group">
+        <app-child-unassigned-profiles [children]="unassignedChildren" [filter]="childProfileFilter"
+            (groupAssigned)="retrieveChildren()">
+        </app-child-unassigned-profiles>
+    </mat-tab>
+
+    <mat-tab label="Archived">
+        <app-child-archived-profiles [children]="archivedChildren" [filter]="childProfileFilter">
+        </app-child-archived-profiles>
+    </mat-tab>
+
+</mat-tab-group>
+
+</div>
+
+<ng-template #loadingChildren>
+<div class="text-center loading-data">
+    <h2>Loading child profiles...</h2>
+    <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+</div>
+</ng-template>

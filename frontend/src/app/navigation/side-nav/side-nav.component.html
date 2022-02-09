@@ -1,0 +1,77 @@
+<div *ngIf="authService.isLoggedIn(); then userSection else anonymousUser"></div>
+
+<ng-template #userSection>
+    <mat-icon class="profile-icon">account_circle</mat-icon>
+    <h4>{{authService.getFullName()}} <button mat-icon-button [matMenuTriggerFor]="dropdown" class="btn-profile">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+    </h4>
+    <mat-menu #dropdown="matMenu">
+        <button mat-menu-item routerLink="user-profile">User profile</button>
+        <button mat-menu-item (click)="logout()">Log out</button>
+    </mat-menu>
+    <mat-divider></mat-divider>
+
+    <button mat-button class="btn-sidenav" routerLink='home' routerLinkActive="btn-sidenav-active-link"
+        (click)="toggleSidenav()">
+        <mat-icon>home</mat-icon>
+        Home
+    </button>
+    <mat-divider></mat-divider>
+
+    <button mat-button class="btn-sidenav" routerLink='child-profiles' routerLinkActive="btn-sidenav-active-link"
+        (click)="toggleSidenav()">
+        <mat-icon>face</mat-icon>
+        Child profiles
+    </button>
+    <mat-divider></mat-divider>
+
+    <button mat-button class="btn-sidenav" routerLink='daycare-groups' routerLinkActive="btn-sidenav-active-link"
+        (click)="toggleSidenav()">
+        <mat-icon>group</mat-icon>
+        Daycare groups
+    </button>
+    <mat-divider></mat-divider>
+
+    <button mat-button class="btn-sidenav" routerLink='attendance' routerLinkActive="btn-sidenav-active-link"
+        (click)="toggleSidenav()">
+        <mat-icon>how_to_reg</mat-icon>
+        Attendance
+    </button>
+    <mat-divider></mat-divider>
+
+    <span *ngIf="authService.isAuthorized(['HEADMASTER'])">
+
+        <button mat-button class="btn-sidenav" routerLink='group-supervisors' routerLinkActive="btn-sidenav-active-link"
+            (click)="toggleSidenav()">
+            <mat-icon>supervisor_account</mat-icon>
+            Group supervisors
+        </button>
+        <mat-divider></mat-divider>
+
+        <button mat-button class="btn-sidenav" routerLink='catering-options' routerLinkActive="btn-sidenav-active-link"
+            (click)="toggleSidenav()">
+            <mat-icon>restaurant</mat-icon>
+            Catering options
+        </button>
+        <mat-divider></mat-divider>
+
+        <button mat-button class="btn-sidenav" routerLink='catering-bills' routerLinkActive="btn-sidenav-active-link"
+            (click)="toggleSidenav()">
+            <mat-icon>receipt</mat-icon>
+            Catering bills
+        </button>
+        <mat-divider></mat-divider>
+
+    </span>
+
+</ng-template>
+
+
+<ng-template #anonymousUser>
+    <button mat-button class="btn-sidenav" routerLink='login' (click)="toggleSidenav()">
+        <mat-icon>person</mat-icon>
+        Login
+    </button>
+    <mat-divider></mat-divider>
+</ng-template>

@@ -1,0 +1,27 @@
+@import "../../../theme_variables.scss";
+
+.mat-form-field{
+    width: 150px;
+}
+
+.mat-column-optionId, .mat-column-optionName, .mat-column-dailyCost, .mat-column-editOption, .mat-column-enableOption{
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+}
+  
+.mat-header-cell{
+      font-size: 0.9rem;
+      letter-spacing: 0.05rem;
+}
+
+.mat-paginator{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+ 
+  

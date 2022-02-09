@@ -1,0 +1,39 @@
+@import "../../../theme_variables.scss";
+
+
+.profile-icon{
+    margin-top: 15px;
+    width: 3em;
+    font-size: 3em;
+}
+
+.btn-sidenav {
+    text-align: left;
+    padding: 10px 20px 10px 20px;
+    width: 100%;
+    justify-content: center;
+    font-size: 0.9em;
+    border-radius: 0;
+
+    mat-icon {
+        margin-right: 8px;
+    }
+}
+
+.btn-sidenav-active-link{
+    background-color: $accent-darkest-color;
+    color: white;
+}
+
+.btn-sidenav:hover{
+    box-shadow: inset 0 0 25px 25px rgba(255, 255, 255, 0.1);
+}
+
+.mat-divider {
+    border-top-color: lightslategray;
+}
+
+
+
+
+

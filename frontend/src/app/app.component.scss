@@ -1,0 +1,36 @@
+@import "../theme_variables.scss";
+ 
+.app-container {
+  position: relative;
+  top:70px;
+  right:0;
+  bottom:0;
+  left:0;
+  z-index: 0;
+  height: calc(100vh-70px);
+}
+
+.app-sidenav{
+  width: 200px;
+  margin: 10px;
+  margin-bottom: 0;
+  background-color: $primary-color;
+  color: white;
+  text-align: center;
+  border: none;
+}
+
+.app-main-content{
+  margin:10px 10px 0 20px;
+  padding: 50px 16px 50px 16px;
+  height: calc(100vh - 80px);
+  position: relative;
+  overflow:auto;
+}
+
+@media (max-width: 768px){
+  .app-main-content{
+    margin: 0px;
+    padding: 50px 10px 50px 10px;
+  }
+}

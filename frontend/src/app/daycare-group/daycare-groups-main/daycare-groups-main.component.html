@@ -1,0 +1,36 @@
+<div class="col-sm-11 mx-auto text-center">
+
+    <mat-card class="mat-elevation-z7 text-center mx-auto">
+
+        <mat-card-title>
+            <h3>Daycare Groups</h3>
+        </mat-card-title>
+
+        <mat-card-content>
+
+            <mat-accordion>
+                <mat-expansion-panel #new [hideToggle]="new.expanded" class="mat-elevation-z3"
+                    [disabled]="!authService.isAuthorized(['HEADMASTER'])">
+                    <mat-expansion-panel-header [class.avoid-clicks]=new.expanded>
+                        <mat-panel-title>
+                            New group
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-create-daycare-group-form></app-create-daycare-group-form>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel #existing [expanded]=true [hideToggle]="existing.expanded" class="mat-elevation-z3">
+                    <mat-expansion-panel-header [class.avoid-clicks]="existing.expanded">
+                        <mat-panel-title>
+                            Existing groups
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-daycare-groups-list></app-daycare-groups-list>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </mat-card-content>
+
+    </mat-card>
+
+</div>

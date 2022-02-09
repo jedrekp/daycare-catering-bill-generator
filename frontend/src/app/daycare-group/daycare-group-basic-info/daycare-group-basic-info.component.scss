@@ -1,0 +1,35 @@
+@import "../../../theme_variables.scss";
+
+.mat-card{
+    margin-bottom: 50px;
+}
+
+.mat-card-subtitle{
+    h3{
+        font-weight: 500;
+        margin-bottom: 0;
+    }
+    margin-bottom: 0 !important;
+}
+
+.mat-card-content{
+    font-weight: 400;
+    padding-bottom: 0 !important;
+    font-size: 0.8rem;
+}
+
+.mat-raised-button {
+    min-width: 160px;
+}
+
+.table{
+    font-size: 0.9rem;
+    max-width: 400px;
+    margin: auto;
+    margin-bottom: 0;
+}
+
+.font-weight-bold{
+    font-weight: 500;
+    letter-spacing: 0.05rem;
+}

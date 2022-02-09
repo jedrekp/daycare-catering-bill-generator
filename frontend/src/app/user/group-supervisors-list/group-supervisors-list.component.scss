@@ -1,0 +1,13 @@
+@import "../../../theme_variables.scss";
+
+.mat-form-field{
+    max-width: 160px;
+}
+
+.loading-data{
+    h2{
+        color: $accent-darker-color;
+        letter-spacing: 0.1rem;
+    }
+    margin-bottom: 25px;
+} 

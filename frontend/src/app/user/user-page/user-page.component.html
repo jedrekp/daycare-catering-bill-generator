@@ -1,0 +1,60 @@
+<div *ngIf="user; else loadingUser" class="col-sm-11 mx-auto text-center">
+
+    <mat-card class="mat-elevation-z7 text-center mx-auto">
+
+        <mat-card-title>
+            <h3>Your Account Details</h3>
+        </mat-card-title>
+        <mat-card-content>
+
+            <table class="table table-borderless text-start">
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">User Id:</td>
+                        <td>#{{user.id}} </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">First Name:</td>
+                        <td>{{user.firstName}} </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Last Name:</td>
+                        <td>{{user.lastName}} </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Username:</td>
+                        <td>{{user.username}} </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Daycare Role:</td>
+                        <td>
+                            <span *ngIf="user.daycareRole == 'HEADMASTER'; else groupSupervisor">
+                                Headmaster
+                            </span>
+                            <ng-template #groupSupervisor>
+                                <span>Group supervisor</span>
+                            </ng-template>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </mat-card-content>
+
+        <mat-card-actions>
+
+            <button mat-raised-button color="accent" class="mb-1" (click)="changePassword()">
+                Change password
+            </button>
+
+        </mat-card-actions>
+    </mat-card>
+
+</div>
+
+<ng-template #loadingUser>
+    <div class="text-center loading-data">
+        <h2>Loading user profile ...</h2>
+        <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </div>
+</ng-template>

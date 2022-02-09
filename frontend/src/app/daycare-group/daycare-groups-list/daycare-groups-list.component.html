@@ -1,0 +1,63 @@
+<div *ngIf="daycareGroups; else loadingDaycareGroups">
+
+    <div class="d-sm-flex justify-content-end">
+        <mat-form-field color="accent" class="m-3">
+            <mat-label>Search by name</mat-label>
+            <input matInput #query (keyup)="applyFilter(query.value)">
+        </mat-form-field>
+    </div>
+
+    <div class="table-responsive">
+        <table mat-table [dataSource]="tableDataSource" class="w-100">
+
+            <ng-container matColumnDef="groupId">
+                <th mat-header-cell *matHeaderCellDef>Group Id</th>
+                <td mat-cell *matCellDef="let group">
+                    #{{group.id}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="groupName">
+                <th mat-header-cell *matHeaderCellDef>Group Name</th>
+                <td mat-cell *matCellDef="let group">
+                    {{group.groupName}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="groupSupervisor">
+                <th mat-header-cell *matHeaderCellDef>Group Supervisor</th>
+                <td mat-cell *matCellDef="let group">
+                    <span *ngIf="group.groupSupervisor">
+                        {{group.groupSupervisor.firstName}} {{group.groupSupervisor.lastName}}
+                    </span>
+                    <span *ngIf="!group.groupSupervisor">Not Assigned</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="groupPage">
+                <th mat-header-cell *matHeaderCellDef>Group Page</th>
+                <td mat-cell *matCellDef="let group">
+                    <a [routerLink]="['/daycare-groups',group.id]">
+                        <button mat-button color="accent">
+                            Open
+                        </button>
+                    </a>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+    </div>
+</div>
+
+<mat-paginator [hidden]="!daycareGroups" [pageSize]="10" [hidePageSize]="true" #paginator color="accent">
+</mat-paginator>
+
+<ng-template #loadingDaycareGroups>
+    <div class="text-center loading-data">
+        <h2>Loading daycare groups...</h2>
+        <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </div>
+</ng-template>

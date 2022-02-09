@@ -1,0 +1,35 @@
+<div class="col-sm-11 mx-auto text-center">
+
+    <mat-card class="mat-elevation-z7 text-center mx-auto">
+
+        <mat-card-title>
+            <h3>Catering Options</h3>
+        </mat-card-title>
+
+        <mat-card-content>
+
+            <mat-accordion>
+                <mat-expansion-panel #new [hideToggle]="new.expanded" class="mat-elevation-z3">
+                    <mat-expansion-panel-header [class.avoid-clicks]=new.expanded>
+                        <mat-panel-title>
+                            New option
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-create-catering-option-form (optionCreated)=onOptionCreated()></app-create-catering-option-form>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel #existing [expanded]=true [hideToggle]="existing.expanded" class="mat-elevation-z3">
+                    <mat-expansion-panel-header [class.avoid-clicks]="existing.expanded">
+                        <mat-panel-title>
+                            Existing options
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-catering-options-list></app-catering-options-list>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </mat-card-content>
+
+    </mat-card>
+
+</div>

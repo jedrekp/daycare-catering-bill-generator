@@ -1,0 +1,27 @@
+<div class="col col-sm-10 col-md-7 col-lg-5 col-xl-4 mx-auto">
+
+    <mat-form-field color="accent" appearance="outline" class="m-1 d-block">
+        <mat-label>Selected month</mat-label>
+        <input matInput readonly [min]="minDate" [matDatepicker]="dp" [ngModel]="firstDayOfMonth">
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp startView="year" (monthSelected)="onMonthSelected($event, dp)"
+            panelClass="month-picker">
+        </mat-datepicker>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" color="accent" class="m-1 d-block">
+        <mat-label>Daycare group</mat-label>
+        <mat-select [(ngModel)]="selectedDaycareGroup">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let group of daycareGroups" [value]="group">
+                {{group.groupName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" [disabled]="!firstDayOfMonth || !selectedDaycareGroup" class="m-1"
+        (click)="onSelect()">
+        Select
+    </button>
+
+</div>

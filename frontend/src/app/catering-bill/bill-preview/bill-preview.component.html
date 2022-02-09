@@ -1,0 +1,68 @@
+<div class="title">
+
+    <h2>Catering Bill Preview</h2>
+
+</div>
+
+<mat-dialog-content *ngIf="cateringBillPreview" class="text-center">
+
+    <h2 class="sub-header">
+        {{cateringBillPreview.childFullName}}, {{cateringBillPreview.month}} {{cateringBillPreview.year}}
+        <span *ngIf="cateringBillPreview.correction">(correction)</span>
+    </h2>
+
+    <div class="table-responsive">
+
+        <table mat-table [dataSource]="tableDataSource" class="w-100">
+
+            <ng-container matColumnDef="orderDate">
+                <th mat-header-cell *matHeaderCellDef>Order Date</th>
+                <td mat-cell *matCellDef="let order">
+                    {{order.orderDate}}
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+            </ng-container>
+
+            <ng-container matColumnDef="optionName">
+                <th mat-header-cell *matHeaderCellDef>Catering Option</th>
+                <td mat-cell *matCellDef="let order">
+                    {{order.cateringOptionName}}
+                </td>
+                <td mat-footer-cell *matFooterCellDef> Total Due: </td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let order">
+                    {{order.cateringOptionPrice | number : '1.2-2'}} PLN
+                </td>
+                <td mat-footer-cell *matFooterCellDef> {{cateringBillPreview.totalDue | number : '1.2-2'}} PLN </td>
+            </ng-container>
+
+            <tr *matNoDataRow class="mat-row no-orders">
+                <td class="mat-cell">&#8212;</td>
+                <td class="mat-cell">&#8212;</td>
+                <td class="mat-cell">&#8212;</td>
+            </tr>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+
+        </table>
+
+    </div>
+
+    <div class="disclaimer">
+        <small>*All orders in this preview are based on the current state of child's attendance for this month and
+            catering options that are in effect for given dates.
+        </small>
+    </div>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+    <button mat-raised-button class="m-1" [mat-dialog-close]="cateringBillPreview">Save and send to parent</button>
+    <button mat-raised-button mat-dialog-close class="m-1">Cancel</button>
+</mat-dialog-actions>

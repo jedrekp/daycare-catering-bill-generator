@@ -1,0 +1,23 @@
+<div *ngIf="daycareGroup; then groupPage else loadingGroup"></div>
+
+<ng-template #groupPage>
+
+    <div class="row">
+        <div class="col-xl-4 mx-auto">
+            <app-daycare-group-basic-info [daycareGroup]="daycareGroup"
+                (daycareGroupChanged)="retrieveDaycareGroup($event)"></app-daycare-group-basic-info>
+        </div>
+        <div class="col-xl-7 mx-auto">
+            <app-daycare-group-children-list [daycareGroup]="daycareGroup"
+                (childRemovedOrAdded)="retrieveDaycareGroup($event)"></app-daycare-group-children-list>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #loadingGroup>
+    <div class="text-center loading-data">
+        <h2>Loading daycare group data ...</h2>
+        <mat-spinner color="accent" class="mx-auto"></mat-spinner>
+    </div>
+</ng-template>

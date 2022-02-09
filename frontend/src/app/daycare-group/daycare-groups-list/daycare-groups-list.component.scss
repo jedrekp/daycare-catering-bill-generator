@@ -1,0 +1,30 @@
+@import "../../../theme_variables.scss";
+
+.mat-column-groupName, .mat-column-groupId, .mat-column-groupPage, .mat-column-groupSupervisor{
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+}
+
+.mat-header-cell{
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+}
+
+.mat-paginator{
+    display: flex;
+    justify-content: center;
+}
+
+
+.loading-data{
+    h2{
+        color: $accent-darker-color;
+        letter-spacing: 0.1rem;
+    }
+    margin-bottom: 25px;
+}
+
+
+ 
+  

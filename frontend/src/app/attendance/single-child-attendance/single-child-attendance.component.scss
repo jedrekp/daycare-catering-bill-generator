@@ -1,0 +1,39 @@
+@import "../../../theme_variables.scss";
+
+.mat-card{
+    margin-bottom: 0px;
+}
+
+.mat-card-content{
+    padding-bottom: 0 !important;
+}
+
+.mat-card-actions{
+    padding-top: 0px !important;
+}
+
+.mat-raised-button {
+    min-width: 160px;
+}
+
+.mat-column-date, .mat-column-present, .mat-column-absent{
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+  }
+
+  .mat-header-cell{
+      font-size: 0.9rem;
+      letter-spacing: 0.05rem;
+  }
+
+  .loading-data{
+    h2{
+        color: $accent-darker-color;
+        letter-spacing: 0.1rem;
+    }
+}
+
+
+ 
+  

@@ -1,0 +1,26 @@
+<div class="col col-sm-10 col-md-7 col-lg-5 col-xl-4 mx-auto">
+
+    <form novalidate [formGroup]="createOptionForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field color="accent" class="mb-3">
+            <mat-label>Option name</mat-label>
+            <input type="text" matInput formControlName='optionName'>
+            <mat-error>{{optionNameErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="mb-4">
+            <mat-label>Daily cost</mat-label>
+            <input type="number" matInput formControlName='dailyCost'
+                onkeydown="return event.keyCode !== 69 && event.keyCode !== 187 && event.keyCode !== 188 && event.keyCode !== 189">
+
+            <span matSuffix>PLN</span>
+            <mat-error>{{dailyCostErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <div class="text-center my-3">
+            <button mat-raised-button color="accent" [disabled]="createOptionForm.invalid">Create</button>
+        </div>
+
+    </form>
+
+</div>

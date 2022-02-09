@@ -1,0 +1,31 @@
+@import "./theme_variables.scss";
+
+@include mat-core($dcbg-typography);
+
+$dcbg-theme-dark: mat-dark-theme((
+  color: (
+    primary: $dcbg-primary,
+    accent: $dcbg-accent,
+    warn: $dcbg-warn,
+  )
+));
+
+$dcbg-theme-light: mat-light-theme((
+  color: (
+    primary: $dcbg-primary,
+    accent: $dcbg-accent,
+    warn: $dcbg-warn,
+  )
+));
+
+@include angular-material-theme($dcbg-theme-light);
+
+
+.dark-theme{
+@include angular-material-color($dcbg-theme-dark);
+ table{ 
+   color: white;
+ }
+};
+
+
