@@ -28,15 +28,15 @@ public class DaycareGroupService {
 
     @Transactional(readOnly = true)
     public Collection<DaycareGroup> findAll() {
-        return daycareGroupRepository.findAllByOrderByGroupNameAsc();
+        return daycareGroupRepository.findAll();
     }
 
     @Transactional(readOnly = true)
     public Collection<DaycareGroup> findByGroupSupervisorId(long groupSupervisorId) {
         if (groupSupervisorId == 0L) {
-            return daycareGroupRepository.findAllByGroupSupervisorIdOrderByGroupNameAsc(null);
+            return daycareGroupRepository.findAllByGroupSupervisorId(null);
         }
-        return daycareGroupRepository.findAllByGroupSupervisorIdOrderByGroupNameAsc(groupSupervisorId);
+        return daycareGroupRepository.findAllByGroupSupervisorId(groupSupervisorId);
     }
 
     @Transactional(readOnly = true)

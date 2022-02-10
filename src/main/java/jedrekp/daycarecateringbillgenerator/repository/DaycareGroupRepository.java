@@ -24,7 +24,6 @@ public interface DaycareGroupRepository extends JpaRepository<DaycareGroup, Long
             "WHERE dg.id = :daycareGroupId")
     Optional<DaycareGroup> findByIdWithAllDetails(Long daycareGroupId);
 
-    List<DaycareGroup> findAllByGroupSupervisorIdOrderByGroupNameAsc(Long groupSupervisorId);
+    List<DaycareGroup> findAllByGroupSupervisorId(Long groupSupervisorId);
 
-    List<DaycareGroup> findAllByOrderByGroupNameAsc();
 }

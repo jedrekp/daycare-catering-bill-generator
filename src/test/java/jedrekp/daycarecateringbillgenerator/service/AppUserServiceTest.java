@@ -163,7 +163,7 @@ class AppUserServiceTest {
 
         List<AppUser> testHeadmasterList = Collections.singletonList(testAppUser);
 
-        when(appUserRepository.findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(DaycareRole.HEADMASTER)).thenReturn(testHeadmasterList);
+        when(appUserRepository.findAllByDaycareRole(DaycareRole.HEADMASTER)).thenReturn(testHeadmasterList);
 
         //when
         Collection<AppUser> returnedAppUsers = appUserService.findAllAppUsersByDaycareRole(DaycareRole.HEADMASTER);
@@ -171,7 +171,7 @@ class AppUserServiceTest {
         //then
         assertEquals(testHeadmasterList, returnedAppUsers);
 
-        verify(appUserRepository, times(1)).findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(DaycareRole.HEADMASTER);
+        verify(appUserRepository, times(1)).findAllByDaycareRole(DaycareRole.HEADMASTER);
         verifyNoMoreInteractions(appUserRepository, daycareGroupService);
     }
 

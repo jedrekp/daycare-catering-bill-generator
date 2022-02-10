@@ -36,7 +36,6 @@ public class DaycareGroup {
 
     @OneToMany(mappedBy = "daycareGroup", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"daycareGroup", "assignedOptions"})
-    @OrderBy(value = "lastName ASC, firstName ASC")
     private Set<Child> children = new HashSet<>();
 
     @OneToOne

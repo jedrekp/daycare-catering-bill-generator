@@ -45,7 +45,7 @@ public class AppUserService {
 
     @Transactional(readOnly = true)
     public Collection<AppUser> findAllAppUsersByDaycareRole(DaycareRole daycareRole) {
-        return appUserRepository.findAllByDaycareRoleOrderByLastNameAscFirstNameAsc(daycareRole);
+        return appUserRepository.findAllByDaycareRole(daycareRole);
     }
 
     @Transactional
