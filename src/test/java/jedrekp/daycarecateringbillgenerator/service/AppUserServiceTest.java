@@ -38,7 +38,7 @@ class AppUserServiceTest {
     //findSingleAppUserByIdWithAllDetails
 
     @Test
-    void shouldReturnAppUserWhenAppUserFoundById() {
+    void shouldReturnAppUser_WhenAppUserFoundById() {
         //given
         AppUser testAppUser = new AppUser(
                 "Jackie",
@@ -61,7 +61,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAppUserNotFoundById() {
+    void shouldThrowException_WhenAppUserNotFoundById() {
         //given
         when(appUserRepository.findByIdWithAllDetails(1L)).thenReturn(Optional.empty());
 
@@ -77,7 +77,7 @@ class AppUserServiceTest {
     //findSingleAppUserByUsername
 
     @Test
-    void shouldReturnAppUserWhenAppUserFoundByUsername() {
+    void shouldReturnAppUser_WhenAppUserFoundByUsername() {
         //given
         AppUser testAppUser = new AppUser(
                 "Jackie",
@@ -100,7 +100,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAppUserNotFoundByUsername() {
+    void shouldThrowException_WhenAppUserNotFoundByUsername() {
         //given
         when(appUserRepository.findByUsername("someUsername")).thenReturn(Optional.empty());
 
@@ -212,7 +212,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAppUserNotGroupSupervisor() {
+    void shouldThrowException_WhenAppUserNotGroupSupervisor() {
         //given
         AppUser appUserToSave = new AppUser(
                 "Tom",
@@ -230,7 +230,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUsernameAlreadyTaken() {
+    void shouldThrowException_WhenUsernameAlreadyTaken() {
         //given
         AppUser appUserToSave = new AppUser(
                 "Tom",
@@ -286,7 +286,7 @@ class AppUserServiceTest {
 
 
     @Test
-    void shouldThrowExceptionWhenDaycareGroupNotFound() {
+    void shouldThrowException_WhenDaycareGroupNotFound() {
         //given
         when(daycareGroupService.findSingleGroupByIdWithAllDetails(1L)).thenThrow(new EntityNotFoundException("Daycare group #1 does not exist."));
 
@@ -299,7 +299,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAppUserWithGroupSupervisorRoleNotFound() {
+    void shouldThrowException_WhenAppUserWithGroupSupervisorRoleNotFound() {
         //given
         DaycareGroup testDaycareGroup = new DaycareGroup("Tigers");
 
@@ -316,7 +316,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenSomeDaycareGroupAlreadyAssignedToGivenGroupSupervisor() {
+    void shouldThrowException_WhenSomeDaycareGroupAlreadyAssignedToGivenGroupSupervisor() {
         //given
         AppUser testAppUser = new AppUser(
                 "Jackie",
@@ -345,7 +345,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenGivenDaycareGroupreadyAssignedToSomeGroupSupervisor() {
+    void shouldThrowException_WhenGivenDaycareGroupreadyAssignedToSomeGroupSupervisor() {
         //given
         AppUser testAppUser1 = new AppUser(
                 "Jackie",
@@ -383,7 +383,7 @@ class AppUserServiceTest {
     //revokeDaycareGroupAssignmentFromGroupSupervisor
 
     @Test
-    void shouldRemoveAssociationBetweenDaycareGroupAndGroupSupervisor() {
+    void shouldRemoveRelationBetweenDaycareGroupAndGroupSupervisor() {
         //given
         AppUser testAppUser = new AppUser(
                 "Jackie",
@@ -416,7 +416,7 @@ class AppUserServiceTest {
 
 
     @Test
-    void shouldThrowExceptionWhenDaycareGroupNotFoundByIdAndGroupSupervisorId() {
+    void shouldThrowException_WhenDaycareGroupNotFoundByIdAndGroupSupervisorId() {
         //given
         when(daycareGroupService.findSingleGroupByIdAndGroupSupervisorId(1L, 1L)).thenThrow(
                 new EntityNotFoundException("Daycare group #1 is not assigned to user #1."));
@@ -433,7 +433,7 @@ class AppUserServiceTest {
     //deleteGroupSupervisorAccount
 
     @Test
-    void shoulCallDeleteByIdMethodFromAppUserRepositoryAndRemoveAppUserAssociationFromDaycareGroup() {
+    void shoulCallDeleteByIdMethodAndRemoveAppUserRelationFromDaycareGroup() {
         //given
         AppUser testAppUser = new AppUser(
                 "Jackie",
@@ -463,7 +463,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAppUserWithGroupSupervisorRoleNotFoundById() {
+    void shouldThrowException_WhenAppUserWithGroupSupervisorRoleNotFoundById() {
         //given
         when(appUserRepository.findByIdAndDaycareRole(1L, DaycareRole.GROUP_SUPERVISOR)).thenReturn(Optional.empty());
 
@@ -505,7 +505,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAppUserNotFound() {
+    void shouldThrowException_WhenAppUserNotFound() {
         //given
         AppUserNewPasswordRequest newPasswordRequest = new AppUserNewPasswordRequest("currentPassword", "newPassword");
 
@@ -520,7 +520,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenCurrentPasswordNotMatched() {
+    void shouldThrowException_WhenCurrentPasswordNotMatched() {
         //given
         AppUser testAppUser = new AppUser(
                 "Jackie",

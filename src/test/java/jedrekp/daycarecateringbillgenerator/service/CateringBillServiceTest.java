@@ -49,7 +49,7 @@ class CateringBillServiceTest {
     //getCateringBillByChildIdAndMonth
 
     @Test
-    void shouldReturnCateringBillResponseObjectWhenCateringBillFoundByChildIdAndMonth() {
+    void shouldReturnCateringBillResponseObject_WhenCateringBillFoundByChildIdAndMonth() {
         //given
         Child testChild = new Child("Son", "Gohan", "songoku@fake.fake", false);
         ReflectionTestUtils.setField(testChild, "id", 1L);
@@ -94,7 +94,7 @@ class CateringBillServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenCateringBillNotFoundByChildIdAndMonth() {
+    void shouldThrowException_WhenCateringBillNotFoundByChildIdAndMonth() {
         //given
         when(cateringBillRepository.findByMonthAndYearAndChildId(Month.MARCH, Year.of(2020), 1L)).thenReturn(Optional.empty());
 
@@ -112,7 +112,7 @@ class CateringBillServiceTest {
     //getAllCateringBillsByDaycareGroupIdAndMonth
 
     @Test
-    void shouldReturnSetOfCateringBillResponseObjectsWhenCateringBillsFoundByMonthAndDaycareGroupId() {
+    void shouldReturnSetOfCateringBillResponseObjects_WhenCateringBillsFoundByMonthAndDaycareGroupId() {
         //given
         Child testChild1 = new Child("Son", "Gohan", "songoku@fake.fake", false);
         ReflectionTestUtils.setField(testChild1, "id", 1L);
@@ -179,7 +179,7 @@ class CateringBillServiceTest {
     }
 
     @Test
-    void shouldReturnEmptySetWhenNoCateringBillsFoundByMonthAndDaycareGroupId() {
+    void shouldReturnEmptySet_WhenNoCateringBillsFoundByMonthAndDaycareGroupId() {
 
         //given
         when(cateringBillRepository.findAllByMonthAndYearAndDaycareGroupId(Month.MARCH, Year.of(2020), 1L))
