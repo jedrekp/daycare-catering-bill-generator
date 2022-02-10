@@ -50,12 +50,6 @@ public class ChildController {
         return new ResponseEntity<>(childService.findChildrenByArchived(archived), HttpStatus.OK);
     }
 
-    @GetMapping(params = "searchPhrase")
-    @JsonView(JsonViewFilter.BasicInfo.class)
-    public ResponseEntity<Collection<Child>> getChildrenBySearchPhrase(@RequestParam String searchPhrase) {
-        return new ResponseEntity<>(childService.findChildrenBySearchPhrase(searchPhrase), HttpStatus.OK);
-    }
-
     @PostMapping
     @PreAuthorize("hasRole('HEADMASTER')")
     @JsonView(JsonViewFilter.BasicInfo.class)

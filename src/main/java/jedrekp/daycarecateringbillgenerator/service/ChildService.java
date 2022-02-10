@@ -59,21 +59,6 @@ public class ChildService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Child> findChildrenBySearchPhrase(String searchPhrase) {
-        Set<Child> children = new LinkedHashSet<>();
-
-        Set<String> searchSubPhrases = splitSearchPhrase(searchPhrase);
-
-        if (searchSubPhrases.size() > 1) {
-            children.addAll(childRepository.findAllByFirstNameAndLastName(searchSubPhrases));
-        }
-        children.addAll(childRepository.findAllByLastName(searchSubPhrases));
-        children.addAll(childRepository.findAllByFirstName(searchSubPhrases));
-
-        return children;
-    }
-
-    @Transactional(readOnly = true)
     public boolean verifyIfChildIsAssignedToDaycareGroupSupervisedByUser(long childId, String groupSupervisorUsername) {
         return childRepository.existsByIdAndDaycareGroupGroupSupervisorUsername(childId, groupSupervisorUsername);
     }
@@ -184,23 +169,4 @@ public class ChildService {
         child.getDaycareGroup().getChildren().remove(child);
         child.setDaycareGroup(null);
     }
-
-    private Set<String> splitSearchPhrase(String searchPhrase) {
-        Set<String> searchSubPhrases = new HashSet<>();
-        searchPhrase = searchPhrase.toLowerCase().trim().replaceAll(" +", " ");
-        Collections.addAll(searchSubPhrases, searchPhrase.split(" "));
-        getAllAdjacentCombinations(searchSubPhrases, searchPhrase);
-        return searchSubPhrases;
-    }
-
-    private void getAllAdjacentCombinations(Set<String> searchSubPhrases, String searchPhrase) {
-        if (!searchSubPhrases.contains(searchPhrase) && searchPhrase.contains(" ")) {
-            searchSubPhrases.add(searchPhrase);
-            getAllAdjacentCombinations(
-                    searchSubPhrases, searchPhrase.substring(0, searchPhrase.lastIndexOf(" ")));
-            getAllAdjacentCombinations(
-                    searchSubPhrases, searchPhrase.substring(searchPhrase.indexOf(" ") + 1));
-        }
-    }
-
 }

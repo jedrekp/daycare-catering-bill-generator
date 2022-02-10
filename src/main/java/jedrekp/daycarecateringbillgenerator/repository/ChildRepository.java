@@ -39,18 +39,6 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     List<Child> findAllByDaycareGroupIdAndArchived(
             Long daycareGroupId, boolean archived);
 
-    @Query("SELECT c FROM Child c WHERE LOWER(c.firstName) IN :searchSubPhrases " +
-            "AND LOWER(c.lastName) IN :searchSubPhrases ORDER BY c.lastName ASC, c.firstName ASC")
-    List<Child> findAllByFirstNameAndLastName(Collection<String> searchSubPhrases);
-
-    @Query("SELECT c FROM Child c WHERE LOWER(c.lastName) IN :searchSubPhrases " +
-            "ORDER BY c.lastName ASC, c.firstName ASC")
-    List<Child> findAllByLastName(Collection<String> searchSubPhrases);
-
-    @Query("SELECT c FROM Child c WHERE LOWER(c.firstName) IN :searchSubPhrases " +
-            "ORDER BY c.lastName ASC, c.firstName ASC")
-    List<Child> findAllByFirstName(Collection<String> searchSubPhrases);
-
     @Query("SELECT pc FROM AttendanceSheet att INNER JOIN att.presentChildren pc INNER JOIN pc.daycareGroup dg " +
             "WHERE att.date = :date AND dg.id = :daycareGroupId")
     List<Child> findPresentChildrenByDateAndDaycareGroupId(LocalDate date, Long daycareGroupId);
