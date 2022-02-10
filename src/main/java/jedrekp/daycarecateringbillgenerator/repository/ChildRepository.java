@@ -34,9 +34,9 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
             "WHERE c.id = :childId AND c.archived = :archived")
     Optional<Child> findByIdAndArchivedWithAssignedOptions(Long childId, boolean archived);
 
-    List<Child> findAllByArchivedOrderByLastNameAscFirstNameAsc(boolean archived);
+    List<Child> findAllByArchived(boolean archived);
 
-    List<Child> findAllByDaycareGroupIdAndArchivedOrderByLastNameAscFirstNameAsc(
+    List<Child> findAllByDaycareGroupIdAndArchived(
             Long daycareGroupId, boolean archived);
 
     @Query("SELECT c FROM Child c WHERE LOWER(c.firstName) IN :searchSubPhrases " +

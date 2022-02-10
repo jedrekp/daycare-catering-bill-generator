@@ -45,16 +45,16 @@ public class ChildService {
 
     @Transactional(readOnly = true)
     public Collection<Child> findChildrenByArchived(boolean archived) {
-        return childRepository.findAllByArchivedOrderByLastNameAscFirstNameAsc(archived);
+        return childRepository.findAllByArchived(archived);
     }
 
     @Transactional(readOnly = true)
     public Collection<Child> findChildrenByDaycareGroup(long daycareGroupId) {
         if (daycareGroupId == 0L) {
-            return childRepository.findAllByDaycareGroupIdAndArchivedOrderByLastNameAscFirstNameAsc(
+            return childRepository.findAllByDaycareGroupIdAndArchived(
                     null, false);
         }
-        return childRepository.findAllByDaycareGroupIdAndArchivedOrderByLastNameAscFirstNameAsc(
+        return childRepository.findAllByDaycareGroupIdAndArchived(
                 daycareGroupId, false);
     }
 
