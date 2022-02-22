@@ -32,9 +32,7 @@ export class JwtAuthService {
   }
 
   isLoggedIn() {
-    const token = this.getToken()
-    if (!token) return false
-    return !this.jwtHelper.isTokenExpired(token)
+    return this.getToken() != null;
   }
 
   getUsername() {

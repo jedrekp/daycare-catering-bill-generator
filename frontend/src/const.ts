@@ -13,7 +13,7 @@ export const RETURN_URL = 'returnUrl'
 export const HEADMASTER = 'HEADMASTER'
 export const GROUP_SUPERVISOR = 'GROUP_SUPERVISOR'
 
-export const NO_RESPONSE_ERROR_MESSAGE = 'No repsponse from the server. Please contact server administrator or try again later.'
+export const NO_RESPONSE_ERROR_MESSAGE = 'No response from the server. Please contact server administrator or try again later.'
 
 export const MONTH_PICKER_FORMAT = {
     display: {
