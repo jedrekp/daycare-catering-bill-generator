@@ -1,11 +1,9 @@
 package jedrekp.daycarecateringbillgenerator.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jedrekp.daycarecateringbillgenerator.entity.AppUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
@@ -14,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class JwtTokenUtil {
 
     @Value("${jwt.signing.key.secret}")
@@ -38,13 +37,36 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    Boolean validateToken(String token, UserDetails userDetails) {
-        String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    Principal decodeToken(String token) {
+        if (isTokenValid(token)) {
+            String username = getUsernameFromToken(token);
+            String userRole = getUserRoleFromToken(token);
+            return new Principal(username, userRole);
+        }
+        return null;
     }
 
-    String getUsernameFromToken(String token) {
+    private boolean isTokenValid(String token) {
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            return true;
+        } catch (SignatureException e) {
+            log.warn("Invalid JWT signature: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.warn("Invalid JWT format: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.warn("JWT token is expired: {}", e.getMessage());
+        }
+        return false;
+    }
+
+
+    private String getUsernameFromToken(String token) {
         return getAllClaimsFromToken(token).getSubject();
+    }
+
+    private String getUserRoleFromToken(String token) {
+        return getAllClaimsFromToken(token).get("userRole", String.class);
     }
 
     private Claims getAllClaimsFromToken(String token) {
@@ -56,11 +78,6 @@ public class JwtTokenUtil {
 
     private Date getExpirationDateFromToken(String token) {
         return getAllClaimsFromToken(token).getExpiration();
-    }
-
-    private Boolean isTokenExpired(String token) {
-        Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
     }
 
     private Date calculateExpirationDate(Date createdDate) {
