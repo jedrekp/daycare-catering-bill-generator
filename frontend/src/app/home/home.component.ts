@@ -9,7 +9,7 @@ import { JwtAuthService } from '../service/authentication/jwt-auth.service';
 export class HomeComponent implements OnInit {
 
   constructor(
-    private authService: JwtAuthService
+    public authService: JwtAuthService
   ) { }
 
   ngOnInit(): void {

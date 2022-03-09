@@ -1,1 +1,68 @@
-<p>home works!</p>
+<div class="col-11 col-lg-8 col-xl-6 m-auto">
+
+    <h1 class="mb-0">Hello {{authService.getFullName()}},</h1>
+    <h2 class="mb-4">Welcome to Daycare Catering Bill Generator</h2>
+
+
+    <div *ngIf="authService.getUserRole()=='HEADMASTER'">
+
+        <p class="mb-3">
+            As a <b>headmaster</b> you are given full access to all sections of this application.
+        </p>
+
+        <p class="mb-3">
+            Visit the <span class="section-name">child profiles </span>
+            <mat-icon>face</mat-icon>module in order to create new child profiles
+            and display/edit the existing ones.
+            You may also assign new catering options to a child and adjust their monthly attendance by entering that
+            child's profile page.
+        </p>
+
+        <p class="mb-3">
+            <span class="section-name">Daycare groups </span>
+            <mat-icon>group</mat-icon>section is a place where you can manage existing daycare groups and add new ones.
+            Go to a single group page to edit it's properties and assign new children or group supervisor to that group.
+        </p>
+
+        <p class="mb-3">
+            <span class="section-name">Attendance </span>
+            <mat-icon>how_to_reg</mat-icon>section is used to track daily attendance for each daycare group.
+            Select date and daycare group, then mark attendance for all it's members.
+            If you need to adjust monthly attendance for a signle child, it might be easier to do it by visiting their
+            profile page instead.
+        </p>
+
+        <p class="mb-3">
+            You may use the
+            <span class="section-name">Group supervisors </span>
+            <mat-icon>supervisor_account</mat-icon>module to create and delete group supervisor user accounts.
+            By visiting this section, you can also assign group supervisor to a daycare group or revoke their group
+            assignment.
+            Note that group supervisors are only able to track attendance for children that are assigned to the same
+            daycare group.
+        </p>
+
+        <p class="mb-3">
+            Go to
+            <span class="section-name">Catering options </span>
+            <mat-icon>restaurant</mat-icon>module to add new catering options and manage the price and name of
+            existing ones.
+            You can also disable and enable individual catering options in this section.
+            Please note, that while disabled catering options can no longer be assigned,
+            they will not be removed from children to whom they are assigned already.
+        </p>
+
+        <p class="mb-3">
+            <span class="section-name">Catering bills </span>
+            <mat-icon>receipt</mat-icon>section is used for generating catering invoices and sending them to parents via email.
+            Each catering bill will be generated automatically based on child's attendance in given month, as well as catering options that are in effect for that period.
+            Additionally this module allows you to dsiplay already generated catering bills and generate corrections when necessary.
+        </p>
+
+    </div>
+
+    <div *ngIf="authService.getUserRole()=='GROUP_SUPERVISOR'">
+    PLACEHOLDER
+    </div>
+
+</div>
