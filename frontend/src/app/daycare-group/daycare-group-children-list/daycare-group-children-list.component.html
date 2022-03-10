@@ -43,7 +43,8 @@
                 <ng-container matColumnDef="removeChild">
                     <th mat-header-cell *matHeaderCellDef>Remove <br> From Group</th>
                     <td mat-cell *matCellDef="let child">
-                        <button mat-button color="warn" (click)="removeChild(child)">
+                        <button mat-button color="warn" (click)="removeChild(child)"
+                            [disabled]="!authService.isAuthorized(['HEADMASTER'])">
                             Remove
                         </button>
                     </td>
