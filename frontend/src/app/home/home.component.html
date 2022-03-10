@@ -54,15 +54,44 @@
 
         <p class="mb-3">
             <span class="section-name">Catering bills </span>
-            <mat-icon>receipt</mat-icon>section is used for generating catering invoices and sending them to parents via email.
-            Each catering bill will be generated automatically based on child's attendance in given month, as well as catering options that are in effect for that period.
-            Additionally this module allows you to dsiplay already generated catering bills and generate corrections when necessary.
+            <mat-icon>receipt</mat-icon>section is used for generating catering invoices and sending them to parents via
+            email.
+            Each catering bill will be generated automatically based on child's attendance in given month, as well as
+            catering options that are in effect for that period.
+            Additionally this module allows you to dsiplay already generated catering bills and generate corrections
+            when necessary.
         </p>
 
     </div>
 
     <div *ngIf="authService.getUserRole()=='GROUP_SUPERVISOR'">
-    PLACEHOLDER
+        <p class="mb-3">
+            As a <b>group supervisor</b> you are permited to track attendance of children assigned to your daycare
+            group.
+            Additionally you have a read-only access to child profiles and daycare groups sections.
+        </p>
+
+        <p class="mb-3">
+            Use the <span class="section-name">attendance </span>
+            <mat-icon>how_to_reg</mat-icon>section to track daily attendance for your daycare group.
+            Select the date and the group that is being supervised by you, then mark attendance for all it's members.
+        </p>
+
+        <p>
+            If you need to adjust attendance for a signle child, you can do so by visiting the
+            <span class="section-name">child profiles </span>
+            <mat-icon>face</mat-icon>module and entering that child's profile page. This allows you to quickly modify
+            that child's attendance for entire month. Note that this will only work if that child is assigned to your
+            daycare group.
+        </p>
+
+        <p>
+            You may also access a child profile page by going to the
+            <span class="section-name">daycare groups </span>
+            <mat-icon>group</mat-icon>
+            section and selecting the daycare group to display the list of all its members.
+        </p>
+
     </div>
 
 </div>
